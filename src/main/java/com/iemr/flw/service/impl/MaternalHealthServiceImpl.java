@@ -314,6 +314,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         IncentiveActivity ancFullActivity =
                 incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-FULL", "MATERNAL HEALTH");
 
+        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-ABORTION", "ABORTION");
+
         if (anc1Activity != null) {
             ancList.forEach( ancVisit -> {
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
@@ -363,7 +365,33 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         recordRepo.save(record);
                     }
                 }
+
             });
+        }
+        if(abortionActivity!=null){
+
+            ancList.forEach((ancVisit -> {
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+                if(ancVisit.getAbortionType()=="true"){
+                    if(record!=null){
+                        record = new IncentiveActivityRecord();
+                        record.setActivityId(abortionActivity.getId());
+                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedBy(ancVisit.getCreatedBy());
+                        record.setStartDate(ancVisit.getCreatedDate());
+                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setBenId(ancVisit.getBenId());
+                        record.setAshaId(userId);
+                        record.setAmount(Long.valueOf(ancFullActivity.getRate()));
+                        recordRepo.save(record);
+                    }
+
+                }
+            }));
         }
     }
 
