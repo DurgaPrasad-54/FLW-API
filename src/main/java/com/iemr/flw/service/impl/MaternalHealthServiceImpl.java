@@ -366,5 +366,41 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             });
         }
     }
+     public void sendAncDueTomorrowNotifications(String ashaId) {
+        try {
+            GetBenRequestHandler request = new GetBenRequestHandler();
+            request.setAshaId(Integer.valueOf(ashaId));
+            request.setFromDate(Timestamp.valueOf(LocalDate.now().plusDays(1).atStartOfDay())); // Tomorrow at 00:00:00
+            request.setToDate(Timestamp.valueOf(LocalDate.now().plusDays(1).atTime(LocalTime.MAX))); // Tomorrow at 23:59:59.999999999
+
+
+            List<ANCVisitDTO> ancList = getANCVisits(request);
+
+            if (ancList != null) {
+                for (ANCVisitDTO anc : ancList) {
+                    if (anc.getAncDate() != null && anc.getAncDate().toLocalDateTime().toLocalDate().isEqual(LocalDate.now().plusDays(1))) {
+                        String ancType = anc.getAbortionType(); // ANC1, ANC2, etc.
+                        String body = "Reminder: Scheduled ANC check-up (" + ancType + ") is due tomorrow.";
+                        String redirectPath = "/work-plan/anc/" + ancType.toLowerCase();
+                        String appType = "FLW_APP"; // or "ASHAA_APP", based on user type
+                        String topic = "ANC"+ashaId; // or some user/topic identifier
+                        String title = "ANC Reminder";
+
+                        notificationService.sendNotification(
+                                appType,
+                                topic,
+                                title,
+                                body,
+                                redirectPath
+                        );
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("Error in sending ANC reminder notifications: {}", e.getMessage());
+        }
+    }
+
 
 }
