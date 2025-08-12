@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -62,6 +64,13 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     ObjectMapper mapper = new ObjectMapper();
 
     ModelMapper modelMapper = new ModelMapper();
+
+   @Autowired
+   private NotificationService notificationService;
+   @Autowired
+   private SMSServiceImpl smsServiceImpl;
+
+
 
     public static final List<String> PNC_PERIODS =
             Arrays.asList("1st Day", "3rd Day", "7th Day", "14th Day", "21st Day", "28th Day", "42nd Day");
@@ -383,7 +392,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         String body = "Reminder: Scheduled ANC check-up (" + ancType + ") is due tomorrow.";
                         String redirectPath = "/work-plan/anc/" + ancType.toLowerCase();
                         String appType = "FLW_APP"; // or "ASHAA_APP", based on user type
-                        String topic = "ANC"+ashaId; // or some user/topic identifier
+                        String topic = "All"; // or some user/topic identifier
                         String title = "ANC Reminder";
 
                         notificationService.sendNotification(
@@ -393,6 +402,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                                 body,
                                 redirectPath
                         );
+
                     }
                 }
             }

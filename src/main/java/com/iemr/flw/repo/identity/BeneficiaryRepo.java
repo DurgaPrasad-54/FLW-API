@@ -12,13 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRmnch, Long> {
 
     @Query(nativeQuery = true, value = " select UserName from db_iemr.m_user where  UserID = :userId and deleted is false ")
     String getUserName(@Param("userId") Integer userId);
+
+    Optional<RMNCHBeneficiaryDetailsRmnch> findById(Long benID);
 
     @Query(nativeQuery = true, value = " SELECT userid FROM db_iemr.m_user WHERE UserName = :userName ")
     Integer getUserIDByUserName(@Param("userName") String userName);
@@ -33,6 +35,9 @@ public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRm
 
     @Query(value = " SELECT t FROM RMNCHMBeneficiarymapping t WHERE t.benAddressId = :addressID")
     RMNCHMBeneficiarymapping getByAddressID(@Param("addressID") BigInteger addressID);
+
+    @Query(value = " SELECT t FROM RMNCHMBeneficiarymapping t WHERE t.benRegId = :BenRegId")
+    RMNCHMBeneficiarymapping getById(@Param("BenRegId") BigInteger BenRegId);
 
     @Query(value = " SELECT t FROM RMNCHMBeneficiarydetail t WHERE t.id = :vanSerialNo")
     RMNCHMBeneficiarydetail getDetailsById(@Param("vanSerialNo") BigInteger vanSerialNo);

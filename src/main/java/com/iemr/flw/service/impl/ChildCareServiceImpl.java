@@ -407,4 +407,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     private Integer getImmunizationServiceIdForVaccine(Short vaccineId) {
         return vaccineRepo.getImmunizationServiceIdByVaccineId(vaccineId);
     }
+
+    public void getTomorrowImmunizationReminders(Integer userID) {
+
+    }
 }
