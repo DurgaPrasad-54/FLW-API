@@ -19,8 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class NotificationSchedulerService {
     final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    @Autowired
-    private MaternalHealthServiceImpl maternalHealthService;
+   
     @Autowired
     private NotificationService notificationService;
     @Autowired
