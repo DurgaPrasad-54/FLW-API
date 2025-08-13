@@ -65,8 +65,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
     ModelMapper modelMapper = new ModelMapper();
 
-   @Autowired
-   private NotificationService notificationService;
+  
    @Autowired
    private SMSServiceImpl smsServiceImpl;
 
@@ -395,13 +394,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         String topic = "All"; // or some user/topic identifier
                         String title = "ANC Reminder";
 
-                        notificationService.sendNotification(
-                                appType,
-                                topic,
-                                title,
-                                body,
-                                redirectPath
-                        );
+                      
 
                     }
                 }
