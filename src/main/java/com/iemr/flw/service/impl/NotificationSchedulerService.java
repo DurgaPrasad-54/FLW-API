@@ -30,7 +30,8 @@ public class NotificationSchedulerService {
    private ChildCareServiceImpl childCareService;
     @Autowired
     private CookieUtil cookieUtil;
-//    @Scheduled(cron = "0 0 9 * * *") // every day at 9 AM
+    
+    @Scheduled(cron = "0 0 9 * * *") // every day at 9 AM
     public void triggerAncRemindersForAllAsha() {
 
 //        HttpServletRequest requestHeader = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
@@ -67,9 +68,5 @@ public class NotificationSchedulerService {
         }
     }
 
-    @PostConstruct
-    public void triggerAncRemindersOnce() {
-        triggerAncRemindersForAllAsha();
-    }
-
+    
 }
