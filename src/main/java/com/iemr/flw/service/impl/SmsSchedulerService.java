@@ -46,6 +46,8 @@ public class SmsSchedulerService {
     private ChildCareServiceImpl childCareService;
     @Autowired
     private CookieUtil cookieUtil;
+
+    @Scheduled(cron = "0 0 9 * * *")
     public void sendAncReminders() {
         try {
 
@@ -88,10 +90,7 @@ public class SmsSchedulerService {
             logger.error(e.getMessage());
         }
     }
-    @PostConstruct
-    public void triggerAncRemindersOnce() {
-        sendAncReminders();
-    }
+    
 
     @Scheduled(cron = "0 0 9 * * *")
     public void trigerTomorrowImmunizationReminders() {
