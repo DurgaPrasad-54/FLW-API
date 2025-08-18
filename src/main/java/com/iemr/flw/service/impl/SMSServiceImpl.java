@@ -60,6 +60,7 @@ public class SMSServiceImpl {
             payload.put("entityId",entityId );
             // Set headers
             HttpHeaders headers = new HttpHeaders();
+            logger.info("userName:"+smsUserName+":"+smsPassword);
             String auth = smsUserName + ":" + smsPassword;
             headers.add("Authorization",
                     "Basic " + Base64.getEncoder().encodeToString(auth.getBytes()));
