@@ -96,10 +96,6 @@ public class SmsSchedulerService {
         }
     }
 
-  @PostConstruct
-public void triggerAncRemindersOnce() {
-            sendAncReminders();
-        }
 
 
     @Scheduled(cron = "0 0 9 * * *")
