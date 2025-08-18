@@ -33,8 +33,8 @@ public class SMSServiceImpl {
     // @Value("${sms-password}")
     private String smsPassword= "]Kt9GAp8}$S*@";
 
-    @Value("${source-address}")
-    private String smsSourceAddress;
+    // @Value("${source-address}")
+    private String smsSourceAddress ="PSMRAM";
 
 
     public String sendReminderSMS(String mobileNo, String serviceName, LocalDate date) {
