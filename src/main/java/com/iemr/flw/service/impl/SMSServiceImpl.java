@@ -30,8 +30,8 @@ public class SMSServiceImpl {
     @Value("${sms-username}")
     private String smsUserName;
 
-    @Value("${sms-password}")
-    private String smsPassword;
+    // @Value("${sms-password}")
+    private String smsPassword= "]Kt9GAp8}$S*@";
 
     @Value("${source-address}")
     private String smsSourceAddress;
