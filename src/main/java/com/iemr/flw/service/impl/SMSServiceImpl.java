@@ -24,8 +24,8 @@ public class SMSServiceImpl {
     final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 
-    @Value("${send-message-url}")
-    private String SMS_GATEWAY_URL;
+    // @Value("${send-message-url}")
+    private String SMS_GATEWAY_URL ="https://openapi.airtel.in/gateway/airtel-iq-sms-utility/sendSingleSms";
 
     @Value("${sms-username}")
     private String smsUserName;
