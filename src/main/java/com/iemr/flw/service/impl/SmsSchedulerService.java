@@ -47,7 +47,7 @@ public class SmsSchedulerService {
     @Autowired
     private CookieUtil cookieUtil;
 
-    @Scheduled(cron = "0 0 9 * * *")
+    // @Scheduled(cron = "0 0 9 * * *")
     public void sendAncReminders() {
         try {
 
@@ -55,45 +55,49 @@ public class SmsSchedulerService {
 
             smsServiceImpl.sendReminderSMS("9560618681","ANC1",tomorrow2);
             
-            List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
-            logger.info("ANC_SMS service is start");
-            ancVisitList.forEach(ancVisit -> {
-                Timestamp ancDate = ancVisit.getAncDate();
-                if (ancDate != null) {
-                    LocalDate visitDate = ancDate.toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate();
+           //  List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
+           //  logger.info("ANC_SMS service is start");
+           //  ancVisitList.forEach(ancVisit -> {
+           //      Timestamp ancDate = ancVisit.getAncDate();
+           //      if (ancDate != null) {
+           //          LocalDate visitDate = ancDate.toInstant()
+           //                  .atZone(ZoneId.systemDefault())
+           //                  .toLocalDate();
 
-                    LocalDate tomorrow = LocalDate.now().plusDays(1);
+           //          LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-                    if (visitDate.equals(tomorrow)) {
-                        logger.info("BenId:"+ancVisit.getBenId());
+           //          if (visitDate.equals(tomorrow)) {
+           //              logger.info("BenId:"+ancVisit.getBenId());
 
-                        Optional<RMNCHBeneficiaryDetailsRmnch> beneficiaryDetailsRmnch = beneficiaryRepo.findById(ancVisit.getBenId());
-                        if (beneficiaryDetailsRmnch.isPresent()) {
-                            RMNCHBeneficiaryDetailsRmnch beneficiary = beneficiaryDetailsRmnch.get();
+           //              Optional<RMNCHBeneficiaryDetailsRmnch> beneficiaryDetailsRmnch = beneficiaryRepo.findById(ancVisit.getBenId());
+           //              if (beneficiaryDetailsRmnch.isPresent()) {
+           //                  RMNCHBeneficiaryDetailsRmnch beneficiary = beneficiaryDetailsRmnch.get();
 
-                            BigInteger vanSerialNo = beneficiaryRepo.getBenIdFromRegID(beneficiary.getBenRegId());
-                            logger.info("vanSerialNo:"+vanSerialNo);
+           //                  BigInteger vanSerialNo = beneficiaryRepo.getBenIdFromRegID(beneficiary.getBenRegId());
+           //                  logger.info("vanSerialNo:"+vanSerialNo);
 
-                            if(beneficiaryRepo.getContactById(vanSerialNo)!=null){
+           //                  if(beneficiaryRepo.getContactById(vanSerialNo)!=null){
 
-                                smsServiceImpl.sendReminderSMS(beneficiaryRepo.getContactById(vanSerialNo).getContact_number(),"ANC"+ancVisit.getAncVisit(),tomorrow);
+           //                      smsServiceImpl.sendReminderSMS(beneficiaryRepo.getContactById(vanSerialNo).getContact_number(),"ANC"+ancVisit.getAncVisit(),tomorrow);
 
-                            }
-                        }
+           //                  }
+           //              }
 
-                    }
+           //          }
 
 
-                }
-           });
+           //      }
+           // });
 
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
+  @PostConstruct
+public void triggerAncRemindersOnce() {
+            sendAncReminders();
+        }
 
 
     @Scheduled(cron = "0 0 9 * * *")
