@@ -47,7 +47,7 @@ public class SmsSchedulerService {
     @Autowired
     private CookieUtil cookieUtil;
 
-    // @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void sendAncReminders() {
         try {
 
@@ -94,10 +94,6 @@ public class SmsSchedulerService {
         }
     }
 
-    @PostConstruct
-    public void triggerAncRemindersOnce() {
-        sendAncReminders();
-    }
 
 
     @Scheduled(cron = "0 0 9 * * *")
