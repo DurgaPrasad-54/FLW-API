@@ -45,8 +45,7 @@ public class SMSServiceImpl {
 
         try {
 
-            String message = "Dear Beneficiary, this is a reminder regarding your upcoming service for "
-                    + serviceName
+            String message = "Dear Beneficiary, this is a reminder regarding your upcoming service for ANC "
                     + ". Please visit the nearest health facility between "
                     + date
                     + ". Regards PSMRI";
