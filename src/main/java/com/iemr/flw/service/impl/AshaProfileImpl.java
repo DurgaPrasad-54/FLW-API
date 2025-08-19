@@ -114,7 +114,7 @@ public class AshaProfileImpl implements AshaProfileService {
 
         if (isValid(request.getAbhaNumber())) existing.setAbhaNumber(request.getAbhaNumber());
         if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId()); // numeric hai, isValid ki zaroorat nahi
-        if (isValid(request.getDob().toString())) existing.setDob(request.getDob());
+        if (request.getDob() != null) existing.setDob(request.getDob());
         if (isValid(request.getAlternateMobileNumber())) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
         if (isValid(request.getAnm1Mobile())) existing.setAnm1Mobile(request.getAnm1Mobile());
         if (isValid(request.getAnm2Name())) existing.setAnm2Name(request.getAnm2Name());
