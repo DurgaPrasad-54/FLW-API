@@ -109,11 +109,9 @@ public class AshaProfileImpl implements AshaProfileService {
 
 
     public AshaWorker updateProfile(AshaWorker request) {
-        // Pehle DB se existing record nikal
-        AshaWorker existing = ashaProfileRepo.findById(request.getId())
+        AshaWorker existing = ashaProfileRepo.findByEmployeeId(request.getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("ASHA worker not found"));
 
-        // Sirf non-null values update karo
         if (request.getAbhaNumber() != null) existing.setAbhaNumber(request.getAbhaNumber());
         if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId());
         if (request.getDob() != null) existing.setDob(request.getDob());
@@ -142,7 +140,7 @@ public class AshaProfileImpl implements AshaProfileService {
         if (request.getSupervisorName() != null) existing.setSupervisorName(request.getSupervisorName());
         if (request.getSupervisorMobile() != null) existing.setSupervisorMobile(request.getSupervisorMobile());
 
-        return existing; // ye UPDATE ke liye jayega
+        return existing;
     }
 
 
