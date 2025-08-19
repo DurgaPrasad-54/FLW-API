@@ -93,7 +93,6 @@ public class AshaProfileImpl implements AshaProfileService {
             AshaWorker ashaWorker = new AshaWorker();
             ashaWorker.setEmployeeId(m_user.getUserID());
             ashaWorker.setDob(m_user.getDOB());
-            ashaWorker.setVillage(getAshaVillage(userID));
             ashaWorker.setDateOfJoining(m_user.getDOJ());
             ashaWorker.setName(String.format("%s %s",
                     Objects.toString(m_user.getFirstName(), ""),
@@ -106,11 +105,6 @@ public class AshaProfileImpl implements AshaProfileService {
             logger.error("Error creating ASHA worker profile from user details for ID {}: {}", userID, e.getMessage(), e);
             throw new RuntimeException("Failed to create ASHA worker profile from user details", e);
         }
-    }
-    private String getAshaVillage(Integer userId){
-        userServiceRoleRepo.findByUserId(userId);
-        return  userServiceRoleRepo.findByUserId(userId).getVillagename();
-
     }
 
 
