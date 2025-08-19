@@ -109,6 +109,7 @@ public class AshaProfileImpl implements AshaProfileService {
 
 
     public AshaWorker updateProfile(AshaWorker request) {
+        // Pehle DB se existing record nikal
         AshaWorker existing = ashaProfileRepo.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("ASHA worker not found"));
 
