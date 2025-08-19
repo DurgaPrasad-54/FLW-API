@@ -108,49 +108,40 @@ public class AshaProfileImpl implements AshaProfileService {
     }
 
 
-    private AshaWorker updateProfile(AshaWorker editAshaWorkerRequest) {
-        System.out.println(editAshaWorkerRequest.toString());
-        try {
-            Objects.requireNonNull(editAshaWorkerRequest, "editEmployee must not be null");
-            logger.debug("Updating ASHA worker profile: {}", editAshaWorkerRequest);
-            AshaWorker editdata = new AshaWorker();
-            editdata.setAbhaNumber(editAshaWorkerRequest.getAbhaNumber());
-            editdata.setDob(editAshaWorkerRequest.getDob());
-            editdata.setAlternateMobileNumber(editAshaWorkerRequest.getAlternateMobileNumber());
-            editdata.setAnm1Mobile(editAshaWorkerRequest.getAnm1Mobile());
-            editdata.setAnm2Name(editAshaWorkerRequest.getAnm2Name());
-            editdata.setIfsc(editAshaWorkerRequest.getIfsc());
-            editdata.setAwwName(editAshaWorkerRequest.getAwwName());
-            editdata.setName(editAshaWorkerRequest.getName());
-            editdata.setVillage(editAshaWorkerRequest.getVillage());
-            editdata.setBankAccount(editAshaWorkerRequest.getBankAccount());
-            editdata.setChoName(editAshaWorkerRequest.getChoName());
-            editdata.setChoMobile(editAshaWorkerRequest.getChoMobile());
-            editdata.setAbhaNumber(editAshaWorkerRequest.getAbhaNumber());
-            editdata.setAshaFamilyMember(editAshaWorkerRequest.getAshaFamilyMember());
-            editdata.setDateOfJoining(editAshaWorkerRequest.getDateOfJoining());
-            editdata.setMobileNumber(editAshaWorkerRequest.getMobileNumber());
-            editdata.setAshaHouseholdRegistration(editAshaWorkerRequest.getAshaHouseholdRegistration());
-            editdata.setFatherOrSpouseName(editAshaWorkerRequest.getFatherOrSpouseName());
-            editdata.setPopulationCovered(editAshaWorkerRequest.getPopulationCovered());
-            editdata.setAnm1Name(editAshaWorkerRequest.getAnm1Name());
-            editdata.setAnm2Mobile(editAshaWorkerRequest.getAnm2Mobile());  // Corrected line
-            editdata.setAwwMobile(editAshaWorkerRequest.getAwwMobile());
-            editdata.setProviderServiceMapID(editAshaWorkerRequest.getProviderServiceMapID());
-            editdata.setProfileImage(editAshaWorkerRequest.getProfileImage());
-            editdata.setIsFatherOrSpouse(editAshaWorkerRequest.getIsFatherOrSpouse());
-            editdata.setSupervisorName(editAshaWorkerRequest.getSupervisorName());
-            editdata.setSupervisorMobile(editAshaWorkerRequest.getSupervisorMobile());
+    public AshaWorker updateProfile(AshaWorker request) {
+        AshaWorker existing = ashaProfileRepo.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("ASHA worker not found"));
 
-            return editdata;
+        // Sirf non-null values update karo
+        if (request.getAbhaNumber() != null) existing.setAbhaNumber(request.getAbhaNumber());
+        if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId());
+        if (request.getDob() != null) existing.setDob(request.getDob());
+        if (request.getAlternateMobileNumber() != null) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
+        if (request.getAnm1Mobile() != null) existing.setAnm1Mobile(request.getAnm1Mobile());
+        if (request.getAnm2Name() != null) existing.setAnm2Name(request.getAnm2Name());
+        if (request.getIfsc() != null) existing.setIfsc(request.getIfsc());
+        if (request.getAwwName() != null) existing.setAwwName(request.getAwwName());
+        if (request.getName() != null) existing.setName(request.getName());
+        if (request.getVillage() != null) existing.setVillage(request.getVillage());
+        if (request.getBankAccount() != null) existing.setBankAccount(request.getBankAccount());
+        if (request.getChoName() != null) existing.setChoName(request.getChoName());
+        if (request.getChoMobile() != null) existing.setChoMobile(request.getChoMobile());
+        if (request.getAshaFamilyMember() != null) existing.setAshaFamilyMember(request.getAshaFamilyMember());
+        if (request.getDateOfJoining() != null) existing.setDateOfJoining(request.getDateOfJoining());
+        if (request.getMobileNumber() != null) existing.setMobileNumber(request.getMobileNumber());
+        if (request.getAshaHouseholdRegistration() != null) existing.setAshaHouseholdRegistration(request.getAshaHouseholdRegistration());
+        if (request.getFatherOrSpouseName() != null) existing.setFatherOrSpouseName(request.getFatherOrSpouseName());
+        if (request.getPopulationCovered() != null) existing.setPopulationCovered(request.getPopulationCovered());
+        if (request.getAnm1Name() != null) existing.setAnm1Name(request.getAnm1Name());
+        if (request.getAnm2Mobile() != null) existing.setAnm2Mobile(request.getAnm2Mobile());
+        if (request.getAwwMobile() != null) existing.setAwwMobile(request.getAwwMobile());
+        if (request.getProviderServiceMapID() != null) existing.setProviderServiceMapID(request.getProviderServiceMapID());
+        if (request.getProfileImage() != null) existing.setProfileImage(request.getProfileImage());
+        if (request.getIsFatherOrSpouse() != null) existing.setIsFatherOrSpouse(request.getIsFatherOrSpouse());
+        if (request.getSupervisorName() != null) existing.setSupervisorName(request.getSupervisorName());
+        if (request.getSupervisorMobile() != null) existing.setSupervisorMobile(request.getSupervisorMobile());
 
-        } catch (Exception e) {
-            logger.error("Error creating updated ASHA worker profile: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to create updated ASHA worker profile", e);
-
-        }
-
-
+        return existing; // ye UPDATE ke liye jayega
     }
 
 
