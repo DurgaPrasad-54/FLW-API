@@ -112,35 +112,40 @@ public class AshaProfileImpl implements AshaProfileService {
         AshaWorker existing = ashaProfileRepo.findByEmployeeId(request.getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("ASHA worker not found"));
 
-        if (request.getAbhaNumber() != null) existing.setAbhaNumber(request.getAbhaNumber());
-        if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId());
-        if (request.getDob() != null) existing.setDob(request.getDob());
-        if (request.getAlternateMobileNumber() != null) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
-        if (request.getAnm1Mobile() != null) existing.setAnm1Mobile(request.getAnm1Mobile());
-        if (request.getAnm2Name() != null) existing.setAnm2Name(request.getAnm2Name());
-        if (request.getIfsc() != null) existing.setIfsc(request.getIfsc());
-        if (request.getAwwName() != null) existing.setAwwName(request.getAwwName());
-        if (request.getName() != null) existing.setName(request.getName());
-        if (request.getVillage() != null) existing.setVillage(request.getVillage());
-        if (request.getBankAccount() != null) existing.setBankAccount(request.getBankAccount());
-        if (request.getChoName() != null) existing.setChoName(request.getChoName());
-        if (request.getChoMobile() != null) existing.setChoMobile(request.getChoMobile());
-        if (request.getAshaFamilyMember() != null) existing.setAshaFamilyMember(request.getAshaFamilyMember());
+        if (isValid(request.getAbhaNumber())) existing.setAbhaNumber(request.getAbhaNumber());
+        if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId()); // numeric hai, isValid ki zaroorat nahi
+        if (isValid(request.getDob().toString())) existing.setDob(request.getDob());
+        if (isValid(request.getAlternateMobileNumber())) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
+        if (isValid(request.getAnm1Mobile())) existing.setAnm1Mobile(request.getAnm1Mobile());
+        if (isValid(request.getAnm2Name())) existing.setAnm2Name(request.getAnm2Name());
+        if (isValid(request.getIfsc())) existing.setIfsc(request.getIfsc());
+        if (isValid(request.getAwwName())) existing.setAwwName(request.getAwwName());
+        if (isValid(request.getName())) existing.setName(request.getName());
+        if (isValid(request.getVillage())) existing.setVillage(request.getVillage());
+        if (isValid(request.getBankAccount())) existing.setBankAccount(request.getBankAccount());
+        if (isValid(request.getChoName())) existing.setChoName(request.getChoName());
+        if (isValid(request.getChoMobile())) existing.setChoMobile(request.getChoMobile());
+        if (isValid(request.getAshaFamilyMember())) existing.setAshaFamilyMember(request.getAshaFamilyMember());
         if (request.getDateOfJoining() != null) existing.setDateOfJoining(request.getDateOfJoining());
-        if (request.getMobileNumber() != null) existing.setMobileNumber(request.getMobileNumber());
-        if (request.getAshaHouseholdRegistration() != null) existing.setAshaHouseholdRegistration(request.getAshaHouseholdRegistration());
-        if (request.getFatherOrSpouseName() != null) existing.setFatherOrSpouseName(request.getFatherOrSpouseName());
+        if (isValid(request.getMobileNumber())) existing.setMobileNumber(request.getMobileNumber());
+        if (isValid(request.getAshaHouseholdRegistration())) existing.setAshaHouseholdRegistration(request.getAshaHouseholdRegistration());
+        if (isValid(request.getFatherOrSpouseName())) existing.setFatherOrSpouseName(request.getFatherOrSpouseName());
         if (request.getPopulationCovered() != null) existing.setPopulationCovered(request.getPopulationCovered());
-        if (request.getAnm1Name() != null) existing.setAnm1Name(request.getAnm1Name());
-        if (request.getAnm2Mobile() != null) existing.setAnm2Mobile(request.getAnm2Mobile());
-        if (request.getAwwMobile() != null) existing.setAwwMobile(request.getAwwMobile());
+        if (isValid(request.getAnm1Name())) existing.setAnm1Name(request.getAnm1Name());
+        if (isValid(request.getAnm2Mobile())) existing.setAnm2Mobile(request.getAnm2Mobile());
+        if (isValid(request.getAwwMobile())) existing.setAwwMobile(request.getAwwMobile());
         if (request.getProviderServiceMapID() != null) existing.setProviderServiceMapID(request.getProviderServiceMapID());
-        if (request.getProfileImage() != null) existing.setProfileImage(request.getProfileImage());
+        if (isValid(request.getProfileImage())) existing.setProfileImage(request.getProfileImage());
         if (request.getIsFatherOrSpouse() != null) existing.setIsFatherOrSpouse(request.getIsFatherOrSpouse());
-        if (request.getSupervisorName() != null) existing.setSupervisorName(request.getSupervisorName());
-        if (request.getSupervisorMobile() != null) existing.setSupervisorMobile(request.getSupervisorMobile());
+        if (isValid(request.getSupervisorName())) existing.setSupervisorName(request.getSupervisorName());
+        if (isValid(request.getSupervisorMobile())) existing.setSupervisorMobile(request.getSupervisorMobile());
+
 
         return existing;
+    }
+
+    private boolean isValid(String value) {
+        return value != null && !value.trim().isEmpty() && !"null".equalsIgnoreCase(value.trim());
     }
 
 
