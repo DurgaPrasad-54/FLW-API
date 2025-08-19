@@ -47,12 +47,10 @@ public class SmsSchedulerService {
     @Autowired
     private CookieUtil cookieUtil;
 
-//    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void sendAncReminders() {
         try {
-            LocalDate tomorrow2 = LocalDate.now().plusDays(1);
 
-            smsServiceImpl.sendReminderSMS("9560618681","ANC1",tomorrow2);
 
             List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
             logger.info("ANC_SMS service is start");
@@ -73,7 +71,7 @@ public class SmsSchedulerService {
                             RMNCHBeneficiaryDetailsRmnch beneficiary = beneficiaryDetailsRmnch.get();
 
                             BigInteger vanSerialNo = beneficiaryRepo.getBenIdFromRegID(beneficiary.getBenRegId());
-                            logger.info("vanSerialNo:"+vanSerialNo);
+                                logger.info("vanSerialNo:"+vanSerialNo);
 
                             if(beneficiaryRepo.getContactById(vanSerialNo)!=null){
 
@@ -94,10 +92,7 @@ public class SmsSchedulerService {
             logger.error(e.getMessage());
         }
     }
-    @PostConstruct
-    public void triggerAncRemindersOnce() {
-        sendAncReminders();
-    }
+
 
     @Scheduled(cron = "0 0 9 * * *")
     public void trigerTomorrowImmunizationReminders() {

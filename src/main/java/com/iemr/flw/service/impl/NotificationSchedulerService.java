@@ -30,7 +30,7 @@ public class NotificationSchedulerService {
    private ChildCareServiceImpl childCareService;
     @Autowired
     private CookieUtil cookieUtil;
-//    @Scheduled(cron = "0 0 9 * * *") // every day at 9 AM
+    @Scheduled(cron = "0 0 9 * * *") // every day at 9 AM
     public void triggerAncRemindersForAllAsha() {
 
 //        HttpServletRequest requestHeader = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
@@ -41,7 +41,7 @@ public class NotificationSchedulerService {
 //
 //        }
         logger.info("triggerAncRemindersForAllAsha Service start");
-        String ancType = "ANC!"; // ANC1, ANC2, etc.
+        String ancType = "ANC"; // ANC1, ANC2, etc.
         String body = "Reminder: Scheduled ANC check-up (" + ancType + ") is due tomorrow.";
         String redirectPath = "/work-plan/anc/" + ancType.toLowerCase();
         String appType = "FLW_APP"; // or "ASHAA_APP", based on user type
@@ -67,9 +67,6 @@ public class NotificationSchedulerService {
         }
     }
 
-    @PostConstruct
-    public void triggerAncRemindersOnce() {
-        triggerAncRemindersForAllAsha();
-    }
+
 
 }
