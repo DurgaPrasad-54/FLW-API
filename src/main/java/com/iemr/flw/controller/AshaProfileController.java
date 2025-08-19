@@ -96,6 +96,7 @@ public class AshaProfileController {
 
             // Business logic
             AshaWorker ashaWorker = ashaProfileService.getProfileData(employeeId);
+            logger.info("Asha Profile"+ashaWorker);
 
             response.put("statusCode", 200);
             response.put("status", "Success");
