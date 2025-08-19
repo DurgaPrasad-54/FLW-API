@@ -51,7 +51,12 @@ public class SmsSchedulerService {
     public void sendAncReminders() {
         try {
 
+            LocalDate tomorrow2 = LocalDate.now().plusDays(1);
 
+            smsServiceImpl.sendReminderSMS("9560618681","ANC",tomorrow2);
+            smsServiceImpl.sendReminderSMS("9154959914","ANC",tomorrow2);
+
+            
             List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
             logger.info("ANC_SMS service is start");
             ancVisitList.forEach(ancVisit -> {
@@ -71,11 +76,11 @@ public class SmsSchedulerService {
                             RMNCHBeneficiaryDetailsRmnch beneficiary = beneficiaryDetailsRmnch.get();
 
                             BigInteger vanSerialNo = beneficiaryRepo.getBenIdFromRegID(beneficiary.getBenRegId());
-                                logger.info("vanSerialNo:"+vanSerialNo);
+                            logger.info("vanSerialNo:"+vanSerialNo);
 
                             if(beneficiaryRepo.getContactById(vanSerialNo)!=null){
 
-                                smsServiceImpl.sendReminderSMS(beneficiaryRepo.getContactById(vanSerialNo).getContact_number(),"ANC"+ancVisit.getAncVisit(),tomorrow);
+                                smsServiceImpl.sendReminderSMS(beneficiaryRepo.getContactById(vanSerialNo).getContact_number(),"ANC",tomorrow);
 
                             }
                         }
@@ -86,12 +91,11 @@ public class SmsSchedulerService {
                 }
            });
 
-
-
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
+
 
 
     @Scheduled(cron = "0 0 9 * * *")

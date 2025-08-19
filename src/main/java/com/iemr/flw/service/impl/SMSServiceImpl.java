@@ -24,17 +24,17 @@ public class SMSServiceImpl {
     final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 
-    @Value("${send-message-url}")
-    private String SMS_GATEWAY_URL;
+    // @Value("${send-message-url}")
+    private String SMS_GATEWAY_URL ="https://openapi.airtel.in/gateway/airtel-iq-sms-utility/sendSingleSms";
 
     @Value("${sms-username}")
     private String smsUserName;
 
-    @Value("${sms-password}")
-    private String smsPassword;
+    // @Value("${sms-password}")
+    private String smsPassword= "]Kt9GAp8}$S*@";
 
-    @Value("${source-address}")
-    private String smsSourceAddress;
+    // @Value("${source-address}")
+    private String smsSourceAddress ="PSMRAM";
 
 
     public String sendReminderSMS(String mobileNo, String serviceName, LocalDate date) {
@@ -60,7 +60,8 @@ public class SMSServiceImpl {
             payload.put("entityId",entityId );
             // Set headers
             HttpHeaders headers = new HttpHeaders();
-            logger.info("userName:"+smsUserName+":"+smsPassword);
+            logger.info("userName:"+smsUserName+":"+smsPassword+":"+SMS_GATEWAY_URL);
+
             String auth = smsUserName + ":" + smsPassword;
             headers.add("Authorization",
                     "Basic " + Base64.getEncoder().encodeToString(auth.getBytes()));
