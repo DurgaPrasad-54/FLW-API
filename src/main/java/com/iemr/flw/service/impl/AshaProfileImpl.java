@@ -114,9 +114,7 @@ public class AshaProfileImpl implements AshaProfileService {
             Objects.requireNonNull(editAshaWorkerRequest, "editEmployee must not be null");
             logger.debug("Updating ASHA worker profile: {}", editAshaWorkerRequest);
             AshaWorker editdata = new AshaWorker();
-            editdata.setId(editAshaWorkerRequest.getId());
             editdata.setAbhaNumber(editAshaWorkerRequest.getAbhaNumber());
-            editdata.setEmployeeId(editAshaWorkerRequest.getEmployeeId());
             editdata.setDob(editAshaWorkerRequest.getDob());
             editdata.setAlternateMobileNumber(editAshaWorkerRequest.getAlternateMobileNumber());
             editdata.setAnm1Mobile(editAshaWorkerRequest.getAnm1Mobile());
