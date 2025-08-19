@@ -2,6 +2,7 @@ package com.iemr.flw.repo.iemr;
 
 import com.iemr.flw.domain.iemr.UserServiceRole;
 import com.iemr.flw.dto.iemr.UserServiceRoleDTO;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,6 @@ public interface UserServiceRoleRepo extends JpaRepository<UserServiceRole, Inte
 
     @Query("select u.userId from UserServiceRole u where u.userName = :userName and u.userServciceRoleDeleted = false")
     Integer getUserIdByName(@Param("userName") String userName);
+
+    UserServiceRole findByUserId(Integer userId);
 }
