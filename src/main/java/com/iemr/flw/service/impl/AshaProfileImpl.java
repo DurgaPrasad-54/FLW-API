@@ -34,20 +34,17 @@ public class AshaProfileImpl implements AshaProfileService {
     AshaProfileRepo ashaProfileRepo;
     @Autowired
     EmployeeMasterInter employeeMasterInter;
-
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private EmployeeMasterRepo userLoginRepo;
     @Autowired
     JwtUtil jwtUtil;
-
     @Autowired
     JwtAuthenticationUtil jwtAuthenticationUtil ;
     @Autowired
     private UserServiceRoleRepo userServiceRoleRepo;
     private final Logger logger = LoggerFactory.getLogger(AshaProfileImpl.class);
-
     @Transactional
     @Override
     public AshaWorker saveEditData(AshaWorker ashaWorkerRequest) {
@@ -64,9 +61,6 @@ public class AshaProfileImpl implements AshaProfileService {
         }
 
     }
-
-
-
     @Override
     public AshaWorker getProfileData(Integer userId) {
 
@@ -81,22 +75,14 @@ public class AshaProfileImpl implements AshaProfileService {
             throw new RuntimeException("Failed to retrieve ASHA worker profile", e);
         }
     }
-
     private AshaWorker getDetails(Integer userID) {
-
         try {
-            M_User m_user = Objects.requireNonNull(
-                    employeeMasterInter.getUserDetails(userID),
-                    "User details not found for ID: " + userID
-            );
-
+            M_User m_user = Objects.requireNonNull(employeeMasterInter.getUserDetails(userID), "User details not found for ID: " + userID);
             AshaWorker ashaWorker = new AshaWorker();
             ashaWorker.setEmployeeId(m_user.getUserID());
             ashaWorker.setDob(m_user.getDOB());
             ashaWorker.setDateOfJoining(m_user.getDOJ());
-            ashaWorker.setName(String.format("%s %s",
-                    Objects.toString(m_user.getFirstName(), ""),
-                    Objects.toString(m_user.getLastName(), "")).trim());
+            ashaWorker.setName(String.format("%s %s", Objects.toString(m_user.getFirstName(), ""), Objects.toString(m_user.getLastName(), "")).trim());
             ashaWorker.setMobileNumber(m_user.getContactNo());
             ashaWorker.setAlternateMobileNumber(m_user.getEmergencyContactNo());
             ashaWorker.setProviderServiceMapID(m_user.getServiceProviderID());
@@ -106,14 +92,10 @@ public class AshaProfileImpl implements AshaProfileService {
             throw new RuntimeException("Failed to create ASHA worker profile from user details", e);
         }
     }
-
-
     public AshaWorker updateProfile(AshaWorker request) {
-        AshaWorker existing = ashaProfileRepo.findByEmployeeId(request.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException("ASHA worker not found"));
-
+        AshaWorker existing = ashaProfileRepo.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new RuntimeException("ASHA worker not found"));
         if (isValid(request.getAbhaNumber())) existing.setAbhaNumber(request.getAbhaNumber());
-        if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId()); // numeric hai, isValid ki zaroorat nahi
+        if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId());
         if (request.getDob() != null) existing.setDob(request.getDob());
         if (isValid(request.getAlternateMobileNumber())) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
         if (isValid(request.getAnm1Mobile())) existing.setAnm1Mobile(request.getAnm1Mobile());
@@ -139,11 +121,8 @@ public class AshaProfileImpl implements AshaProfileService {
         if (request.getIsFatherOrSpouse() != null) existing.setIsFatherOrSpouse(request.getIsFatherOrSpouse());
         if (isValid(request.getSupervisorName())) existing.setSupervisorName(request.getSupervisorName());
         if (isValid(request.getSupervisorMobile())) existing.setSupervisorMobile(request.getSupervisorMobile());
-
-
         return existing;
     }
-
     private boolean isValid(String value) {
         return value != null && !value.trim().isEmpty() && !"null".equalsIgnoreCase(value.trim());
     }
