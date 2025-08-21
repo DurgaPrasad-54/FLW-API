@@ -321,7 +321,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             boolean isBabyDisChargeSNCUA = hbncVisits.stream()
                     .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu()));
-            Long benId = beneficiaryRepo.getBenIdFromRegID(hbncVisit.getBeneficiaryId()).longValue();
+            Long benId = hbncVisit.getBeneficiaryId();
             Integer userId = userRepo.getUserIdByName(hbncVisit.getCreatedBy());
             if (isVisitDone) {
                 IncentiveActivity visitActivity =
