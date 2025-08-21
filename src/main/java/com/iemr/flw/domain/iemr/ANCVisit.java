@@ -116,8 +116,6 @@ public class ANCVisit {
     @Column(name = "file_path")
     private String filePath;
 
-
-
     @Column(name = "serial_no")
     private String serialNo;
 

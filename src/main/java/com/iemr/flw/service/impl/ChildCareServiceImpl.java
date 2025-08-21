@@ -200,7 +200,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
 
             hbncVisitRepo.saveAll(hbncList);
-            //checkAndAddHbncIncentives(hbncList);
+            checkAndAddHbncIncentives(hbncList);
 
 
             logger.info("HBNC details saved");

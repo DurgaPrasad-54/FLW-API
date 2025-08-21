@@ -91,6 +91,8 @@ public class DeathReportsServiceImpl implements DeathReportsService {
                 mdsrList.add(mdsr);
             });
             mdsrRepo.saveAll(mdsrList);
+            checkAndAddIncentivesMdsr(mdsrList);
+
             return "no of mdsr details saved: " + mdsrDTOs.size();
         } catch (Exception e) {
             return "error while saving mdsr details: " + e.getMessage();
@@ -140,6 +142,20 @@ public class DeathReportsServiceImpl implements DeathReportsService {
         });
     }
 
+
+    private void checkAndAddIncentivesMdsr(List<MDSR> mdsrList) {
+
+        mdsrList.forEach( mdsr -> {
+            Long benId = beneficiaryRepo.getBenIdFromRegID(mdsr.getBenId()).longValue();
+            Integer userId = userRepo.getUserIdByName(mdsr.getCreatedBy());
+            IncentiveActivity immunizationActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("MATERNAL_DEATH", "MDSR");
+            createIncentiveRecord(mdsr,benId,userId,immunizationActivity);
+        });
+    }
+
+
+
     private void createIncentiveRecord(CDR cdr, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), cdr.getCreatedDate(), benId);
@@ -159,5 +175,31 @@ public class DeathReportsServiceImpl implements DeathReportsService {
             recordRepo.save(record);
         }
     }
+
+    private void createIncentiveRecord(MDSR mdsr, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), mdsr.getCreatedDate(), benId);
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(immunizationActivity.getId());
+            record.setCreatedDate(mdsr.getCreatedDate());
+            record.setCreatedBy(mdsr.getCreatedBy());
+            record.setName(immunizationActivity.getName());
+            record.setStartDate(mdsr.getCreatedDate());
+            record.setEndDate(mdsr.getCreatedDate());
+            record.setUpdatedDate(mdsr.getCreatedDate());
+            record.setUpdatedBy(mdsr.getCreatedBy());
+            record.setBenId(benId);
+            record.setAshaId(userId);
+            record.setAmount(Long.valueOf(immunizationActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
+
+
+
+
+
 
 }

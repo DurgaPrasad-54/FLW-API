@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -314,7 +311,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         IncentiveActivity ancFullActivity =
                 incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-FULL", "MATERNAL HEALTH");
 
-        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-ABORTION", "ABORTION");
+        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-ABORTION", "MATERNAL HEALTH");
 
         if (anc1Activity != null) {
             ancList.forEach( ancVisit -> {
@@ -374,7 +371,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
-                if(ancVisit.getAbortionType()=="true"){
+                if(Objects.equals(ancVisit.getAbortionType(), "true")){
                     if(record!=null){
                         record = new IncentiveActivityRecord();
                         record.setActivityId(abortionActivity.getId());
