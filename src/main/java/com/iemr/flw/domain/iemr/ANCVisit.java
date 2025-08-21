@@ -116,4 +116,47 @@ public class ANCVisit {
     @Column(name = "file_path")
     private String filePath;
 
+
+
+    @Column(name = "serial_no")
+    private String serialNo;
+
+    @Column(name = "method_of_termination")
+    private String methodOfTermination;
+
+    @Column(name = "method_of_termination_id")
+    private Integer methodOfTerminationId;
+
+    @Column(name = "termination_done_by")
+    private String terminationDoneBy;
+
+    @Column(name = "termination_done_by_id")
+    private Integer terminationDoneById;
+
+    @Column(name = "is_paiucd_id")
+    private Integer isPaiucdId;
+
+    @Column(name = "is_paiucd")
+    private String isPaiucd;
+
+    @Column(name = "remarks")
+    private String remarks;
+
+    @Column(name = "abortion_img1")
+    private String abortionImg1;
+
+    @Column(name = "abortion_img2")
+    private String abortionImg2;
+
+    @Column(name = "place_of_death")
+    private String placeOfDeath;
+
+    @Column(name = "place_of_death_id")
+    private Integer placeOfDeathId;
+
+    @Column(name = "other_place_of_death")
+    private String otherPlaceOfDeath;
+
+
+
 }

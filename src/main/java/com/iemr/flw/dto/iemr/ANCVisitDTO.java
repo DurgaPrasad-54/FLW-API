@@ -46,5 +46,19 @@ public class ANCVisitDTO {
     private String filePath;
 
 
+    private String serialNo;
+    private String methodOfTermination;
+    private Integer methodOfTerminationId;
+    private String terminationDoneBy;
+    private Integer terminationDoneById;
+    private Integer isPaiucdId;
+    private String isPaiucd;
+    private String remarks;
+    private String abortionImg1;
+    private String abortionImg2;
+    private String placeOfDeath;
+    private Integer placeOfDeathId;
+    private String otherPlaceOfDeath;
+
 }
 
