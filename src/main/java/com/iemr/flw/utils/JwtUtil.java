@@ -19,7 +19,7 @@ public class JwtUtil {
 
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
-	
+
 	@Autowired
 	private TokenDenylist tokenDenylist;
 
@@ -35,18 +35,18 @@ public class JwtUtil {
 	public Claims validateToken(String token) {
 		try {
 			Claims claims = Jwts.parser()
-				.verifyWith(getSigningKey())
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
-				
+					.verifyWith(getSigningKey())
+					.build()
+					.parseSignedClaims(token)
+					.getPayload();
+
 			String jti = claims.getId();
-			
+
 			// Check if token is denylisted (only if jti exists)
 			if (jti != null && tokenDenylist.isTokenDenylisted(jti)) {
 				return null;
 			}
-			
+
 			return claims;
 		} catch (Exception e) {
 			return null; // Handle token parsing/validation errors
