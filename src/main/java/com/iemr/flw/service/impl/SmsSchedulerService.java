@@ -51,11 +51,6 @@ public class SmsSchedulerService {
     public void sendAncReminders() {
         try {
 
-            LocalDate tomorrow2 = LocalDate.now().plusDays(1);
-
-            smsServiceImpl.sendReminderSMS("9560618681","ANC",tomorrow2);
-            smsServiceImpl.sendReminderSMS("9154959914","ANC",tomorrow2);
-
             
             List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
             logger.info("ANC_SMS service is start");
