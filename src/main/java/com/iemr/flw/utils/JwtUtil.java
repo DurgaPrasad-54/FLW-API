@@ -35,10 +35,10 @@ public class JwtUtil {
 	public Claims validateToken(String token) {
 		try {
 			Claims claims = Jwts.parser()
-					.verifyWith(getSigningKey())
-					.build()
-					.parseSignedClaims(token)
-					.getPayload();
+				.verifyWith(getSigningKey())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
 
 			String jti = claims.getId();
 

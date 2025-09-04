@@ -27,7 +27,7 @@ public class JwtUserIdValidationFilter implements Filter {
 	private final String allowedOrigins;
 
 	public JwtUserIdValidationFilter(JwtAuthenticationUtil jwtAuthenticationUtil,
-									 @Value("${cors.allowed-origins}") String allowedOrigins) {
+			@Value("${cors.allowed-origins}") String allowedOrigins) {
 		this.jwtAuthenticationUtil = jwtAuthenticationUtil;
 		this.allowedOrigins = allowedOrigins;
 	}
@@ -76,7 +76,7 @@ public class JwtUserIdValidationFilter implements Filter {
 		}
 
 		// Skip login and public endpoints
-		if (shouldSkipPath(path,contextPath)) {
+		if (shouldSkipPath(path, contextPath)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 		}
@@ -86,7 +86,6 @@ public class JwtUserIdValidationFilter implements Filter {
 			String jwtFromHeader = request.getHeader("JwtToken");
 			String authHeader = request.getHeader("Authorization");
 			String jwtToken = jwtFromCookie != null ? jwtFromCookie : jwtFromHeader;
-
 
 			if (jwtToken != null) {
 				logger.info("Validating JWT token from cookie");
@@ -114,6 +113,7 @@ public class JwtUserIdValidationFilter implements Filter {
 
 			logger.warn("No valid authentication token found");
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid or missing token");
+
 		} catch (Exception e) {
 			logger.error("Authorization error: ", e);
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization error: " + e.getMessage());
