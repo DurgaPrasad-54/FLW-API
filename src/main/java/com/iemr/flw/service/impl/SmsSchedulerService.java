@@ -47,12 +47,9 @@ public class SmsSchedulerService {
     @Autowired
     private CookieUtil cookieUtil;
 
-  //  @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void sendAncReminders() {
         try {
-            LocalDate tomorrow1 = LocalDate.now().plusDays(1);
-
-            smsServiceImpl.sendReminderSMS("9560618681","ANC",tomorrow1);
 
             List<ANCVisit> ancVisitList = ancVisitRepo.findAll();
             logger.info("ANC_SMS service is start");
@@ -103,9 +100,5 @@ public class SmsSchedulerService {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        sendAncReminders();
-    }
 
 }
