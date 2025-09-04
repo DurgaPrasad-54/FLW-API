@@ -1,10 +1,13 @@
 package com.iemr.flw.service.impl;
 
 import com.google.gson.Gson;
+import com.iemr.flw.domain.iemr.SMSTemplate;
+import com.iemr.flw.repo.iemr.SMSTemplateRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,46 +21,54 @@ import java.time.LocalDate;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class SMSServiceImpl {
     final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-
-
-    // @Value("${send-message-url}")
-    private String SMS_GATEWAY_URL ="https://openapi.airtel.in/gateway/airtel-iq-sms-utility/sendSingleSms";
-
+    @Autowired
+    SMSTemplateRepository smsTemplateRepository;
     @Value("${sms-username}")
     private String smsUserName;
+    private String smsTemplate;
 
-    // @Value("${sms-password}")
-    private String smsPassword= "]Kt9GAp8}$S*@";
+    @Value("${sms-password}")
+    private String smsPassword;
 
-    // @Value("${source-address}")
-    private String smsSourceAddress ="PSMRAM";
+    @Value("${sms-entityid}")
+    private String smsEntityId;
+
+    @Value("${sms-consent-source-address}")
+    private String smsSourceAddress;
+
+    @Value("${send-message-url}")
+    private String SMS_GATEWAY_URL;
+
+    private String smsTemplateName = "reminder_sms";
+
 
 
     public String sendReminderSMS(String mobileNo, String serviceName, LocalDate date) {
         final RestTemplate restTemplate = new RestTemplate();
 
-        String  dltTemplateId = "1007702336787892386";
-        String  entityId = "1201161708885589464";
+
+        Optional<SMSTemplate> smsTemplateData = smsTemplateRepository.findBySmsTemplateName(smsTemplateName);
+        if (smsTemplateData.isPresent()) {
+            smsTemplate = smsTemplateRepository.findBySmsTemplateID(smsTemplateData.get().getSmsTemplateID()).getSmsTemplate();
+
+        }
 
         try {
 
-            String message = "Dear Beneficiary, this is a reminder regarding your upcoming service for "
-                    + serviceName
-                    + ". Please visit the nearest health facility between "
-                    + date
-                    + ". Regards PSMRI";
+            String message = smsTemplate.replace("$$serviceName$$",serviceName).replace("$$date$$",date.toString());
             Map<String, Object> payload = new HashMap<>();
             payload.put("customerId",smsUserName);
             payload.put("destinationAddress", mobileNo);
             payload.put("message", message);
             payload.put("sourceAddress", smsSourceAddress);
             payload.put("messageType", "SERVICE_IMPLICIT");
-            payload.put("dltTemplateId", dltTemplateId);
-            payload.put("entityId",entityId );
+            payload.put("dltTemplateId", smsTemplateData.get().getDltTemplateId());
+            payload.put("entityId",smsEntityId);
             // Set headers
             HttpHeaders headers = new HttpHeaders();
             logger.info("userName:"+smsUserName+":"+smsPassword+":"+SMS_GATEWAY_URL);
