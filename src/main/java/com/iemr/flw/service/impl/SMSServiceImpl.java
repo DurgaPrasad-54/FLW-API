@@ -38,7 +38,7 @@ public class SMSServiceImpl {
     @Value("${sms-entityid}")
     private String smsEntityId;
 
-    @Value("${sms-consent-source-address}")
+    @Value("${source-address}")
     private String smsSourceAddress;
 
     @Value("${send-message-url}")
