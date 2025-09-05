@@ -86,6 +86,28 @@ public class AshaProfileImpl implements AshaProfileService {
             ashaWorker.setMobileNumber(m_user.getContactNo());
             ashaWorker.setAlternateMobileNumber(m_user.getEmergencyContactNo());
             ashaWorker.setProviderServiceMapID(m_user.getServiceProviderID());
+            ashaWorker.setProfileImage("");
+            ashaWorker.setSupervisorName("");
+            ashaWorker.setAwwName("");
+            ashaWorker.setVillage("");
+            ashaWorker.setSupervisorMobile("");
+            ashaWorker.setFatherOrSpouseName("");
+            ashaWorker.setChoName("");
+            ashaWorker.setAnm1Name("");
+            ashaWorker.setAnm2Mobile("");
+            ashaWorker.setAnm1Mobile("");
+            ashaWorker.setBankAccount("");
+            ashaWorker.setIfsc("");
+            ashaWorker.setIsFatherOrSpouse(false);
+            ashaWorker.setPopulationCovered(0);
+            ashaWorker.setVillage("");
+            ashaWorker.setChoName("");
+            ashaWorker.setAwwMobile("");
+            ashaWorker.setAnm2Name("");
+            ashaWorker.setAbhaNumber("");
+            ashaWorker.setAshaHouseholdRegistration("");
+            ashaWorker.setAshaFamilyMember("");
+
             return ashaWorker;
         } catch (Exception e) {
             logger.error("Error creating ASHA worker profile from user details for ID {}: {}", userID, e.getMessage(), e);
