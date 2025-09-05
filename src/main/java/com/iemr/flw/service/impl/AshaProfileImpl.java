@@ -101,12 +101,13 @@ public class AshaProfileImpl implements AshaProfileService {
             ashaWorker.setIsFatherOrSpouse(false);
             ashaWorker.setPopulationCovered(0);
             ashaWorker.setVillage("");
-            ashaWorker.setChoName("");
             ashaWorker.setAwwMobile("");
             ashaWorker.setAnm2Name("");
             ashaWorker.setAbhaNumber("");
             ashaWorker.setAshaHouseholdRegistration("");
             ashaWorker.setAshaFamilyMember("");
+            ashaWorker.setId(0L);
+            ashaWorker.setChoMobile("");
 
             return ashaWorker;
         } catch (Exception e) {
