@@ -165,7 +165,7 @@ public class DiseaseControlController {
 
     }
 
-    @RequestMapping(value = "getAllDisease", method = RequestMethod.GET, produces = "application/json",headers = "Authorization")
+    @RequestMapping(value = "getAllDisease", method = RequestMethod.POST, produces = "application/json",headers = "Authorization")
     public ResponseEntity<Map<String, Object>> getAllData(@RequestBody GetDiseaseRequestHandler getDiseaseRequestHandler) {
         Map<String, Object> response = new HashMap<>();
         try {
