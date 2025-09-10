@@ -471,7 +471,4 @@ public class RMNCHBeneficiaryDetailsRmnch {
 	@Column(name = "noOfDaysForDelivery")
 	private Integer noOfDaysForDelivery;
 
-	@Column(name = "id_death")
-	private Boolean isDeath;
-
 }
