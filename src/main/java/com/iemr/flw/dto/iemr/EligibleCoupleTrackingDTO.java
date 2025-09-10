@@ -38,7 +38,7 @@ public class EligibleCoupleTrackingDTO implements Serializable {
 
     private Timestamp dateOfAntraInjection;
 
-    private Timestamp dueDateOfAntraInjection;
+    private String  dueDateOfAntraInjection;
 
     private Long mpaFile;
 

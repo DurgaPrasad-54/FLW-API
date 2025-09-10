@@ -59,7 +59,7 @@ public class EligibleCoupleTracking {
     private Timestamp dateOfAntraInjection;
 
     @Column(name = "due_date_of_antra_injection")
-    private Timestamp dueDateOfAntraInjection;
+    private String dueDateOfAntraInjection;
 
     @Column(name = "mpa_file")
     private Long mpaFile;
