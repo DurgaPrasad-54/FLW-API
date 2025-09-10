@@ -40,7 +40,7 @@ public class EligibleCoupleTrackingDTO implements Serializable {
 
     private String  dueDateOfAntraInjection;
 
-    private Long mpaFile;
+    private String mpaFile;
 
     private String antraDose;
 

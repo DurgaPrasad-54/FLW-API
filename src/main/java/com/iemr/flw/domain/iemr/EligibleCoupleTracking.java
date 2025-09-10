@@ -62,7 +62,7 @@ public class EligibleCoupleTracking {
     private String dueDateOfAntraInjection;
 
     @Column(name = "mpa_file")
-    private Long mpaFile;
+    private String mpaFile;
 
     @Column(name = "antra_dose")
     private String antraDose;
