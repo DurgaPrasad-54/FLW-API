@@ -185,4 +185,7 @@ public class RMNCHMBeneficiarydetail {
 	@Expose
 	@Transient
 	private Integer ProviderServiceMapID;
+
+	@Column(name = "id_death")
+	private Boolean isDeath;
 }
