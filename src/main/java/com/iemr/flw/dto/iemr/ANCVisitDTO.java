@@ -44,14 +44,12 @@ public class ANCVisitDTO {
     private String updatedBy;
     private Integer providerServiceMapID;
     private String filePath;
-
-
     private String serialNo;
     private String methodOfTermination;
     private Integer methodOfTerminationId;
     private String terminationDoneBy;
     private Integer terminationDoneById;
-    private Integer isPaiucdId;
+    private Boolean isPaiucdId;
     private String isPaiucd;
     private String remarks;
     private String abortionImg1;

@@ -132,7 +132,7 @@ public class ANCVisit {
     private Integer terminationDoneById;
 
     @Column(name = "is_paiucd_id")
-    private Integer isPaiucdId;
+    private Boolean isPaiucdId;
 
     @Column(name = "is_paiucd")
     private String isPaiucd;
@@ -160,6 +160,8 @@ public class ANCVisit {
 
     @Column(name = "lmp_date")
     private Timestamp lmpDate;
+
+
 
 
 
