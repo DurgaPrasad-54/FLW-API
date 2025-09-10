@@ -155,6 +155,13 @@ public class ANCVisit {
     @Column(name = "other_place_of_death")
     private String otherPlaceOfDeath;
 
+    @Column(name = "visit_date")
+    private Timestamp visitDate;
+
+    @Column(name = "lmp_date")
+    private Timestamp lmpDate;
+
+
 
 
 }

@@ -59,6 +59,8 @@ public class ANCVisitDTO {
     private String placeOfDeath;
     private Integer placeOfDeathId;
     private String otherPlaceOfDeath;
+    private  Timestamp lmpDate;
+    private Timestamp visitDate;
 
 }
 
