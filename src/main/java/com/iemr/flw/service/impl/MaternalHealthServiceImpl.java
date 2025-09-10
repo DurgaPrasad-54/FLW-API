@@ -177,6 +177,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 }
                 ancList.add(ancVisit);
             });
+
             ancVisitRepo.saveAll(ancList);
             ancCareRepo.saveAll(ancCareList);
             checkAndAddIncentives(ancList);
