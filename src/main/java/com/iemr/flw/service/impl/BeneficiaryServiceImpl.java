@@ -362,7 +362,16 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("benficieryid", benDetailsRMNCH_OBJ.getBenficieryid());
                     RMNCHBeneficiaryDetailsRmnch finalBenDetailsRMNCH_OBJ = benDetailsRMNCH_OBJ;
                     resultMap.put("generalOpdData", generalOpdRepo.findAll().stream().filter(generalOpdData -> generalOpdData.getBeneficiaryRegID().equals(finalBenDetailsRMNCH_OBJ.getBenficieryid())).collect(Collectors.toList()));
-                    resultMap.put("isDeath",false);
+                    resultMap.put("isDeath", false);
+                    resultMap.put("isDeathValue", "");
+                    resultMap.put("dateOfDeath", "");
+                    resultMap.put("timeOfDeath", "");
+                    resultMap.put("reasonOfDeath", "");
+                    resultMap.put("reasonOfDeathId", 0);
+                    resultMap.put("placeOfDeath", "");
+                    resultMap.put("placeOfDeathId", 0);
+                    resultMap.put("otherPlaceOfDeath", "");
+
                     resultMap.put("BenRegId", m.getBenRegId());
 
                     // adding asha id / created by - user id
