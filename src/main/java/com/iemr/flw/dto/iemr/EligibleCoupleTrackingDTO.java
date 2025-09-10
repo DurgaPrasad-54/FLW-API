@@ -36,4 +36,12 @@ public class EligibleCoupleTrackingDTO implements Serializable {
 
     private String lmpDate;
 
+    private Timestamp dateOfAntraInjection;
+
+    private Timestamp dueDateOfAntraInjection;
+
+    private Long mpaFile;
+
+    private String antraDose;
+
 }
