@@ -3,6 +3,7 @@ package com.iemr.flw.domain.iemr;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -53,4 +54,16 @@ public class EligibleCoupleTracking {
 
     @Column(name = "lmp_date")
     private String lmpDate;
+
+    @Column(name = "date_of_antra_injection")
+    private Timestamp dateOfAntraInjection;
+
+    @Column(name = "due_date_of_antra_injection")
+    private String dueDateOfAntraInjection;
+
+    @Column(name = "mpa_file")
+    private String mpaFile;
+
+    @Column(name = "antra_dose")
+    private String antraDose;
 }
