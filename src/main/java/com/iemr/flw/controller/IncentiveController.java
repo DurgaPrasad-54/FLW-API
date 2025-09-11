@@ -83,7 +83,7 @@ public class IncentiveController {
 
             // add logic for different state or district
             if (incentiveRequestDTO != null) {
-                String s = incentiveService.getIncentiveMaster(incentiveRequestDTO);
+                String s = incentiveService.getIncentiveMasterWithTranslationAndOrder(incentiveRequestDTO);
                 logger.info("All incentives"+s);
 
                 if (s != null)
