@@ -112,6 +112,7 @@ public class CoupleController {
                         .setDateFormat("MMM dd, yyyy h:mm:ss a") // Set the desired date format
                         .create();
                 String s = gson.toJson(result);
+                logger.info("tracking data:"+s);
                 if (s != null)
                     response.setResponse(s);
                 else
