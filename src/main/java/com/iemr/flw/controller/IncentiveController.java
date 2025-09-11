@@ -72,6 +72,35 @@ public class IncentiveController {
         return response.toString();
     }
 
+
+    @Operation(summary = "get incentive master")
+    @RequestMapping(value = { "/masterData/incentives" }, method = { RequestMethod.POST })
+    public String getIncentiveMasterData(@RequestBody IncentiveRequestDTO incentiveRequestDTO,
+                                          @RequestHeader(value = "Authorization") String Authorization) {
+        OutputResponse response = new OutputResponse();
+        try {
+            logger.info("get All incentives");
+
+            // add logic for different state or district
+            if (incentiveRequestDTO != null) {
+                String s = incentiveService.getIncentiveMaster(incentiveRequestDTO);
+                logger.info("All incentives"+s);
+
+                if (s != null)
+                    response.setResponse(s);
+                else
+                    response.setError(5000, "No record found");
+            } else
+                response.setError(5000, "Invalid/NULL request obj");
+        } catch (Exception e) {
+            logger.error("Error in incentive master data " + e);
+            response.setError(5000, "Error in incentive master data" + e);
+        }
+        return response.toString();
+    }
+
+
+
     @Operation(summary = "get high risk assessment data of all beneficiaries registered with given user id")
     @RequestMapping(value = { "/fetchUserData" }, method = { RequestMethod.POST })
     public String getAllIncentivesByUserId(@RequestBody GetBenRequestHandler requestDTO,

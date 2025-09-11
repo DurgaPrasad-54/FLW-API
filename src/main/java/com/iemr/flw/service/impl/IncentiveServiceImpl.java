@@ -72,6 +72,28 @@ public class IncentiveServiceImpl implements IncentiveService {
     }
 
     @Override
+    public String getIncentiveMasterWithTranslationAndOrder(IncentiveRequestDTO incentiveRequestDTO) {
+        try {
+            List<IncentiveActivity> incs = incentivesRepo.findAll();
+
+            List<IncentiveActivityDTO> activityDtos =
+                    incs.stream()
+                            .map(inc -> modelMapper.map(inc, IncentiveActivityDTO.class))
+                            .collect(Collectors.toList());
+
+            Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
+
+//            String lang = incentiveRequestDTO.getLangCode();
+
+            return gson.toJson(activityDtos);
+
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+    @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
