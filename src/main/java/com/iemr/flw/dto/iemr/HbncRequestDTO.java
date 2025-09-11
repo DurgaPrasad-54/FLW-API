@@ -10,5 +10,7 @@ public class HbncRequestDTO {
     private Long beneficiaryId;
     private Long houseHoldId;
     private String visitDate;
+    private Integer userId;
+    private String  userName;
     private HbncVisitDTO fields;
 }

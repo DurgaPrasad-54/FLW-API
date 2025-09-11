@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/incentive", headers = "Authorization", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/incentive", consumes = "application/json", produces = "application/json")
 public class IncentiveController {
 
     private final Logger logger = LoggerFactory.getLogger(IncentiveController.class);
@@ -27,8 +27,7 @@ public class IncentiveController {
 
     @Operation(summary = "save incentive master")
     @RequestMapping(value = { "/masterData/saveAll" }, method = { RequestMethod.POST })
-    public String saveIncentiveMasterData(@RequestBody List<IncentiveActivityDTO> activityDTOS,
-            @RequestHeader(value = "Authorization") String Authorization) {
+    public String saveIncentiveMasterData(@RequestBody List<IncentiveActivityDTO> activityDTOS) {
         OutputResponse response = new OutputResponse();
         try {
             logger.info("Saving All incentives");
@@ -58,6 +57,8 @@ public class IncentiveController {
             // add logic for different state or district
             if (incentiveRequestDTO != null) {
                 String s = incentiveService.getIncentiveMaster(incentiveRequestDTO);
+                logger.info("All incentives"+s);
+
                 if (s != null)
                     response.setResponse(s);
                 else
@@ -70,6 +71,35 @@ public class IncentiveController {
         }
         return response.toString();
     }
+
+
+    @Operation(summary = "get incentive master")
+    @RequestMapping(value = { "/masterData/incentives" }, method = { RequestMethod.POST })
+    public String getIncentiveMasterData(@RequestBody IncentiveRequestDTO incentiveRequestDTO,
+                                          @RequestHeader(value = "Authorization") String Authorization) {
+        OutputResponse response = new OutputResponse();
+        try {
+            logger.info("get All incentives");
+
+            // add logic for different state or district
+            if (incentiveRequestDTO != null) {
+                String s = incentiveService.getIncentiveMaster(incentiveRequestDTO);
+                logger.info("All incentives"+s);
+
+                if (s != null)
+                    response.setResponse(s);
+                else
+                    response.setError(5000, "No record found");
+            } else
+                response.setError(5000, "Invalid/NULL request obj");
+        } catch (Exception e) {
+            logger.error("Error in incentive master data " + e);
+            response.setError(5000, "Error in incentive master data" + e);
+        }
+        return response.toString();
+    }
+
+
 
     @Operation(summary = "get high risk assessment data of all beneficiaries registered with given user id")
     @RequestMapping(value = { "/fetchUserData" }, method = { RequestMethod.POST })

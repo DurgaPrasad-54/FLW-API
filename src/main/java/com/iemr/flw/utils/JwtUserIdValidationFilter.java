@@ -27,7 +27,7 @@ public class JwtUserIdValidationFilter implements Filter {
 	private final String allowedOrigins;
 
 	public JwtUserIdValidationFilter(JwtAuthenticationUtil jwtAuthenticationUtil,
-									 @Value("${cors.allowed-origins}") String allowedOrigins) {
+			@Value("${cors.allowed-origins}") String allowedOrigins) {
 		this.jwtAuthenticationUtil = jwtAuthenticationUtil;
 		this.allowedOrigins = allowedOrigins;
 	}

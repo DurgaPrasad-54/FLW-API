@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface AshaProfileRepo extends JpaRepository<AshaWorker,Integer> {
     Optional<AshaWorker> findByEmployeeId(Integer employeeId);
 
+    Optional<AshaWorker> findById(Long id);
+
+
 }

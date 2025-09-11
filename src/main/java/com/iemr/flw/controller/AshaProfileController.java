@@ -7,6 +7,7 @@ import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
 import com.iemr.flw.service.AshaProfileService;
 import com.iemr.flw.service.EmployeeMasterInter;
 import com.iemr.flw.service.UserService;
+import io.lettuce.core.dynamic.annotation.Param;
 import com.iemr.flw.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,25 +69,25 @@ public class AshaProfileController {
 
     }
 
-    @RequestMapping(value = "getProfile", method = RequestMethod.GET, headers = "Authorization")
-    public ResponseEntity<Map<String, Object>> getProfile(HttpServletRequest request) {
+   @RequestMapping(value = "getProfile", method = RequestMethod.GET, headers = "Authorization")
+    public ResponseEntity<Map<String, Object>> getProfile(HttpServletRequest request, @Param("employeeId") Integer employeeId) {
         Map<String, Object> response = new HashMap<>();
 
         try {
             String jwtFromHeader = request.getHeader("JwtToken");
 
             // Validate JWT header presence
-            if (jwtFromHeader == null || jwtFromHeader.trim().isEmpty()) {
-                response.put("statusCode", 401);
-                response.put("status", "Unauthorized");
-                response.put("errorMessage", "JWT token is missing");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
+//            if (jwtFromHeader == null || jwtFromHeader.trim().isEmpty()) {
+//                response.put("statusCode", 401);
+//                response.put("status", "Unauthorized");
+//                response.put("errorMessage", "JWT token is missing");
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//            }
 
             // Extract and validate user ID from JWT
-            int userId = jwtUtil.extractUserId(jwtFromHeader); // Make sure this returns 0 or throws for invalid token
+           // int userId = jwtUtil.extractUserId(jwtFromHeader); // Make sure this returns 0 or throws for invalid token
 
-            if (userId == 0) {
+            if (employeeId == 0) {
                 response.put("statusCode", 401);
                 response.put("status", "Unauthorized");
                 response.put("errorMessage", "Invalid JWT token");
@@ -94,7 +95,8 @@ public class AshaProfileController {
             }
 
             // Business logic
-            AshaWorker ashaWorker = ashaProfileService.getProfileData(userId);
+            AshaWorker ashaWorker = ashaProfileService.getProfileData(employeeId);
+            logger.info("Asha Profile"+ashaWorker);
 
             response.put("statusCode", 200);
             response.put("status", "Success");

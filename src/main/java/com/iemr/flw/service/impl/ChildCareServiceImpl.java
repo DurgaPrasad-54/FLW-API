@@ -191,6 +191,8 @@ public class ChildCareServiceImpl implements ChildCareService {
                         hbncVisit = new HbncVisit();
                         modelMapper.map(hbncVisitDTO, hbncVisit);
                         hbncVisit.setBeneficiaryId(it.getBeneficiaryId());
+                        hbncVisit.setUserId(it.getUserId());
+                        hbncVisit.setCreatedBy(it.getUserName());
                         hbncVisit.setHouseHoldId(it.getHouseHoldId());
                         hbncVisit.setId(null);
                     }
@@ -321,20 +323,19 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             boolean isBabyDisChargeSNCUA = hbncVisits.stream()
                     .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu()));
-            Long benId = beneficiaryRepo.getBenIdFromRegID(hbncVisit.getBeneficiaryId()).longValue();
-            Integer userId = userRepo.getUserIdByName(hbncVisit.getCreatedBy());
+            Long benId = hbncVisit.getBeneficiaryId();
             if (isVisitDone) {
                 IncentiveActivity visitActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_VISIT", "HBNC");
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, userId, visitActivity);
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
 
             }
             if (isBabyDisChargeSNCUA) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("BABY_DISCHARGES_SNCU", "HBNC");
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, userId, babyDisChargeSNCUAActivity);
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
 
             }
 
@@ -394,7 +395,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
     }
 
-    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
+    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
         if (record == null) {
@@ -408,7 +409,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             record.setUpdatedDate(hbncVisit.getCreatedDate());
             record.setUpdatedBy(hbncVisit.getCreatedBy());
             record.setBenId(benId);
-            record.setAshaId(userId);
+            record.setAshaId(hbncVisit.getUserId());
             record.setAmount(Long.valueOf(immunizationActivity.getRate()));
             recordRepo.save(record);
         }
@@ -416,5 +417,9 @@ public class ChildCareServiceImpl implements ChildCareService {
 
     private Integer getImmunizationServiceIdForVaccine(Short vaccineId) {
         return vaccineRepo.getImmunizationServiceIdByVaccineId(vaccineId);
+    }
+
+    public void getTomorrowImmunizationReminders(Integer userID) {
+
     }
 }

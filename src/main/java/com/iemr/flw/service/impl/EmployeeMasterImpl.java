@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EmployeeMasterImpl implements EmployeeMasterInter {
     @Autowired
@@ -28,5 +30,10 @@ public class EmployeeMasterImpl implements EmployeeMasterInter {
             logger.error("Error fetching user details for userID: {}", userID, e);
             throw e;
         }
+    }
+
+    @Override
+    public List<M_User> getAllUsers() {
+        return employeeMasterRepo.findAll();
     }
 }
