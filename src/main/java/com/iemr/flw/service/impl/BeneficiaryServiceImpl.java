@@ -371,6 +371,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("placeOfDeathId", 0);
                     resultMap.put("otherPlaceOfDeath", "");
 
+
                     resultMap.put("BenRegId", m.getBenRegId());
 
                     // adding asha id / created by - user id
