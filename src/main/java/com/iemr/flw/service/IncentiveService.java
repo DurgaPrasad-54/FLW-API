@@ -11,7 +11,6 @@ public interface IncentiveService {
     String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS);
 
     String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO);
-    String getIncentiveMasterWithTranslationAndOrder(IncentiveRequestDTO incentiveRequestDTO);
 
     String getAllIncentivesByUserId(GetBenRequestHandler requestDTO);
 }
