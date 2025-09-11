@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,11 +71,11 @@ public class IncentiveServiceImpl implements IncentiveService {
         try {
 
 
-            if(incentiveRequestDTO.getLangCode()=="en"){
+            if(Objects.equals(incentiveRequestDTO.getLangCode(), "en")){
                 langId = 2L;
             }
 
-            if(incentiveRequestDTO.getLangCode()=="hi"){
+            if(Objects.equals(incentiveRequestDTO.getLangCode(), "hi")){
                 langId = 1L;
             }
 
