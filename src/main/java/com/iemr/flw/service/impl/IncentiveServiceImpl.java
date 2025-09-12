@@ -75,7 +75,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                 langId = 2L;
             }
 
-            if(Objects.equals(incentiveRequestDTO.getLangCode(), "hi")){
+            if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
                 langId = 1L;
             }
 
@@ -90,7 +90,7 @@ public class IncentiveServiceImpl implements IncentiveService {
 
                 if (mapping != null) {
                     dto.setName(mapping.getActivityName());
-                    dto.setGroup(mapping.getGroupName());
+                    dto.setGroupName(mapping.getGroupName());
                     dto.setDescription(mapping.getActivityDescription());
                 }
 
