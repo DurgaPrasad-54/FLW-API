@@ -339,6 +339,31 @@ public class RMNCHBeneficiaryDetailsRmnch {
 	@Transient
 	private String villageName;
 
+
+	@Expose
+	private Boolean isDeath;
+
+	@Expose
+	private String isDeathValue;
+
+	@Expose
+	private String timeOfDeath;
+
+	@Expose
+	private String reasonOfDeath;
+
+	@Expose
+	private Integer reasonOfDeathId;
+
+	@Expose
+	private String placeOfDeath;
+
+	@Expose
+	private Integer placeOfDeathId;
+
+	@Expose
+	private String  otherPlaceOfDeath;
+
 	@Expose
 	@Transient
 	private Integer servicePointID;
