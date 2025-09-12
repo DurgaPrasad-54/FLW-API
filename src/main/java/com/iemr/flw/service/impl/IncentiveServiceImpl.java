@@ -112,6 +112,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
         entities.forEach(entry -> dtos.add(modelMapper.map(entry, IncentiveRecordDTO.class)));
+
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(dtos);
     }
