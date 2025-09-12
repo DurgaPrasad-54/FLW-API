@@ -93,7 +93,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                     dto.setGroupName(mapping.getGroupName());
                     dto.setDescription(mapping.getActivityDescription());
                 }else {
-                    dto.setGroupName(mapping.getGroupName());
+                    dto.setGroupName(inc.getGroup());
 
                 }
 
