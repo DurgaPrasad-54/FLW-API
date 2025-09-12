@@ -347,6 +347,9 @@ public class RMNCHBeneficiaryDetailsRmnch {
 	private String isDeathValue;
 
 	@Expose
+	private String dateOfDeath;
+
+	@Expose
 	private String timeOfDeath;
 
 	@Expose
