@@ -139,31 +139,27 @@ public class CoupleServiceImpl implements CoupleService {
     private void checkAndAddAntaraIncentive(List<IncentiveActivityRecord> recordList, EligibleCoupleTracking ect) {
         Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
         List<EligibleCoupleTracking> couplesHadAntara = eligibleCoupleTrackingRepo.findCouplesHadAntara(ect.getBenId());
-        Integer numAntaraDosage = 0;
-        if(couplesHadAntara != null && couplesHadAntara.size() > 0) {
-            numAntaraDosage = couplesHadAntara.size();
-        }
 
         if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("ANTRA Injection")) {
-            if (numAntaraDosage == 0) {
+            if (ect.getAntraDose().equals("DOSE-1")) {
                 IncentiveActivity antaraActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_1", "FAMILY PLANNING");
                 if (antaraActivity != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity);
                 }
-            } else if (numAntaraDosage == 1) {
+            } else if (ect.getAntraDose().equals("DOSE-2")) {
                 IncentiveActivity antaraActivity2 =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_2", "FAMILY PLANNING");
                 if (antaraActivity2 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity2);
                 }
-            } else if (numAntaraDosage == 2) {
+            } else if (ect.getAntraDose().equals("DOSE-3")) {
                 IncentiveActivity antaraActivity3 =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_3", "FAMILY PLANNING");
                 if (antaraActivity3 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity3);
                 }
-            } else if (numAntaraDosage == 3) {
+            } else if (ect.getAntraDose().equals("DOSE-4")) {
                 IncentiveActivity antaraActivity4 =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_4", "FAMILY PLANNING");
                 if (antaraActivity4 != null) {
