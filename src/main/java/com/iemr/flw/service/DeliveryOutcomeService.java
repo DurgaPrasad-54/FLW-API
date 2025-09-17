@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DeliveryOutcomeService {
 
-    String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS);
+    String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS,Integer userId);
 
     List<DeliveryOutcomeDTO> getDeliveryOutcome(GetBenRequestHandler dto);
 }

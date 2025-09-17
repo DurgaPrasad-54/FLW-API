@@ -2,11 +2,19 @@ package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.DeliveryOutcome;
+import com.iemr.flw.domain.iemr.HbncVisit;
+import com.iemr.flw.domain.iemr.IncentiveActivity;
+import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.DeliveryOutcomeDTO;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
+import com.iemr.flw.repo.identity.HouseHoldRepo;
 import com.iemr.flw.repo.iemr.DeliveryOutcomeRepo;
+import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
+import com.iemr.flw.repo.iemr.IncentivesRepo;
+import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
 import com.iemr.flw.service.DeliveryOutcomeService;
+import org.apache.commons.lang3.Validate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +38,21 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 //    @Autowired
 //    private EligibleCoupleRegisterRepo ecrRepo;
 
+    @Autowired
+    private IncentivesRepo incentivesRepo;
+
+    @Autowired
+    private UserServiceRoleRepo userRepo;
+
+    @Autowired
+    private IncentiveRecordRepo recordRepo;
+
+    @Autowired
+    private HouseHoldRepo houseHoldRepo;
+
+
+
+
     private final Logger logger = LoggerFactory.getLogger(DeliveryOutcomeServiceImpl.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -37,7 +60,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS) {
+    public String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS,Integer userId) {
 
         try {
             List<DeliveryOutcome> delOutList = new ArrayList<>();
@@ -62,6 +85,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
                 delOutList.add(deliveryoutcome);
             });
             deliveryOutcomeRepo.saveAll(delOutList);
+            checkAndAddJsyIncentive(delOutList,userId);
 //            ecrRepo.save(ecrList);
             return "no of delivery outcome details saved: " + delOutList.size();
         } catch (Exception e) {
@@ -80,5 +104,71 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             logger.error(e.getMessage());
         }
         return null;
+    }
+    private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList,Integer userId){
+        delOutList.forEach(deliveryOutcome -> {
+
+            // Determine delivery number
+            int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
+            boolean isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
+
+            boolean institutionalDelivery = !deliveryOutcome.getPlaceOfDelivery().isEmpty();
+
+            String location = houseHoldRepo.getByHouseHoldID(beneficiaryRepo.getRegIDFromBenId(deliveryOutcome.getBenId())).getResidentialArea(); // "Rural" or "Urban"
+
+            // JSY incentive name construction
+            List<String> activityNames = new ArrayList<>();
+            if(location.equalsIgnoreCase("Rural")) {
+                switch(deliveryNumber) {
+                    case 1:
+                        if(isJsyBeneficiary) activityNames.add("1ST_RURAL_DELIVERY_ANC");
+                        if(institutionalDelivery) activityNames.add("1ST_RURAL_DELIVERY_INST");
+                        break;
+                    case 2:
+                        if(isJsyBeneficiary) activityNames.add("2ND_RURAL_DELIVERY_ANC");
+                        if(institutionalDelivery) activityNames.add("2ND_RURAL_DELIVERY_INST");
+                        break;
+                    case 3:
+                        if(isJsyBeneficiary) activityNames.add("3RD_RURAL_DELIVERY_ANC");
+                        if(institutionalDelivery) activityNames.add("3RD_RURAL_DELIVERY_INST");
+                        break;
+                    case 4:
+                        if(isJsyBeneficiary) activityNames.add("4TH_RURAL_DELIVERY_ANC");
+                        if(institutionalDelivery) activityNames.add("4TH_RURAL_DELIVERY_INST");
+                        break;
+                }
+            } else if(location.equalsIgnoreCase("Urban")) {
+                if(isJsyBeneficiary) activityNames.add("URBAN_DELIVERY_ANC");
+                if(institutionalDelivery) activityNames.add("URBAN_DELIVERY_INST");
+            }
+
+            // For each activity, create record
+            for(String activityName : activityNames){
+                IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(activityName,"JSY");
+                if(incentiveActivity != null){
+                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivity, userId);
+                }
+            }
+        });
+
+    }
+    private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity,Integer userId) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), delOutList.getCreatedDate(), benId);
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(immunizationActivity.getId());
+            record.setCreatedDate(delOutList.getCreatedDate());
+            record.setCreatedBy(delOutList.getCreatedBy());
+            record.setName(immunizationActivity.getName());
+            record.setStartDate(delOutList.getCreatedDate());
+            record.setEndDate(delOutList.getCreatedDate());
+            record.setUpdatedDate(delOutList.getCreatedDate());
+            record.setUpdatedBy(delOutList.getCreatedBy());
+            record.setBenId(benId);
+            record.setAshaId(userId);
+            record.setAmount(Long.valueOf(immunizationActivity.getRate()));
+            recordRepo.save(record);
+        }
     }
 }
