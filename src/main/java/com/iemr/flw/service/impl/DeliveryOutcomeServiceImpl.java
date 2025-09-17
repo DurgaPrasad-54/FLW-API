@@ -110,7 +110,6 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     }
     private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
 
-        logger.info("deliveryOutcome JSON: {}", gson.toJson(delOutList));
 
         delOutList.forEach(deliveryOutcome -> {
 
