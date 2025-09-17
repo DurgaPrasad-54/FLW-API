@@ -90,7 +90,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             });
             deliveryOutcomeRepo.saveAll(delOutList);
 
-            checkAndAddJsyIncentive(delOutList);
+//            checkAndAddJsyIncentive(delOutList);
 //            ecrRepo.save(ecrList);
             return "no of delivery outcome details saved: " + delOutList.size();
         } catch (Exception e) {
