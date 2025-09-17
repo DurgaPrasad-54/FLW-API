@@ -2,6 +2,7 @@ package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
 import com.iemr.flw.domain.iemr.DeliveryOutcome;
 import com.iemr.flw.domain.iemr.HbncVisit;
 import com.iemr.flw.domain.iemr.IncentiveActivity;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -118,10 +120,11 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             boolean isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
 
             boolean institutionalDelivery = !deliveryOutcome.getPlaceOfDelivery().isEmpty();
-
-            String location = houseHoldRepo.getByHouseHoldID(beneficiaryRepo.getRegIDFromBenId(deliveryOutcome.getBenId())).getResidentialArea(); // "Rural" or "Urban"
+            Optional<RMNCHBeneficiaryDetailsRmnch> rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findById(deliveryOutcome.getBenId());
+            String location = houseHoldRepo.getByHouseHoldID(rmnchBeneficiaryDetailsRmnch.get().getHouseoldId()).getResidentialArea(); // "Rural" or "Urban"
 
             // JSY incentive name construction
+
             List<String> activityNames = new ArrayList<>();
             if(location.equalsIgnoreCase("Rural")) {
                 switch(deliveryNumber) {
