@@ -60,7 +60,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS,Integer userId) {
+    public String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS) {
 
         try {
             List<DeliveryOutcome> delOutList = new ArrayList<>();
@@ -85,7 +85,8 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
                 delOutList.add(deliveryoutcome);
             });
             deliveryOutcomeRepo.saveAll(delOutList);
-            checkAndAddJsyIncentive(delOutList,userId);
+
+            checkAndAddJsyIncentive(delOutList);
 //            ecrRepo.save(ecrList);
             return "no of delivery outcome details saved: " + delOutList.size();
         } catch (Exception e) {
@@ -105,7 +106,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         }
         return null;
     }
-    private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList,Integer userId){
+    private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
         delOutList.forEach(deliveryOutcome -> {
 
             // Determine delivery number
@@ -146,13 +147,13 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             for(String activityName : activityNames){
                 IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(activityName,"JSY");
                 if(incentiveActivity != null){
-                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivity, userId);
+                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivity);
                 }
             }
         });
 
     }
-    private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity,Integer userId) {
+    private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), delOutList.getCreatedDate(), benId);
         if (record == null) {
@@ -166,7 +167,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             record.setUpdatedDate(delOutList.getCreatedDate());
             record.setUpdatedBy(delOutList.getCreatedBy());
             record.setBenId(benId);
-            record.setAshaId(userId);
+            record.setAshaId(userRepo.getUserIdByName(delOutList.getUpdatedBy()));
             record.setAmount(Long.valueOf(immunizationActivity.getRate()));
             recordRepo.save(record);
         }

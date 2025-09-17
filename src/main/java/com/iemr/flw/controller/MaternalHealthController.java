@@ -144,16 +144,13 @@ public class MaternalHealthController {
     @RequestMapping(value = { "/deliveryOutcome/saveAll" }, method = { RequestMethod.POST })
     public String saveDeliveryOutcome(@RequestBody List<DeliveryOutcomeDTO> deliveryOutcomeDTOS,
                                       @RequestHeader(value = "Authorization") String Authorization, HttpServletRequest request) throws IEMRException {
-        String jwtFromHeader = request.getHeader("JwtToken");
 
 
-
-        int userId = jwtUtil.extractUserId(jwtFromHeader);
         OutputResponse response = new OutputResponse();
         try {
             if (deliveryOutcomeDTOS.size() != 0) {
                 logger.info("Saving delivery outcomes with timestamp : " + new Timestamp(System.currentTimeMillis()));
-                String s = deliveryOutcomeService.registerDeliveryOutcome(deliveryOutcomeDTOS,userId);
+                String s = deliveryOutcomeService.registerDeliveryOutcome(deliveryOutcomeDTOS);
                 if (s != null)
                     response.setResponse(s);
                 else
