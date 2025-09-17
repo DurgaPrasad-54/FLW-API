@@ -70,17 +70,12 @@ public class DeliveryOutcome {
     @Column(name = "created_by")
     private String createdBy;
 
-
-
     @Column(name = "updated_by")
     private String updatedBy;
 
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM dd, yyyy, h:mm:ss a")
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM dd, yyyy, h:mm:ss a")
     @Column(name = "updated_date")
     private Timestamp updatedDate;
 
