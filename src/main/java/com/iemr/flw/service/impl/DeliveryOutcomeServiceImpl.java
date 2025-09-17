@@ -110,8 +110,8 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     }
     private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
 
-         logger.info("delOutList"+gson.toJson(delOutList.toString()));
         delOutList.forEach(deliveryOutcome -> {
+            logger.info("delOutList"+gson.toJson(deliveryOutcome));
 
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
