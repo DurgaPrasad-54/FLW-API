@@ -161,13 +161,15 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), delOutList.getCreatedDate(), benId);
         if (record == null) {
+            logger.info("setStartDate"+delOutList.getDateOfDelivery());
+            logger.info("setCreatedDate"+delOutList.getCreatedDate());
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(delOutList.getDateOfDelivery());
             record.setCreatedBy(delOutList.getCreatedBy());
             record.setName(immunizationActivity.getName());
             record.setStartDate(delOutList.getDateOfDelivery());
-            record.setEndDate(delOutList.getDateOfDischarge());
+            record.setEndDate(delOutList.getDateOfDelivery());
             record.setUpdatedDate(delOutList.getCreatedDate());
             record.setUpdatedBy(delOutList.getCreatedBy());
             record.setBenId(benId);
