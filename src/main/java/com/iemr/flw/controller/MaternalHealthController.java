@@ -8,10 +8,14 @@ import com.iemr.flw.service.ChildService;
 import com.iemr.flw.service.DeliveryOutcomeService;
 import com.iemr.flw.service.InfantService;
 import com.iemr.flw.service.MaternalHealthService;
+import com.iemr.flw.utils.JwtUtil;
+import com.iemr.flw.utils.exception.IEMRException;
 import com.iemr.flw.utils.response.OutputResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,9 @@ public class MaternalHealthController {
 
     @Autowired
     private ChildService childService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Operation(summary = "save pregnant woman registration details")
     @RequestMapping(value = { "/pregnantWoman/saveAll" }, method = { RequestMethod.POST })
@@ -136,12 +143,17 @@ public class MaternalHealthController {
     @Operation(summary = "save Delivery Outcome details")
     @RequestMapping(value = { "/deliveryOutcome/saveAll" }, method = { RequestMethod.POST })
     public String saveDeliveryOutcome(@RequestBody List<DeliveryOutcomeDTO> deliveryOutcomeDTOS,
-            @RequestHeader(value = "Authorization") String Authorization) {
+                                      @RequestHeader(value = "Authorization") String Authorization, HttpServletRequest request) throws IEMRException {
+        String jwtFromHeader = request.getHeader("JwtToken");
+
+
+
+        int userId = jwtUtil.extractUserId(jwtFromHeader);
         OutputResponse response = new OutputResponse();
         try {
             if (deliveryOutcomeDTOS.size() != 0) {
                 logger.info("Saving delivery outcomes with timestamp : " + new Timestamp(System.currentTimeMillis()));
-                String s = deliveryOutcomeService.registerDeliveryOutcome(deliveryOutcomeDTOS);
+                String s = deliveryOutcomeService.registerDeliveryOutcome(deliveryOutcomeDTOS,userId);
                 if (s != null)
                     response.setResponse(s);
                 else
