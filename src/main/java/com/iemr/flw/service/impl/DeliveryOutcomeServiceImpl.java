@@ -16,6 +16,7 @@ import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
 import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
 import com.iemr.flw.service.DeliveryOutcomeService;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.Validate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -63,6 +64,8 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
     ModelMapper modelMapper = new ModelMapper();
 
+    boolean institutionalDelivery = false;
+
     @Override
     public String registerDeliveryOutcome(List<DeliveryOutcomeDTO> deliveryOutcomeDTOS) {
 
@@ -90,7 +93,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             });
             deliveryOutcomeRepo.saveAll(delOutList);
 
-//            checkAndAddJsyIncentive(delOutList);
+            checkAndAddJsyIncentive(delOutList);
 //            ecrRepo.save(ecrList);
             return "no of delivery outcome details saved: " + delOutList.size();
         } catch (Exception e) {
@@ -110,7 +113,9 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         }
         return null;
     }
-    private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
+
+
+    public void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
 
         delOutList.forEach(deliveryOutcome -> {
             logger.info("delOutList"+gson.toJson(deliveryOutcome));
@@ -118,9 +123,16 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
             boolean isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
+             if(deliveryOutcome.getPlaceOfDelivery()!=null && !deliveryOutcome.getPlaceOfDelivery().isEmpty()){
+                 institutionalDelivery = true;
 
-            boolean institutionalDelivery = !deliveryOutcome.getPlaceOfDelivery().isEmpty();
+             }else {
+                 institutionalDelivery = false;
+             }
             Optional<RMNCHBeneficiaryDetailsRmnch> rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findById(deliveryOutcome.getBenId());
+             if(rmnchBeneficiaryDetailsRmnch.isPresent()){
+                 logger.info("rmnchBeneficiaryDetailsRmnch"+rmnchBeneficiaryDetailsRmnch.get());
+             }
             String location = houseHoldRepo.getByHouseHoldID(rmnchBeneficiaryDetailsRmnch.get().getHouseoldId()).getResidentialArea(); // "Rural" or "Urban"
 
             // JSY incentive name construction
@@ -161,6 +173,8 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
     }
     private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity) {
+        logger.info("benId"+benId);
+
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), delOutList.getCreatedDate(), benId);
         if (record == null) {
@@ -179,6 +193,9 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             record.setAshaId(userRepo.getUserIdByName(delOutList.getUpdatedBy()));
             record.setAmount(Long.valueOf(immunizationActivity.getRate()));
             recordRepo.save(record);
+        }else {
+            logger.info("benId:"+record.getId());
+
         }
     }
 }
