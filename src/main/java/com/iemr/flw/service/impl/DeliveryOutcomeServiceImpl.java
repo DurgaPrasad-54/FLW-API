@@ -1,6 +1,7 @@
 package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.iemr.flw.domain.iemr.DeliveryOutcome;
 import com.iemr.flw.domain.iemr.HbncVisit;
 import com.iemr.flw.domain.iemr.IncentiveActivity;
@@ -52,6 +53,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
 
 
+    private Gson gson = new Gson();
 
     private final Logger logger = LoggerFactory.getLogger(DeliveryOutcomeServiceImpl.class);
 
@@ -107,8 +109,10 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         return null;
     }
     private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
+
+        logger.info("deliveryOutcome JSON: {}", gson.toJson(delOutList));
+
         delOutList.forEach(deliveryOutcome -> {
-            logger.info("deliveryOutcome:"+deliveryOutcome);
 
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
