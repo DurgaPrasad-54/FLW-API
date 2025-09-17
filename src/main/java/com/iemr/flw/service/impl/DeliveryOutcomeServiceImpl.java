@@ -110,7 +110,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     }
     private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
 
-
+         logger.info("delOutList"+gson.toJson(delOutList.toString()));
         delOutList.forEach(deliveryOutcome -> {
 
             // Determine delivery number
@@ -163,11 +163,11 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
-            record.setCreatedDate(delOutList.getCreatedDate());
+            record.setCreatedDate(delOutList.getDateOfDelivery());
             record.setCreatedBy(delOutList.getCreatedBy());
             record.setName(immunizationActivity.getName());
-            record.setStartDate(delOutList.getCreatedDate());
-            record.setEndDate(delOutList.getCreatedDate());
+            record.setStartDate(delOutList.getDateOfDelivery());
+            record.setEndDate(delOutList.getDateOfDischarge());
             record.setUpdatedDate(delOutList.getCreatedDate());
             record.setUpdatedBy(delOutList.getCreatedBy());
             record.setBenId(benId);
