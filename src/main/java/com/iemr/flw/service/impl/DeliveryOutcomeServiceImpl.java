@@ -108,6 +108,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     }
     private void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
         delOutList.forEach(deliveryOutcome -> {
+            logger.info("deliveryOutcome:"+deliveryOutcome);
 
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
@@ -122,25 +123,25 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             if(location.equalsIgnoreCase("Rural")) {
                 switch(deliveryNumber) {
                     case 1:
-                        if(isJsyBeneficiary) activityNames.add("1ST_RURAL_DELIVERY_ANC");
-                        if(institutionalDelivery) activityNames.add("1ST_RURAL_DELIVERY_INST");
+                        if(isJsyBeneficiary) activityNames.add("1st_RURAL_DELIVERY");
+                        if(institutionalDelivery) activityNames.add("1st_RURAL_INSTITUTIONAL_DELIVERY");
                         break;
                     case 2:
-                        if(isJsyBeneficiary) activityNames.add("2ND_RURAL_DELIVERY_ANC");
-                        if(institutionalDelivery) activityNames.add("2ND_RURAL_DELIVERY_INST");
+                        if(isJsyBeneficiary) activityNames.add("2nd_RURAL_DELIVERY");
+                        if(institutionalDelivery) activityNames.add("2nd_RURAL_INSTITUTIONAL_DELIVERY");
                         break;
                     case 3:
                         if(isJsyBeneficiary) activityNames.add("3RD_RURAL_DELIVERY_ANC");
-                        if(institutionalDelivery) activityNames.add("3RD_RURAL_DELIVERY_INST");
+                        if(institutionalDelivery) activityNames.add("3rd_RURAL_INSTITUTIONAL_DELIVERY");
                         break;
                     case 4:
-                        if(isJsyBeneficiary) activityNames.add("4TH_RURAL_DELIVERY_ANC");
-                        if(institutionalDelivery) activityNames.add("4TH_RURAL_DELIVERY_INST");
+                        if(isJsyBeneficiary) activityNames.add("4th_RURAL_DELIVERY");
+                        if(institutionalDelivery) activityNames.add("4th_RURAL_INSTITUTIONAL_DELIVERY");
                         break;
                 }
             } else if(location.equalsIgnoreCase("Urban")) {
-                if(isJsyBeneficiary) activityNames.add("URBAN_DELIVERY_ANC");
-                if(institutionalDelivery) activityNames.add("URBAN_DELIVERY_INST");
+                if(isJsyBeneficiary) activityNames.add("URBAN_DELIVERY");
+                if(institutionalDelivery) activityNames.add("URBAN_INSTITUTIONAL_DELIVERY");
             }
 
             // For each activity, create record
