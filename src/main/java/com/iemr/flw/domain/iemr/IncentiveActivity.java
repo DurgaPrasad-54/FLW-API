@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "incentive_activity", schema = "db_iemr")
+@Table(name = "m_incentive_activity", schema = "db_iemr")
 @Data
 public class IncentiveActivity {
 
