@@ -86,12 +86,25 @@ public class IncentiveServiceImpl implements IncentiveService {
 
                 // Fetch language mapping
                 IncentiveActivityLangMapping mapping = incentiveActivityLangMappingRepo
-                        .findByActivityIdAndLanguageId(inc.getId(), langId);
+                        .findByIdAndName(inc.getId(),inc.getName());
 
                 if (mapping != null) {
-                    dto.setName(mapping.getActivityName());
-                    dto.setGroupName(mapping.getGroupName());
-                    dto.setDescription(mapping.getActivityDescription());
+                    dto.setName(mapping.getName());
+                    dto.setGroupName(mapping.getGroup());
+                    if(Objects.equals(incentiveRequestDTO.getLangCode(), "en")){
+                        dto.setDescription(mapping.getDescription());
+
+                    }else  if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
+                        if(mapping.getAssameActivityDescription()!=null){
+                            dto.setDescription(mapping.getAssameActivityDescription());
+
+                        }else {
+                            dto.setDescription(mapping.getDescription());
+
+                        }
+
+                    }
+
                 }else {
                     dto.setGroupName(inc.getGroup());
 

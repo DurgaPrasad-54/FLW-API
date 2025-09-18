@@ -1,8 +1,12 @@
 package com.iemr.flw.domain.iemr;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
+import java.sql.Timestamp;
 
 @Entity
+@Data
 @Table(name = "m_incentive_activity_lang_mapping",schema = "db_iemr")
 public class IncentiveActivityLangMapping {
 
@@ -10,79 +14,51 @@ public class IncentiveActivityLangMapping {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "activity_id", nullable = false)
-    private Long activityId;
-
-    @Column(name = "language_id", nullable = false)
-    private Long languageId;
-
     @Column(name = "activity_name")
-    private String activityName;
+    private String name;
+
+    @Column(name = "activity_description")
+    private String description;
+
+    @Column(name = "payment_parameter")
+    private String paymentParam;
+
+    @Column(name = "rate_per_activity")
+    private Integer rate;
+
+    @Column(name = "state_code")
+    private Integer state;
+
+    @Column(name = "district_code")
+    private Integer district;
 
     @Column(name = "group_name")
-    private String groupName;
+    private String group;
 
-    @Column(name = "activity_description", length = 500)
-    private String activityDescription;
 
-    // 🔹 Constructors
-    public IncentiveActivityLangMapping() {
-    }
+    @Column(name = "fmr_code")
+    private String fmrCode;
 
-    public IncentiveActivityLangMapping(Long activityId, Long languageId, String activityName, String groupName, String activityDescription) {
-        this.activityId = activityId;
-        this.languageId = languageId;
-        this.activityName = activityName;
-        this.groupName = groupName;
-        this.activityDescription = activityDescription;
-    }
+    @Column(name = "fmr_code_old")
+    private String fmrCodeOld;
 
-    // 🔹 Getters & Setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "created_by")
+    private String createdBy;
 
-    public Long getActivityId() {
-        return activityId;
-    }
+    @Column(name = "updated_date")
+    private Timestamp updatedDate;
 
-    public void setActivityId(Long activityId) {
-        this.activityId = activityId;
-    }
+    @Column(name = "updated_by")
+    private String updatedBy;
 
-    public Long getLanguageId() {
-        return languageId;
-    }
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
-    }
+    @Column(name = "assame_activity_description")
+    private String assameActivityDescription;
 
-    public String getActivityName() {
-        return activityName;
-    }
 
-    public void setActivityName(String activityName) {
-        this.activityName = activityName;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getActivityDescription() {
-        return activityDescription;
-    }
-
-    public void setActivityDescription(String activityDescription) {
-        this.activityDescription = activityDescription;
-    }
 }

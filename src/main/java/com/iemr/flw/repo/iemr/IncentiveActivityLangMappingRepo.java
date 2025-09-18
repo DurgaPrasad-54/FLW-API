@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IncentiveActivityLangMappingRepo extends JpaRepository<IncentiveActivityLangMapping, Long> {
-    IncentiveActivityLangMapping findByActivityIdAndLanguageId(Long activityId, Long languageId);
+    IncentiveActivityLangMapping findByIdAndName(Long activityId,String activityName);
 }
