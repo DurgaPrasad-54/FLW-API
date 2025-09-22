@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,20 +53,22 @@ public class GeneralOpdServiceImpl implements GeneralOpdService {
     @Autowired
     private GeneralOpdRepo generalOpdRepo;
 
+
+
     @Override
-    public Object getOpdListForAsha(GetBenRequestHandler request, String authorisation) throws Exception {
-        List<GeneralOpdData> filteredList;
+    public Page<GeneralOpdData> getOutreachData(Integer villageId,String userName) {
+        int page = 0; // always start from 0
+        int pageSize = 20;
+        Page<GeneralOpdData> result;
 
         do {
-            filteredList = generalOpdRepo.findAll().stream()
-                    .filter(generalOpdData ->
-                            generalOpdData.getVisitCategory() != null &&
-                                    generalOpdData.getVisitCategory().equals("General OPD") && generalOpdData.getVisitCode()!=0)
-                    .collect(Collectors.toList());
+            Pageable pageable = PageRequest.of(page, pageSize);
+            result = generalOpdRepo.findFilteredOutreachData(villageId, pageable,userName);
 
+            page++;
+        } while (result.isEmpty() && page < 50); // 50 = safety limit to avoid infinite loop
 
-        } while (filteredList.isEmpty());
-
-        return filteredList.stream().filter(data-> data.getAgentId().equals(request.getUserName())).collect(Collectors.toList());
+        return result;
     }
+
 }

@@ -24,11 +24,13 @@
 */
 package com.iemr.flw.service;
 
+import com.iemr.flw.domain.iemr.GeneralOpdData;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.GeneralOpdDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface GeneralOpdService {
-    Object getOpdListForAsha(GetBenRequestHandler getBenRequestHandler,String authorisation) throws Exception;
+    public Page<GeneralOpdData> getOutreachData(Integer villageId,String userName);
 }
