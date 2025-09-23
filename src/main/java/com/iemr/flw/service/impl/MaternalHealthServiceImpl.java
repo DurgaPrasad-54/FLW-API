@@ -315,12 +315,14 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
     private void checkAndAddIncentives(List<ANCVisit> ancList) {
         IncentiveActivity anc1Activity =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-1", "MATERNAL HEALTH");
+                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC_REGISTRATION_1ST_TRIM", "MATERNAL HEALTH");
 
         IncentiveActivity ancFullActivity =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-FULL", "MATERNAL HEALTH");
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", "MATERNAL HEALTH");
 
-        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("ANC-ABORTION", "MATERNAL HEALTH");
+        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", "MATERNAL HEALTH");
+
+
 
         if (anc1Activity != null) {
             ancList.forEach( ancVisit -> {
@@ -399,6 +401,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 }
             }));
         }
+
     }
      public void sendAncDueTomorrowNotifications(String ashaId) {
         try {

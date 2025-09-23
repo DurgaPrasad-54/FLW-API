@@ -141,25 +141,25 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             if(location.equalsIgnoreCase("Rural")) {
                 switch(deliveryNumber) {
                     case 1:
-                        if(isJsyBeneficiary) activityNames.add("1st_RURAL_DELIVERY");
-                        if(institutionalDelivery) activityNames.add("1st_RURAL_INSTITUTIONAL_DELIVERY");
+                        if(isJsyBeneficiary) activityNames.add("JSY_1ST_DEL_ANC_RURAL");
+                        if(institutionalDelivery) activityNames.add("JSY_1ST_DEL_INST_RURAL");
                         break;
                     case 2:
-                        if(isJsyBeneficiary) activityNames.add("2nd_RURAL_DELIVERY");
-                        if(institutionalDelivery) activityNames.add("2nd_RURAL_INSTITUTIONAL_DELIVERY");
+                        if(isJsyBeneficiary) activityNames.add("JSY_2ND_DEL_ANC_RURAL");
+                        if(institutionalDelivery) activityNames.add("JSY_2ND_DEL_INST_RURAL");
                         break;
                     case 3:
-                        if(isJsyBeneficiary) activityNames.add("3RD_RURAL_DELIVERY_ANC");
-                        if(institutionalDelivery) activityNames.add("3rd_RURAL_INSTITUTIONAL_DELIVERY");
+                        if(isJsyBeneficiary) activityNames.add("JSY_3RD_DEL_ANC_RURAL");
+                        if(institutionalDelivery) activityNames.add("JSY_3RD_DEL_INST_RURAL");
                         break;
                     case 4:
-                        if(isJsyBeneficiary) activityNames.add("4th_RURAL_DELIVERY");
-                        if(institutionalDelivery) activityNames.add("4th_RURAL_INSTITUTIONAL_DELIVERY");
+                        if(isJsyBeneficiary) activityNames.add("JSY_4TH_DEL_ANC_RURAL");
+                        if(institutionalDelivery) activityNames.add("JSY_4TH_DEL_INST_RURAL");
                         break;
                 }
             } else if(location.equalsIgnoreCase("Urban")) {
-                if(isJsyBeneficiary) activityNames.add("URBAN_DELIVERY");
-                if(institutionalDelivery) activityNames.add("URBAN_INSTITUTIONAL_DELIVERY");
+                if(isJsyBeneficiary) activityNames.add("JSY_ANC_URBAN");
+                if(institutionalDelivery) activityNames.add("JSY_INST_URBAN");
             }
 
             // For each activity, create record

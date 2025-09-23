@@ -59,7 +59,7 @@ public class CoupleServiceImpl implements CoupleService {
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
                     if(existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 3) {
                         IncentiveActivity activity1 =
-                                incentivesRepo.findIncentiveMasterByNameAndGroup("MARRIAGE_1st_CHILD_GAP", "FAMILY PLANNING");
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("FP_DELAY_2Y", "FAMILY PLANNING");
                         createIncentiveRecord(recordList, it, activity1);
                     } else if (existingECR.getNumLiveChildren() == 1 && it.getNumLiveChildren() >= 2 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 2) {
                         IncentiveActivity activity2 =
@@ -143,25 +143,31 @@ public class CoupleServiceImpl implements CoupleService {
         if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("ANTRA Injection")) {
             if (ect.getAntraDose().equals("Dose-1")) {
                 IncentiveActivity antaraActivity =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_1", "FAMILY PLANNING");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA1", "FAMILY PLANNING");
                 if (antaraActivity != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity);
                 }
             } else if (ect.getAntraDose().equals("Dose-2")) {
                 IncentiveActivity antaraActivity2 =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_2", "FAMILY PLANNING");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA2", "FAMILY PLANNING");
                 if (antaraActivity2 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity2);
                 }
             } else if (ect.getAntraDose().equals("Dose-3")) {
                 IncentiveActivity antaraActivity3 =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_3", "FAMILY PLANNING");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA3", "FAMILY PLANNING");
                 if (antaraActivity3 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity3);
                 }
             } else if (ect.getAntraDose().equals("Dose-4")) {
                 IncentiveActivity antaraActivity4 =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("ANTARA_PROG_4", "FAMILY PLANNING");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA4", "FAMILY PLANNING");
+                if (antaraActivity4 != null) {
+                    addIncenticeRecord(recordList, ect, userId, antaraActivity4);
+                }
+            }else if (ect.getAntraDose().equals("Dose-5")) {
+                IncentiveActivity antaraActivity4 =
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA5", "FAMILY PLANNING");
                 if (antaraActivity4 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity4);
                 }
