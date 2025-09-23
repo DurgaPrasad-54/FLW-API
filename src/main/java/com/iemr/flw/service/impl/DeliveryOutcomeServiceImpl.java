@@ -133,7 +133,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
              if(rmnchBeneficiaryDetailsRmnch.isPresent()){
                  logger.info("rmnchBeneficiaryDetailsRmnch"+rmnchBeneficiaryDetailsRmnch.get());
              }
-            String location = houseHoldRepo.getByHouseHoldID(rmnchBeneficiaryDetailsRmnch.get().getHouseoldId()).getResidentialArea(); // "Rural" or "Urban"
+            String location = "Rural";
 
             // JSY incentive name construction
 
