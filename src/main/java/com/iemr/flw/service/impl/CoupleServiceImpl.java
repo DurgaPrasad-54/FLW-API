@@ -138,7 +138,6 @@ public class CoupleServiceImpl implements CoupleService {
 
     private void checkAndAddAntaraIncentive(List<IncentiveActivityRecord> recordList, EligibleCoupleTracking ect) {
         Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
-        List<EligibleCoupleTracking> couplesHadAntara = eligibleCoupleTrackingRepo.findCouplesHadAntara(ect.getBenId());
 
         if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("ANTRA Injection")) {
             if (ect.getAntraDose().equals("Dose-1")) {
@@ -171,6 +170,41 @@ public class CoupleServiceImpl implements CoupleService {
                 if (antaraActivity4 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity4);
                 }
+            }
+        }else  if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("MALE STERILIZATION")){
+
+            IncentiveActivity maleSterilizationActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", "FAMILY PLANNING");
+            if (maleSterilizationActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivity);
+            }
+        }else  if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("FEMALE STERILIZATION")){
+
+            IncentiveActivity femaleSterilizationActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", "FAMILY PLANNING");
+            if (femaleSterilizationActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivity);
+            }
+        }else  if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("MiniLap")){
+
+            IncentiveActivity miniLapActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MINILAP", "FAMILY PLANNING");
+            if (miniLapActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, miniLapActivity);
+            }
+        }else  if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("Condom")){
+
+            IncentiveActivity comdomActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+            if (comdomActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, comdomActivity);
+            }
+        }else  if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("Copper T (IUCD)")){
+
+            IncentiveActivity copperTActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+            if (copperTActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, copperTActivity);
             }
         }
     }
