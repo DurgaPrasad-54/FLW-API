@@ -326,17 +326,23 @@ public class ChildCareServiceImpl implements ChildCareService {
             Long benId = hbncVisit.getBeneficiaryId();
             if (isVisitDone) {
                 IncentiveActivity visitActivity =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_VISIT", "HBNC");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", "CHILD HEALTH");
 
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
 
             }
             if (isBabyDisChargeSNCUA) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("BABY_DISCHARGES_SNCU", "HBNC");
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", "CHILD HEALTH");
 
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
 
+            }
+            if(hbncVisit.getIs_baby_alive()){
+                IncentiveActivity isChildDeathActivity =
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
+
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity);
             }
 
 
