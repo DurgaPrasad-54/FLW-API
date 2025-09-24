@@ -186,7 +186,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         dewormingForm.setFormType("Deworming");
         dewormingFormRepo.save(dewormingForm);
         if (Objects.equals(dewormingForm.getDewormingDone(), "Yes")) {
-            checkAndAddIncentives(dewormingForm.getDewormingDate(), Math.toIntExact(dewormingForm.getUserId()), dewormingForm.getFormType(), dewormingForm.getCreatedBy());
+            checkAndAddIncentives(dewormingForm.getDewormingDate(), Math.toIntExact(dewormingForm.getUserId()), "NATIONAL_DEWORMING_DAY", dewormingForm.getCreatedBy());
 
         }
         return true;
@@ -253,7 +253,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         logger.info("timestamp" + timestamp);
 
         IncentiveActivity villageFormEntryActivity;
-        villageFormEntryActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(formType, "VILLAGELEVEL");
+        villageFormEntryActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(formType, "CHILD HEALTH");
 
         if (villageFormEntryActivity != null) {
             IncentiveActivityRecord record = recordRepo

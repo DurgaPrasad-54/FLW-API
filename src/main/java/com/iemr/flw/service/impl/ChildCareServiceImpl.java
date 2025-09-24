@@ -76,6 +76,8 @@ public class ChildCareServiceImpl implements ChildCareService {
                 hbycList.add(hbyc);
             });
             hbycRepo.saveAll(hbycList);
+            checkAndAddHbyncIncentives(hbycList);
+
             return "no of hbyc details saved: " + hbycDTOs.size();
         } catch (Exception e) {
             logger.info("error while saving hbyc details: " + e.getMessage());
@@ -315,6 +317,33 @@ public class ChildCareServiceImpl implements ChildCareService {
         return null;
     }
 
+    private void checkAndAddHbyncIncentives(List<HBYC> hbycList) {
+        hbycList.forEach(hbyc -> {
+            IncentiveActivity hbyncVisitActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("HBYC_QUARTERLY_VISITS", "CHILD HEALTH");
+
+            IncentiveActivity hbyncOrsPacketActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", "CHILD HEALTH");
+            if(hbyncVisitActivity!=null){
+                if(hbyc.getVisitDate()!=null){
+                    createIncentiveRecordforHbyncVisit(hbyc,hbyc.getBenId(),hbyncVisitActivity);
+
+                }
+
+            }
+            if(hbyncOrsPacketActivity!=null){
+                if(hbyc.getOrsPacketDelivered()){
+                    createIncentiveRecordforHbyncOrsDistribution(hbyc,hbyc.getBenId(),hbyncOrsPacketActivity);
+
+                }
+
+            }
+
+        });
+
+
+    }
+
     private void checkAndAddHbncIncentives(List<HbncVisit> hbncVisits) {
         hbncVisits.forEach(hbncVisit -> {
             boolean isVisitDone = List.of("1st Day", "3rd Day", "7th Day", "42nd Day")
@@ -344,6 +373,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity);
             }
+
 
 
         });
@@ -423,6 +453,49 @@ public class ChildCareServiceImpl implements ChildCareService {
             record.setUpdatedBy(hbncVisit.getCreatedBy());
             record.setBenId(benId);
             record.setAshaId(hbncVisit.getUserId());
+            record.setAmount(Long.valueOf(immunizationActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
+    private void createIncentiveRecordforHbyncVisit(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
+        if (record == null) {
+
+            record = new IncentiveActivityRecord();
+            record.setActivityId(immunizationActivity.getId());
+            record.setCreatedDate(data.getVisitDate());
+            record.setCreatedBy(data.getCreatedBy());
+            record.setName(immunizationActivity.getName());
+            record.setStartDate(data.getVisitDate());
+            record.setEndDate(data.getVisitDate());
+            record.setUpdatedDate(data.getVisitDate());
+            record.setUpdatedBy(data.getUpdatedBy());
+            record.setBenId(benId);
+            record.setAshaId(beneficiaryRepo.getUserIDByUserName(data.getCreatedBy()));
+            record.setAmount(Long.valueOf(immunizationActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
+
+    private void createIncentiveRecordforHbyncOrsDistribution(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
+        if (record == null) {
+
+            record = new IncentiveActivityRecord();
+            record.setActivityId(immunizationActivity.getId());
+            record.setCreatedDate(data.getVisitDate());
+            record.setCreatedBy(data.getCreatedBy());
+            record.setName(immunizationActivity.getName());
+            record.setStartDate(data.getVisitDate());
+            record.setEndDate(data.getVisitDate());
+            record.setUpdatedDate(data.getVisitDate());
+            record.setUpdatedBy(data.getUpdatedBy());
+            record.setBenId(benId);
+            record.setAshaId(beneficiaryRepo.getUserIDByUserName(data.getCreatedBy()));
             record.setAmount(Long.valueOf(immunizationActivity.getRate()));
             recordRepo.save(record);
         }

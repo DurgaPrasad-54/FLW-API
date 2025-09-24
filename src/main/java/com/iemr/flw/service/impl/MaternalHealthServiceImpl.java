@@ -314,6 +314,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     }
 
     private void checkAndAddIncentives(List<ANCVisit> ancList) {
+
         IncentiveActivity anc1Activity =
                 incentivesRepo.findIncentiveMasterByNameAndGroup("ANC_REGISTRATION_1ST_TRIM", "MATERNAL HEALTH");
 
@@ -322,10 +323,12 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", "MATERNAL HEALTH");
 
+        IncentiveActivity identifiedHrpActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", "MATERNAL HEALTH");
 
 
         if (anc1Activity != null) {
             ancList.forEach( ancVisit -> {
+
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
                 if (ancVisit.getAncVisit() == 1) {
                     IncentiveActivityRecord record = recordRepo
@@ -379,7 +382,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         if(abortionActivity!=null){
 
             ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(abortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
                 if(Objects.equals(ancVisit.getAbortionType(), "true")){
@@ -394,7 +397,32 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         record.setEndDate(ancVisit.getCreatedDate());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(ancFullActivity.getRate()));
+                        record.setAmount(Long.valueOf(abortionActivity.getRate()));
+                        recordRepo.save(record);
+                    }
+
+                }
+            }));
+        }
+
+        if(identifiedHrpActivity!=null){
+            ancList.forEach((ancVisit -> {
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+                if(ancVisit.getIsHrpConfirmed()){
+                    if(record!=null){
+                        record = new IncentiveActivityRecord();
+                        record.setActivityId(identifiedHrpActivity.getId());
+                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedBy(ancVisit.getCreatedBy());
+                        record.setStartDate(ancVisit.getCreatedDate());
+                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setBenId(ancVisit.getBenId());
+                        record.setAshaId(userId);
+                        record.setAmount(Long.valueOf(identifiedHrpActivity.getRate()));
                         recordRepo.save(record);
                     }
 
