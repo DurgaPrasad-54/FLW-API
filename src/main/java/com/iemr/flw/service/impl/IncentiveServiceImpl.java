@@ -36,8 +36,6 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Autowired
     IncentiveRecordRepo recordRepo;
 
-    private  Long langId = 2L; // English
-
 
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
@@ -70,14 +68,6 @@ public class IncentiveServiceImpl implements IncentiveService {
 
         try {
 
-
-            if(Objects.equals(incentiveRequestDTO.getLangCode(), "en")){
-                langId = 2L;
-            }
-
-            if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
-                langId = 1L;
-            }
 
             List<IncentiveActivity> incs = incentivesRepo.findAll();
 
