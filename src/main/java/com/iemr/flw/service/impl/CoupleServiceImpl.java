@@ -141,7 +141,8 @@ public class CoupleServiceImpl implements CoupleService {
 
     private void checkAndAddAntaraIncentive(List<IncentiveActivityRecord> recordList, EligibleCoupleTracking ect) {
         Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
-
+           logger.info("Antra"+ect.getMethodOfContraception());
+           logger.info("Antra"+ect.getAntraDose());
         if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("ANTRA Injection")) {
             if (ect.getAntraDose().equals("Dose-1")) {
                 IncentiveActivity antaraActivity =
@@ -220,12 +221,12 @@ public class CoupleServiceImpl implements CoupleService {
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(antaraActivity.getId());
-            record.setCreatedDate(ect.getCreatedDate());
+            record.setCreatedDate(ect.getVisitDate());
             record.setCreatedBy(ect.getCreatedBy());
             record.setName(beneName);
-            record.setStartDate(ect.getCreatedDate());
-            record.setEndDate(ect.getCreatedDate());
-            record.setUpdatedDate(ect.getCreatedDate());
+            record.setStartDate(ect.getVisitDate());
+            record.setEndDate(ect.getVisitDate());
+            record.setUpdatedDate(ect.getVisitDate());
             record.setUpdatedBy(ect.getCreatedBy());
             record.setBenId(ect.getBenId());
             record.setAshaId(userId);
