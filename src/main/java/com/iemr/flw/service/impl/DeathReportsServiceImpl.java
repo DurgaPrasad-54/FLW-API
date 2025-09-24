@@ -137,7 +137,7 @@ public class DeathReportsServiceImpl implements DeathReportsService {
             Long benId = beneficiaryRepo.getBenIdFromRegID(cdr.getBenId()).longValue();
             Integer userId = userRepo.getUserIdByName(cdr.getCreatedBy());
             IncentiveActivity immunizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("DEATH_REPORTING", "CDR");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
             createIncentiveRecord(cdr,benId,userId,immunizationActivity);
         });
     }
@@ -149,7 +149,7 @@ public class DeathReportsServiceImpl implements DeathReportsService {
             Long benId = beneficiaryRepo.getBenIdFromRegID(mdsr.getBenId()).longValue();
             Integer userId = userRepo.getUserIdByName(mdsr.getCreatedBy());
             IncentiveActivity immunizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("MATERNAL_DEATH", "MDSR");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("MATERNAL_DEATH_REPORT", "MATERNAL HEALTH");
             createIncentiveRecord(mdsr,benId,userId,immunizationActivity);
         });
     }
