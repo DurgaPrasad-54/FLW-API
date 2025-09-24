@@ -28,6 +28,7 @@ import com.iemr.flw.domain.identity.*;
 import com.iemr.flw.domain.iemr.GeneralOpdData;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
+import com.iemr.flw.repo.iemr.BenReferDetailsRepo;
 import com.iemr.flw.repo.iemr.GeneralOpdRepo;
 import com.iemr.flw.service.GeneralOpdService;
 import org.slf4j.Logger;
@@ -53,6 +54,9 @@ public class GeneralOpdServiceImpl implements GeneralOpdService {
     @Autowired
     private GeneralOpdRepo generalOpdRepo;
 
+    @Autowired
+    private BenReferDetailsRepo benReferDetailsRepo;
+
 
 
     @Override
@@ -64,6 +68,12 @@ public class GeneralOpdServiceImpl implements GeneralOpdService {
         do {
             Pageable pageable = PageRequest.of(page, pageSize);
             result = generalOpdRepo.findFilteredOutreachData(villageId, pageable,userName);
+            result.forEach(generalOpdData->{
+                if(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryId())!=null){
+                    generalOpdData.setVisitCategory(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryId()));
+
+                }
+            });
 
             page++;
         } while (result.isEmpty() && page < 50); // 50 = safety limit to avoid infinite loop
