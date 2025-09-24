@@ -338,7 +338,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
 
             }
-            if(hbncVisit.getIs_baby_alive()){
+            if(!hbncVisit.getIs_baby_alive()){
                 IncentiveActivity isChildDeathActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
 
