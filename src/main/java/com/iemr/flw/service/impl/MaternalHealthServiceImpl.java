@@ -386,7 +386,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
                 if(Objects.equals(ancVisit.getAbortionType(), "true")){
-                    if(record!=null){
+                    if(record==null){
                         record = new IncentiveActivityRecord();
                         record.setActivityId(abortionActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
@@ -411,7 +411,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
                 if(ancVisit.getIsHrpConfirmed()){
-                    if(record!=null){
+                    if(record==null){
                         record = new IncentiveActivityRecord();
                         record.setActivityId(identifiedHrpActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
