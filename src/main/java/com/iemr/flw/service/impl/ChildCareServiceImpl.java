@@ -2,6 +2,7 @@ package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -414,12 +415,14 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecord(ChildVaccination vaccination, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), vaccination.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(vaccination.getCreatedDate());
             record.setCreatedBy(vaccination.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(vaccination.getCreatedDate());
             record.setEndDate(vaccination.getCreatedDate());
             record.setUpdatedDate(vaccination.getCreatedDate());
@@ -434,6 +437,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -446,7 +451,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(visitDate);
             record.setCreatedBy(hbncVisit.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(visitDate);
             record.setEndDate(visitDate);
             record.setUpdatedDate(visitDate);
@@ -461,13 +466,15 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbyncVisit(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
 
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(data.getVisitDate());
             record.setCreatedBy(data.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(data.getVisitDate());
             record.setEndDate(data.getVisitDate());
             record.setUpdatedDate(data.getVisitDate());
@@ -483,13 +490,15 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbyncOrsDistribution(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
 
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(data.getVisitDate());
             record.setCreatedBy(data.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(data.getVisitDate());
             record.setEndDate(data.getVisitDate());
             record.setUpdatedDate(data.getVisitDate());

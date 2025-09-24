@@ -1,6 +1,7 @@
 package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.CdrDTO;
@@ -159,12 +160,14 @@ public class DeathReportsServiceImpl implements DeathReportsService {
     private void createIncentiveRecord(CDR cdr, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), cdr.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(cdr.getCreatedDate());
             record.setCreatedBy(cdr.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(cdr.getCreatedDate());
             record.setEndDate(cdr.getCreatedDate());
             record.setUpdatedDate(cdr.getCreatedDate());
@@ -179,12 +182,14 @@ public class DeathReportsServiceImpl implements DeathReportsService {
     private void createIncentiveRecord(MDSR mdsr, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), mdsr.getCreatedDate(), benId);
+        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(mdsr.getCreatedDate());
             record.setCreatedBy(mdsr.getCreatedBy());
-            record.setName(immunizationActivity.getName());
+            record.setName(beneName);
             record.setStartDate(mdsr.getCreatedDate());
             record.setEndDate(mdsr.getCreatedDate());
             record.setUpdatedDate(mdsr.getCreatedDate());

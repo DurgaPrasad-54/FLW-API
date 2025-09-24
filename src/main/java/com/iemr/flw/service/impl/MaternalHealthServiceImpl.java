@@ -1,6 +1,7 @@
 package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -333,11 +334,14 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 if (ancVisit.getAncVisit() == 1) {
                     IncentiveActivityRecord record = recordRepo
                             .findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                    RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                    String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                     if (record == null) {
                         record = new IncentiveActivityRecord();
                         record.setActivityId(anc1Activity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setName(beneName);
                         record.setStartDate(ancVisit.getCreatedDate());
                         record.setEndDate(ancVisit.getCreatedDate());
                         record.setUpdatedDate(ancVisit.getCreatedDate());
@@ -362,10 +366,13 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                             .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 4, true);
 
                     if (record == null && (visit1 != null) && (visit2 != null) && (visit3 != null) && (visit4 != null)) {
+                        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                         record = new IncentiveActivityRecord();
                         record.setActivityId(ancFullActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setName(beneName);
                         record.setUpdatedDate(ancVisit.getCreatedDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
                         record.setStartDate(visit1.getCreatedDate());
@@ -384,12 +391,15 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(abortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+                RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
 
-                if(Objects.equals(ancVisit.getAbortionType(), "true")){
+                if(Objects.equals(ancVisit.getIsAborted(), "true")){
                     if(record==null){
                         record = new IncentiveActivityRecord();
                         record.setActivityId(abortionActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setName(beneName);
                         record.setCreatedBy(ancVisit.getCreatedBy());
                         record.setUpdatedDate(ancVisit.getCreatedDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
@@ -409,7 +419,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-
+                RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                 if(ancVisit.getIsHrpConfirmed()){
                     if(record==null){
                         record = new IncentiveActivityRecord();
@@ -417,6 +428,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         record.setCreatedDate(ancVisit.getCreatedDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
                         record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setName(beneName);
                         record.setUpdatedBy(ancVisit.getCreatedBy());
                         record.setStartDate(ancVisit.getCreatedDate());
                         record.setEndDate(ancVisit.getCreatedDate());
