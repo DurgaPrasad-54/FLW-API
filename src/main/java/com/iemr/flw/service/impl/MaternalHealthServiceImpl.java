@@ -339,12 +339,12 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     if (record == null) {
                         record = new IncentiveActivityRecord();
                         record.setActivityId(anc1Activity.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedDate(ancVisit.getAncDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
                         record.setName(beneName);
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setStartDate(ancVisit.getAncDate());
+                        record.setEndDate(ancVisit.getAncDate());
+                        record.setUpdatedDate(ancVisit.getAncDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
@@ -370,13 +370,13 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                         record = new IncentiveActivityRecord();
                         record.setActivityId(ancFullActivity.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedDate(ancVisit.getAncDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
                         record.setName(beneName);
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedDate(ancVisit.getAncDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(visit1.getCreatedDate());
-                        record.setEndDate(visit4.getCreatedDate());
+                        record.setStartDate(visit1.getAncDate());
+                        record.setEndDate(visit4.getAncDate());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
                         record.setAmount(Long.valueOf(ancFullActivity.getRate()));
