@@ -421,22 +421,25 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
                 RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
                 String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
-                if(ancVisit.getIsHrpConfirmed()){
-                    if(record==null){
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(identifiedHrpActivity.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
-                        record.setName(beneName);
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(identifiedHrpActivity.getRate()));
-                        recordRepo.save(record);
+                if(ancVisit.getIsHrpConfirmed()!=null){
+                    if(ancVisit.getIsHrpConfirmed()){
+                        if(record==null){
+                            record = new IncentiveActivityRecord();
+                            record.setActivityId(identifiedHrpActivity.getId());
+                            record.setCreatedDate(ancVisit.getCreatedDate());
+                            record.setCreatedBy(ancVisit.getCreatedBy());
+                            record.setUpdatedDate(ancVisit.getCreatedDate());
+                            record.setName(beneName);
+                            record.setUpdatedBy(ancVisit.getCreatedBy());
+                            record.setStartDate(ancVisit.getCreatedDate());
+                            record.setEndDate(ancVisit.getCreatedDate());
+                            record.setBenId(ancVisit.getBenId());
+                            record.setAshaId(userId);
+                            record.setAmount(Long.valueOf(identifiedHrpActivity.getRate()));
+                            recordRepo.save(record);
+                        }
                     }
+
 
                 }
             }));
