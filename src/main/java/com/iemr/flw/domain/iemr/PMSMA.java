@@ -137,7 +137,7 @@ public class PMSMA {
     private Timestamp visitDate;
     
     @Column(name = "visitNo")
-    private int visitNumber;
+    private Integer visitNumber;
     
     @Column(name = "anyOtherHighRiskCondition")
     private String anyOtherHighRiskCondition;
