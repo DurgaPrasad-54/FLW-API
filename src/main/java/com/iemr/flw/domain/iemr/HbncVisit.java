@@ -17,7 +17,7 @@ public class HbncVisit {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "asha_id")
     private Integer userId;
 
     @Column(name = "ben_id")
