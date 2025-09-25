@@ -24,7 +24,7 @@ public class IRSRoundController {
     @Autowired
     private IRSRoundService irsRoundService;
 
-    @PostMapping(value = "/add", headers = "Authorization")
+    @PostMapping(value = "/add")
     public ResponseEntity<Map<String, Object>> addRound(@RequestBody IRSRoundListDTO dto) {
         Map<String, Object> response = new LinkedHashMap<>();
         try {
@@ -55,7 +55,7 @@ public class IRSRoundController {
 
     }
 
-    @GetMapping(value = "/list/{householdId}", headers = "Authorization")
+    @GetMapping(value = "/list/{householdId}")
     public ResponseEntity<Map<String, Object>> getRounds(@PathVariable Long householdId) {
 
         Map<String, Object> response = new LinkedHashMap<>();

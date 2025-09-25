@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/generalOpd",headers = "Authorization")
+@RequestMapping(value = "/generalOpd")
 public class GeneralOPDController {
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(GeneralOPDController.class);
 

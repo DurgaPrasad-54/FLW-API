@@ -63,6 +63,6 @@ public interface GeneralOpdRepo extends JpaRepository<GeneralOpdData,Long> {
             nativeQuery = true)
     Page<GeneralOpdData> findFilteredOutreachData(
             @Param("villageID") Integer villageID,
-            Pageable pageable,String  userName);
+            Pageable pageable,@Param("userName") String  userName);
 
 }

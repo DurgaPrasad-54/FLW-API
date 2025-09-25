@@ -69,8 +69,18 @@ public class GeneralOpdServiceImpl implements GeneralOpdService {
             Pageable pageable = PageRequest.of(page, pageSize);
             result = generalOpdRepo.findFilteredOutreachData(villageId, pageable,userName);
             result.forEach(generalOpdData->{
-                if(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryId())!=null){
-                    generalOpdData.setVisitCategory(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryId()));
+                if(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryRegID())!=null){
+                    generalOpdData.setVisitCategory(benReferDetailsRepo.findInstituteNameByBeneficiaryRegID(generalOpdData.getBeneficiaryRegID()));
+
+                }else {
+                    generalOpdData.setVisitCategory("");
+
+                }
+                if(benReferDetailsRepo.findReasonByBeneficiaryRegID(generalOpdData.getBeneficiaryRegID())!=null){
+                    generalOpdData.setVisitReason(benReferDetailsRepo.findReasonByBeneficiaryRegID(generalOpdData.getBeneficiaryRegID()));
+
+                }else {
+                    generalOpdData.setVisitReason("");
 
                 }
             });

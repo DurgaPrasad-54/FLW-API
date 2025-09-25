@@ -216,5 +216,9 @@ public class GeneralOpdData {
 	@Column(name = "beneficiary_id")
 	private Long beneficiaryId;
 
+	@Expose
+	@Column(name = "village")
+	private String  village;
+
 
 }
