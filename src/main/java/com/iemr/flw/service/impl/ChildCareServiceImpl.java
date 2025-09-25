@@ -194,7 +194,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                         hbncVisit = new HbncVisit();
                         modelMapper.map(hbncVisitDTO, hbncVisit);
                         hbncVisit.setBeneficiaryId(it.getBeneficiaryId());
-                        hbncVisit.setUserId(it.getUserId());
+                        hbncVisit.setAshaId(it.getAshaId());
                         hbncVisit.setCreatedBy(it.getUserName());
                         hbncVisit.setHouseHoldId(it.getHouseHoldId());
                         hbncVisit.setId(null);
@@ -457,7 +457,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             record.setUpdatedDate(visitDate);
             record.setUpdatedBy(hbncVisit.getCreatedBy());
             record.setBenId(benId);
-            record.setAshaId(hbncVisit.getUserId());
+            record.setAshaId(hbncVisit.getAshaId());
             record.setAmount(Long.valueOf(immunizationActivity.getRate()));
             recordRepo.save(record);
         }
