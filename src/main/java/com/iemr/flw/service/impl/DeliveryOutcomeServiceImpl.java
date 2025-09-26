@@ -180,9 +180,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), delOutList.getCreatedDate(), benId);
 
-        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(delOutList.getBenId()))).getBenDetailsId();
-        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
-        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+
         if (record == null) {
             logger.info("setStartDate"+delOutList.getDateOfDelivery());
             logger.info("setCreatedDate"+delOutList.getCreatedDate());
@@ -190,7 +188,6 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(delOutList.getDateOfDelivery());
             record.setCreatedBy(delOutList.getCreatedBy());
-            record.setName(beneName);
             record.setStartDate(delOutList.getDateOfDelivery());
             record.setEndDate(delOutList.getDateOfDelivery());
             record.setUpdatedDate(delOutList.getCreatedDate());

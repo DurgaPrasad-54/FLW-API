@@ -92,14 +92,11 @@ public class CoupleServiceImpl implements CoupleService {
             IncentiveActivityRecord record = recordRepo
                     .findRecordByActivityIdCreatedDateBenId(activity.getId(), eligibleCoupleDTO.getCreatedDate(), eligibleCoupleDTO.getBenId());
             Integer userId = userRepo.getUserIdByName(eligibleCoupleDTO.getCreatedBy());
-            BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(eligibleCoupleDTO.getBenId()))).getBenDetailsId();
-            RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);            String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(activity.getId());
                 record.setCreatedDate(eligibleCoupleDTO.getCreatedDate());
                 record.setCreatedBy(eligibleCoupleDTO.getCreatedBy());
-                record.setName(beneName);
                 record.setStartDate(eligibleCoupleDTO.getCreatedDate());
                 record.setEndDate(eligibleCoupleDTO.getCreatedDate());
                 record.setUpdatedDate(eligibleCoupleDTO.getCreatedDate());
@@ -219,16 +216,12 @@ public class CoupleServiceImpl implements CoupleService {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(antaraActivity.getId(), ect.getCreatedDate(), ect.getBenId());
         // get bene details
-        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(ect.getBenId()))).getBenDetailsId();
-        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
-        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
 
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(antaraActivity.getId());
             record.setCreatedDate(ect.getVisitDate());
             record.setCreatedBy(ect.getCreatedBy());
-            record.setName(beneName);
             record.setStartDate(ect.getVisitDate());
             record.setEndDate(ect.getVisitDate());
             record.setUpdatedDate(ect.getVisitDate());
