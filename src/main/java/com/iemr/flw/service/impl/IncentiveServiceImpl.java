@@ -2,11 +2,13 @@ package com.iemr.flw.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.IncentiveActivity;
 import com.iemr.flw.domain.iemr.IncentiveActivityLangMapping;
 import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
+import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.IncentiveActivityLangMappingRepo;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
@@ -15,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class IncentiveServiceImpl implements IncentiveService {
 
-
+    @Autowired
+    private BeneficiaryRepo beneficiaryRepo;
     ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
@@ -117,7 +121,16 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        entities.forEach(entry -> dtos.add(modelMapper.map(entry, IncentiveRecordDTO.class)));
+        entities.forEach(entry -> {
+            if(entry.getName()==null){
+                BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(entry.getBenId()))).getBenDetailsId();
+                RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
+                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+                entry.setName(beneName);
+            }
+
+            dtos.add(modelMapper.map(entry, IncentiveRecordDTO.class));
+        });
 
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(dtos);
