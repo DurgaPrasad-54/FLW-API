@@ -3,6 +3,7 @@ package com.iemr.flw.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
+import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -415,7 +416,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecord(ChildVaccination vaccination, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), vaccination.getCreatedDate(), benId);
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(vaccination.getBeneficiaryRegId()).getBenDetailsId();
+        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             record = new IncentiveActivityRecord();
@@ -437,7 +439,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(hbncVisit.getBeneficiaryId()))).getBenDetailsId();
+        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -466,7 +469,9 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbyncVisit(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+
+        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(data.getBenId()))).getBenDetailsId();
+        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
 
@@ -490,7 +495,9 @@ public class ChildCareServiceImpl implements ChildCareService {
     private void createIncentiveRecordforHbyncOrsDistribution(HBYC data, Long benId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getCreatedDate(), benId);
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
+
+        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(data.getBenId()))).getBenDetailsId();
+        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
 

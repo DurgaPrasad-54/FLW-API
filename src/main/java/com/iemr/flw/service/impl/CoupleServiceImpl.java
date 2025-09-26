@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
+import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.EligibleCoupleDTO;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,8 +92,8 @@ public class CoupleServiceImpl implements CoupleService {
             IncentiveActivityRecord record = recordRepo
                     .findRecordByActivityIdCreatedDateBenId(activity.getId(), eligibleCoupleDTO.getCreatedDate(), eligibleCoupleDTO.getBenId());
             Integer userId = userRepo.getUserIdByName(eligibleCoupleDTO.getCreatedBy());
-            RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(eligibleCoupleDTO.getBenId()));
-            String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+            BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(eligibleCoupleDTO.getBenId()))).getBenDetailsId();
+            RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);            String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(activity.getId());
@@ -216,8 +218,11 @@ public class CoupleServiceImpl implements CoupleService {
     private void addIncenticeRecord(List<IncentiveActivityRecord> recordList, EligibleCoupleTracking ect, Integer userId, IncentiveActivity antaraActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(antaraActivity.getId(), ect.getCreatedDate(), ect.getBenId());
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ect.getBenId()));
+        // get bene details
+        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(ect.getBenId()))).getBenDetailsId();
+        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(antaraActivity.getId());

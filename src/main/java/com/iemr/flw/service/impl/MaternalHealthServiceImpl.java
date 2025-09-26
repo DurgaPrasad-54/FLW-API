@@ -2,6 +2,7 @@ package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
+import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -334,7 +336,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 if (ancVisit.getAncVisit() == 1) {
                     IncentiveActivityRecord record = recordRepo
                             .findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-                    RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()))).getBenDetailsId();
+                    RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
                     String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                     if (record == null) {
                         record = new IncentiveActivityRecord();
@@ -366,7 +369,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                             .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 4, true);
 
                     if (record == null && (visit1 != null) && (visit2 != null) && (visit3 != null) && (visit4 != null)) {
-                        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                        BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()))).getBenDetailsId();
+                        RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
                         String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
                         record = new IncentiveActivityRecord();
                         record.setActivityId(ancFullActivity.getId());
@@ -391,9 +395,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(abortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
+                BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()))).getBenDetailsId();
+                RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
                 String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
-
                 if(Objects.equals(ancVisit.getIsAborted(), "true")){
                     if(record==null){
                         record = new IncentiveActivityRecord();
