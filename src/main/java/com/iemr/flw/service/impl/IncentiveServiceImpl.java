@@ -125,9 +125,9 @@ public class IncentiveServiceImpl implements IncentiveService {
         entities.forEach(entry -> {
             if(entry.getName()==null){
                 if(entry.getBenId()!=0){
-                    BigInteger regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
+                    Long regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
                     logger.info("rmnchBeneficiaryDetailsRmnch"+regId);
-                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(regId).getBenDetailsId();
+                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(BigInteger.valueOf(regId)).getBenDetailsId();
                     RMNCHMBeneficiarydetail rmnchBeneficiaryDetails = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
                     String beneName = rmnchBeneficiaryDetails.getFirstName()+" "+rmnchBeneficiaryDetails.getLastName();
                     entry.setName(beneName);

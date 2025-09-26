@@ -22,8 +22,8 @@ public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRm
 
     Optional<RMNCHBeneficiaryDetailsRmnch> findById(Long benID);
 
-    @Query(value = "SELECT CAST(BenRegId AS UNSIGNED) FROM db_identity.i_beneficiarydetails_rmnch WHERE BeneficiaryId = :benId", nativeQuery = true)
-    BigInteger getBenRegIdFromBenId(@Param("benId") Long benId);
+    @Query(value = "SELECT beneficiaryRegID FROM db_identity.i_beneficiarydetails_rmnch WHERE BeneficiaryId = :benId", nativeQuery = true)
+    Long getBenRegIdFromBenId(@Param("benId") Long benId);
 
     @Query(nativeQuery = true, value = " SELECT userid FROM db_iemr.m_user WHERE UserName = :userName ")
     Integer getUserIDByUserName(@Param("userName") String userName);
@@ -68,10 +68,6 @@ public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRm
 
     @Query(" SELECT t.benRegId FROM RMNCHMBeneficiaryregidmapping t  WHERE t.beneficiaryID = :benID ")
     Long getRegIDFromBenId(@Param("benID") Long benID);
-
-
-
-
 
 
     @Query(nativeQuery = true, value = " SELECT HealthIdNumber,HealthID  FROM db_iemr.m_benhealthidmapping WHERE BeneficiaryRegID = :benRegId ")
