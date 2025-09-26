@@ -22,6 +22,9 @@ public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRm
 
     Optional<RMNCHBeneficiaryDetailsRmnch> findById(Long benID);
 
+    @Query(value = "SELECT BeneficiaryRegID FROM db_identity.i_beneficiarydetails_rmnch WHERE BeneficiaryId = :benId", nativeQuery = true)
+    BigInteger getBenRegIdFromBenId(@Param("benId") Long benId);
+
     @Query(nativeQuery = true, value = " SELECT userid FROM db_iemr.m_user WHERE UserName = :userName ")
     Integer getUserIDByUserName(@Param("userName") String userName);
 
@@ -66,18 +69,22 @@ public interface BeneficiaryRepo extends JpaRepository<RMNCHBeneficiaryDetailsRm
     @Query(" SELECT t.benRegId FROM RMNCHMBeneficiaryregidmapping t  WHERE t.beneficiaryID = :benID ")
     Long getRegIDFromBenId(@Param("benID") Long benID);
 
+
+
+
+
+
     @Query(nativeQuery = true, value = " SELECT HealthIdNumber,HealthID  FROM db_iemr.m_benhealthidmapping WHERE BeneficiaryRegID = :benRegId ")
 	Object[] getBenHealthIdNumber(@Param("benRegId") BigInteger benRegId);
     
     @Query(nativeQuery = true, value = " SELECT HealthID,HealthIdNumber,isNewAbha FROM db_iemr.t_healthid WHERE HealthIdNumber = :healthIdNumber ")
     ArrayList<Object[]> getBenHealthDetails(@Param("healthIdNumber") String healthIdNumber);
 
-    @Query(value = "SELECT * FROM db_identity.i_beneficiarymapping WHERE BenRegId = :benRegId", nativeQuery = true)
-    RMNCHMBeneficiarymapping  findByBenRegIdFromMapping(Long benRegId);
+    @Query("SELECT b FROM RMNCHMBeneficiarymapping b WHERE b.benRegId = :benRegId")
+    RMNCHMBeneficiarymapping findByBenRegIdFromMapping(@Param("benRegId") BigInteger benRegId);
 
-
-    @Query(value = "SELECT * FROM db_identity.i_beneficiarydetails WHERE BeneficiaryDetailsId = :beneficiaryDetailsId", nativeQuery = true)
-    RMNCHMBeneficiarydetail findByBeneficiaryDetailsId(BigInteger beneficiaryDetailsId);
+    @Query("SELECT d FROM RMNCHMBeneficiarydetail d WHERE d.beneficiaryDetailsId = :beneficiaryDetailsId")
+    RMNCHMBeneficiarydetail findByBeneficiaryDetailsId(@Param("beneficiaryDetailsId") BigInteger beneficiaryDetailsId);
 
 
 

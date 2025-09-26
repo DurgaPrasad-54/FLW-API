@@ -2,6 +2,7 @@ package com.iemr.flw.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
 import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.IncentiveActivity;
 import com.iemr.flw.domain.iemr.IncentiveActivityLangMapping;
@@ -14,18 +15,18 @@ import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
 import com.iemr.flw.service.IncentiveService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class IncentiveServiceImpl implements IncentiveService {
+    private final Logger logger = LoggerFactory.getLogger(ChildCareServiceImpl.class);
 
     @Autowired
     private BeneficiaryRepo beneficiaryRepo;
@@ -124,10 +125,13 @@ public class IncentiveServiceImpl implements IncentiveService {
         entities.forEach(entry -> {
             if(entry.getName()==null){
                 if(entry.getBenId()!=0){
-                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(entry.getBenId()))).getBenDetailsId();
-                    RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
-                    String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+                    BigInteger regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
+                    logger.info("rmnchBeneficiaryDetailsRmnch"+regId);
+                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(regId).getBenDetailsId();
+                    RMNCHMBeneficiarydetail rmnchBeneficiaryDetails = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
+                    String beneName = rmnchBeneficiaryDetails.getFirstName()+" "+rmnchBeneficiaryDetails.getLastName();
                     entry.setName(beneName);
+
                 }
 
             }
