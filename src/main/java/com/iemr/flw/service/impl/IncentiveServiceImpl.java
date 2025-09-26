@@ -123,10 +123,13 @@ public class IncentiveServiceImpl implements IncentiveService {
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
         entities.forEach(entry -> {
             if(entry.getName()==null){
-                BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(entry.getBenId()))).getBenDetailsId();
-                RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
-                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
-                entry.setName(beneName);
+                if(entry.getBenId()!=0){
+                    BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping((beneficiaryRepo.getRegIDFromBenId(entry.getBenId()))).getBenDetailsId();
+                    RMNCHMBeneficiarydetail rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.findByBeneficiaryDetailsId(benDetailId);
+                    String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
+                    entry.setName(beneName);
+                }
+
             }
 
             dtos.add(modelMapper.map(entry, IncentiveRecordDTO.class));
