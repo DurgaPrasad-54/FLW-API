@@ -26,39 +26,22 @@ public class IncentiveActivityLangMapping {
     @Column(name = "rate_per_activity")
     private Integer rate;
 
-    @Column(name = "state_code")
-    private Integer state;
-
-    @Column(name = "district_code")
-    private Integer district;
-
     @Column(name = "group_name")
     private String group;
 
 
-    @Column(name = "fmr_code")
-    private String fmrCode;
-
-    @Column(name = "fmr_code_old")
-    private String fmrCodeOld;
-
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    @Column(name = "created_by")
-    private String createdBy;
 
     @Column(name = "updated_date")
     private Timestamp updatedDate;
 
-    @Column(name = "updated_by")
-    private String updatedBy;
-
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
-
     @Column(name = "assame_activity_description")
     private String assameActivityDescription;
+
+    @Column(name = "hindi_activity_description")
+    private String hindiActivityDescription;
 
 
 }

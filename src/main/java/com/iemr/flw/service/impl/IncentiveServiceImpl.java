@@ -83,6 +83,8 @@ public class IncentiveServiceImpl implements IncentiveService {
                 IncentiveActivityLangMapping mapping = incentiveActivityLangMappingRepo
                         .findByIdAndName(inc.getId(),inc.getName());
 
+
+
                 if (mapping != null) {
                     dto.setName(mapping.getName());
                     dto.setGroupName(mapping.getGroup());
@@ -92,6 +94,15 @@ public class IncentiveServiceImpl implements IncentiveService {
                     }else  if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
                         if(mapping.getAssameActivityDescription()!=null){
                             dto.setDescription(mapping.getAssameActivityDescription());
+
+                        }else {
+                            dto.setDescription(mapping.getDescription());
+
+                        }
+
+                    }else  if(Objects.equals(incentiveRequestDTO.getLangCode(), "hi")){
+                        if(mapping.getHindiActivityDescription()!=null){
+                            dto.setDescription(mapping.getHindiActivityDescription());
 
                         }else {
                             dto.setDescription(mapping.getDescription());

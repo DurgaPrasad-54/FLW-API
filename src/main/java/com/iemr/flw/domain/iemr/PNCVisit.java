@@ -81,7 +81,7 @@ public class PNCVisit {
     private String updatedBy;
 
     @Column(name = "steilisation_date")
-    private Timestamp steilisationDate;
+    private Timestamp sterilisationDate;
 
     @Column(name = "delivery_discharge_summary_image1")
     private String  deliveryDischargeSummary1;
