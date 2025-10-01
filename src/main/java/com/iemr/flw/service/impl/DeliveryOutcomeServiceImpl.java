@@ -56,6 +56,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     @Autowired
     private HouseHoldRepo houseHoldRepo;
 
+   private boolean isJsyBeneficiary;
 
 
     private Gson gson = new Gson();
@@ -124,7 +125,10 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
-            boolean isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
+            if(deliveryOutcome.getIsJSYBenificiary()!=null){
+                isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
+
+            }
              if(deliveryOutcome.getPlaceOfDelivery()!=null && !deliveryOutcome.getPlaceOfDelivery().isEmpty()){
                  institutionalDelivery = true;
 

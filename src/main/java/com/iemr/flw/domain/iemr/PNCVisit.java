@@ -92,6 +92,6 @@ public class PNCVisit {
     @Column(name = "delivery_discharge_summary_image3")
     private String  deliveryDischargeSummary3;
 
-    @Column(name = "delivery_discharge_summary_image3")
+    @Column(name = "delivery_discharge_summary_image4")
     private String  deliveryDischargeSummary4;
 }
