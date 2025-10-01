@@ -303,6 +303,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     pncCare.setLastModDate(it.getUpdatedDate());
                     pncCare.setProcessed("N");
                     pncCareList.add(pncCare);
+                    checkAndAddAntaraIncentive(pncList,pncVisit);
                 }
                 pncList.add(pncVisit);
             });
@@ -315,6 +316,69 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         }
         return null;
     }
+
+    private void checkAndAddAntaraIncentive(List<PNCVisit> recordList, PNCVisit ect) {
+        Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
+        logger.info("ContraceptionMethod:"+ect.getContraceptionMethod());
+          if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MALE STERILIZATION")){
+
+            IncentiveActivity maleSterilizationActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", "FAMILY PLANNING");
+            if (maleSterilizationActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivity);
+            }
+        }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("FEMALE STERILIZATION")){
+
+            IncentiveActivity femaleSterilizationActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", "FAMILY PLANNING");
+            if (femaleSterilizationActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivity);
+            }
+        }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MiniLap")){
+
+            IncentiveActivity miniLapActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MINILAP", "FAMILY PLANNING");
+            if (miniLapActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, miniLapActivity);
+            }
+        }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("Condom")){
+
+            IncentiveActivity comdomActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+            if (comdomActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, comdomActivity);
+            }
+        }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("Copper T (IUCD)")){
+
+            IncentiveActivity copperTActivity =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+            if (copperTActivity != null) {
+                addIncenticeRecord(recordList, ect, userId, copperTActivity);
+            }
+        }
+    }
+
+    private void addIncenticeRecord(List<PNCVisit> recordList, PNCVisit ect, Integer userId, IncentiveActivity antaraActivity) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(antaraActivity.getId(), ect.getCreatedDate(), ect.getBenId());
+        // get bene details
+
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(antaraActivity.getId());
+            record.setCreatedDate(ect.getPncDate());
+            record.setCreatedBy(ect.getCreatedBy());
+            record.setStartDate(ect.getPncDate());
+            record.setEndDate(ect.getPncDate());
+            record.setUpdatedDate(ect.getPncDate());
+            record.setUpdatedBy(ect.getCreatedBy());
+            record.setBenId(ect.getBenId());
+            record.setAshaId(userId);
+            record.setAmount(Long.valueOf(antaraActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
 
     private void checkAndAddIncentives(List<ANCVisit> ancList) {
 
