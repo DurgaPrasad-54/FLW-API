@@ -17,14 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("sammelans")
+@RequestMapping(value = "/sammelans")
 public class SammelanController {
     @Autowired
     private  SammelanService service;
 
 
 
-    @RequestMapping(value = "saveAll",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "saveAll",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,method = RequestMethod.POST)
     public ResponseEntity<SammelanResponseDTO> create(
             @RequestPart("payload") @Valid SammelanRequestDTO payload,
             @RequestPart(value = "files", required = false) MultipartFile[] files) {
@@ -35,7 +35,7 @@ public class SammelanController {
     }
 
 
-    @RequestMapping(value = "getAll")
+    @RequestMapping(value = "getAll",method = RequestMethod.GET)
     public List<SammelanResponseDTO> sammelanlist(@RequestParam Integer ashaId) {
         return service.getSammelanHistory(ashaId);
     }
