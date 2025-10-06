@@ -3,7 +3,10 @@ package com.iemr.flw.domain.iemr;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "t_eligible_couple_register", schema = "db_iemr")
@@ -161,5 +164,16 @@ public class EligibleCoupleRegister {
 
     @Column(name = "lmp_date")
     private String lmpDate;
+
+    @Column(name = "is_kit_handed_over")
+    private Boolean isKitHandedOver;
+
+    @Column(name = "is_kit_handed_over_date")
+    private Timestamp kitHandedOverDate;
+
+
+    @Lob
+    @Column(name = "kit_photo", columnDefinition = "LONGTEXT")
+    private String kitPhoto;
 }
 

@@ -1,5 +1,6 @@
 package com.iemr.flw.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,27 @@ public class CoupleServiceImpl implements CoupleService {
                         createIncentiveRecord(recordList, it, activity2);
                     }
                     Long id = existingECR.getId();
+                    if (it.getKitPhoto() != null && it.getKitPhoto().length > 0) {
+                        List<String> base64Images = List.of(it.getKitPhoto())
+                                .stream()
+                                .filter(file -> !file.isEmpty())
+                                .map(file -> {
+                                    try {
+                                        return Base64.getEncoder().encodeToString(file.getBytes());
+                                    } catch (Exception e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                })
+                                .collect(Collectors.toList());
+
+                        String imagesJson = null;
+                        try {
+                            imagesJson = mapper.writeValueAsString(base64Images);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        existingECR.setKitPhoto(imagesJson);
+                    }
                     modelMapper.map(it, existingECR);
                     existingECR.setId(id);
                 } else {
