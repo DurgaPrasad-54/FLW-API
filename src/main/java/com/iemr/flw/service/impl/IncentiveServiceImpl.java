@@ -143,6 +143,9 @@ public class IncentiveServiceImpl implements IncentiveService {
                     String beneName = rmnchBeneficiaryDetails.getFirstName()+" "+rmnchBeneficiaryDetails.getLastName();
                     entry.setName(beneName);
 
+                }else{
+                  entry.setName("");
+
                 }
 
             }
