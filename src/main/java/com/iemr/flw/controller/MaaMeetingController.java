@@ -30,7 +30,7 @@ public class MaaMeetingController {
     }
 
     @PostMapping("/saveAll")
-    public ResponseEntity<?> saveMeeting(@ModelAttribute List<MaaMeetingRequestDTO> dto) {
+    public ResponseEntity<?> saveMeeting(@RequestBody List<MaaMeetingRequestDTO> dto) {
         try {
             MaaMeeting saved = service.saveMeeting(dto);
             return ResponseEntity.ok(saved);
