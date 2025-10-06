@@ -1,6 +1,7 @@
 package com.iemr.flw.dto.iemr;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -106,8 +107,12 @@ public class EligibleCoupleDTO implements Serializable {
 
     private String updatedBy;
 
-
-  
     private String lmpDate;
+
+    private Boolean isKitHandedOver;
+
+    private Timestamp kitHandedOverDate;
+
+    private MultipartFile [] kitPhoto;
 
 }
