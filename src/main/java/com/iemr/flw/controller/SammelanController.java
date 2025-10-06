@@ -2,6 +2,10 @@ package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.SammelanService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +28,35 @@ public class SammelanController {
 
 
 
-    @RequestMapping(value = "saveAll",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,method = RequestMethod.POST)
+    @RequestMapping(value = "saveAll",method = RequestMethod.POST)
     public ResponseEntity<SammelanResponseDTO> create(
-            @RequestPart("payload") @Valid SammelanRequestDTO payload,
-            @RequestPart(value = "files", required = false) MultipartFile[] files) {
-
+            @RequestBody  @Valid List<SammelanRequestDTO> payload) {
 
         SammelanResponseDTO resp = service.submitSammelan(payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
 
-    @RequestMapping(value = "getAll",method = RequestMethod.GET)
-    public List<SammelanResponseDTO> sammelanlist(@RequestParam Integer ashaId) {
-        return service.getSammelanHistory(ashaId);
+    @GetMapping("/getAll")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched meetings",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SammelanListResponseDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public ResponseEntity<?> getMeetings(@RequestParam Integer ashaId) {
+        SammelanListResponseDTO response = new SammelanListResponseDTO();
+
+        try {
+            response.setData(service.getSammelanHistory(ashaId));
+            response.setStatusCode(200);
+            response.setStatus("Success");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setStatus("Something went wrong");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
 

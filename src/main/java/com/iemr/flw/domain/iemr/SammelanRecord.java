@@ -47,6 +47,8 @@ public class SammelanRecord {
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    @OneToMany(mappedBy = "sammelanRecord", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SammelanAttachment> attachments = new ArrayList<>();
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT",name = "attachments")
+    private String attachments;
 }

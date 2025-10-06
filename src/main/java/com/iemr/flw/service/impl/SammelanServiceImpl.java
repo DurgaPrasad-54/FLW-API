@@ -1,5 +1,8 @@
 package com.iemr.flw.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.SammelanAttachment;
 import com.iemr.flw.domain.iemr.SammelanRecord;
 import com.iemr.flw.dto.iemr.*;
@@ -12,73 +15,93 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class SammelanServiceImpl implements SammelanService {
     @Autowired
-    private  SammelanRecordRepository recordRepo;
+    private SammelanRecordRepository recordRepo;
     @Autowired
-    private  SammelanAttachmentRepository attachmentRepo;
+    private SammelanAttachmentRepository attachmentRepo;
 
     private SammelanRecord record;
 
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @Override
-    public SammelanResponseDTO submitSammelan(SammelanRequestDTO dto) {
-        validateRequest(dto);
-        LocalDate localDate = dto.getDate().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
-        YearMonth ym = YearMonth.from(localDate);
-
-        // Check for existing record in same month
-        boolean exists = recordRepo.existsByAshaIdAndMeetingDateBetween(
-                dto.getAshaId(),
-                ym.atDay(1),
-                ym.atEndOfMonth()
-        );
-        if (exists) {
-            throw new IllegalArgumentException("Sammelan already submitted for this month.");
-        }
-
-        // Save Sammelan record
-        record = new SammelanRecord();
-        record.setAshaId(dto.getAshaId());
-        record.setMeetingDate(dto.getDate());
-        record.setPlace(dto.getPlace());
-        record.setParticipants(dto.getParticipants());
-        record = recordRepo.save(record);
-
-        // Save Attachments
-        if (dto.getAttachments() != null) {
-            List<SammelanAttachment> attachments = dto.getAttachments().stream().map(a -> {
-                SammelanAttachment att = new SammelanAttachment();
-                att.setSammelanRecord(record);
-                att.setFileName(a.getFileName());
-                att.setFileType(a.getFileType());
-                att.setFileSize(a.getFileSize());
-                return att;
-            }).collect(Collectors.toList());
-            attachmentRepo.saveAll(attachments);
-            record.setAttachments(attachments);
-        }
-
-        // Save incentive audit
-
-
-        // Prepare Response DTO
+    public SammelanResponseDTO submitSammelan(List<SammelanRequestDTO> dto) {
         SammelanResponseDTO response = new SammelanResponseDTO();
-        response.setId(record.getId());
-        response.setAshaId(record.getAshaId());
-        response.setDate(record.getMeetingDate());
-        response.setPlace(record.getPlace());
-        response.setParticipants(record.getParticipants());
 
+        try {
+            dto.forEach(sammelanRequestDTO -> {
+                validateRequest(sammelanRequestDTO);
+                LocalDate localDate = sammelanRequestDTO.getDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+
+                YearMonth ym = YearMonth.from(localDate);
+
+                // Check for existing record in same month
+                boolean exists = recordRepo.existsByAshaIdAndMeetingDateBetween(
+                        sammelanRequestDTO.getAshaId(),
+                        ym.atDay(1),
+                        ym.atEndOfMonth()
+                );
+                if (exists) {
+                    throw new IllegalArgumentException("Sammelan already submitted for this month.");
+                }
+
+                // Save Sammelan record
+                record = new SammelanRecord();
+                record.setAshaId(sammelanRequestDTO.getAshaId());
+                record.setMeetingDate(sammelanRequestDTO.getDate());
+                record.setPlace(sammelanRequestDTO.getPlace());
+                record.setParticipants(sammelanRequestDTO.getParticipants());
+                record = recordRepo.save(record);
+
+                // Save Attachments
+                if (sammelanRequestDTO.getAttachments() != null && sammelanRequestDTO.getAttachments().length > 0) {
+                    List<String> base64Images = List.of(sammelanRequestDTO.getAttachments())
+                            .stream()
+                            .filter(file -> !file.isEmpty())
+                            .map(file -> {
+                                try {
+                                    return Base64.getEncoder().encodeToString(file.getBytes());
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .collect(Collectors.toList());
+
+                    String imagesJson = null;
+                    try {
+                        imagesJson = objectMapper.writeValueAsString(base64Images);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    record.setAttachments(imagesJson);
+                }
+
+
+                // Prepare Response DTO
+                response.setId(record.getId());
+                response.setAshaId(record.getAshaId());
+                response.setDate(record.getMeetingDate());
+                response.setPlace(record.getPlace());
+                response.setParticipants(record.getParticipants());
+            });
+
+
+        } catch (Exception e) {
+
+        }
         return response;
+
+
     }
 
     @Override
@@ -91,6 +114,18 @@ public class SammelanServiceImpl implements SammelanService {
             dto.setDate(record.getMeetingDate());
             dto.setPlace(record.getPlace());
             dto.setParticipants(record.getParticipants());
+            try {
+                if (record.getAttachments() != null) {
+                    List<String> images = objectMapper.readValue(
+                            record.getAttachments(),
+                            new TypeReference<List<String>>() {
+                            }
+                    );
+                    dto.setImagePaths(images);
+                }
+            } catch (Exception e) {
+                dto.setImagePaths(List.of());
+            }
 
             return dto;
         }).collect(Collectors.toList());
@@ -111,11 +146,9 @@ public class SammelanServiceImpl implements SammelanService {
         if (dto.getParticipants() < 0 || dto.getParticipants() > 999) {
             throw new IllegalArgumentException("Participants must be between 0–999.");
         }
-        if (dto.getAttachments() == null || dto.getAttachments().size() < 2) {
+        if (dto.getAttachments() == null) {
             throw new IllegalArgumentException("Minimum 2 attachments required.");
         }
-        if (dto.getAttachments().size() > 5) {
-            throw new IllegalArgumentException("Maximum 5 attachments allowed.");
-        }
+
     }
 }
