@@ -9,4 +9,7 @@ public enum PaymentParam {
     SECOND_DOSE_PER_ASHA,
     THIRD_DOSE_PER_ASHA,
     FOURTH_DOSE_PER_ASHA,
+    PER_NET,
+    PER_VISIT,
+    PER_YEAR,
 }
