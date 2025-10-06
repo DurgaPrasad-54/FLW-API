@@ -6,16 +6,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.MaaMeeting;
 import com.iemr.flw.dto.iemr.MaaMeetingRequestDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingResponseDTO;
+import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
+import com.iemr.flw.repo.iemr.IncentivesRepo;
 import com.iemr.flw.repo.iemr.MaaMeetingRepository;
+import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class MaaMeetingService {
+    @Autowired
+    private IncentivesRepo incentivesRepo;
 
+    @Autowired
+    private UserServiceRoleRepo userRepo;
+
+    @Autowired
+    private IncentiveRecordRepo recordRepo;
     private final MaaMeetingRepository repository;
     private final ObjectMapper objectMapper;
 
@@ -24,42 +37,53 @@ public class MaaMeetingService {
         this.objectMapper = objectMapper;
     }
 
-    public MaaMeeting saveMeeting(List<MaaMeetingRequestDTO> dto) throws Exception {
-        MaaMeeting meeting = new MaaMeeting();
-        dto.forEach(maaMeetingRequestDTO -> {
-                    meeting.setMeetingDate(maaMeetingRequestDTO.getMeetingDate());
-                    meeting.setPlace(maaMeetingRequestDTO.getPlace());
-                    meeting.setParticipants(maaMeetingRequestDTO.getParticipants());
-                    meeting.setAshaId(maaMeetingRequestDTO.getAshaId());
+    public List<MaaMeeting> saveMeeting(List<MaaMeetingRequestDTO> dtoList, List<MultipartFile> files) throws Exception {
+        List<MaaMeeting> meetings = new ArrayList<>();
 
-                    // Convert images to Base64
-                    if (maaMeetingRequestDTO.getMeetingImages() != null && maaMeetingRequestDTO.getMeetingImages().length > 0) {
-                        List<String> base64Images = List.of(maaMeetingRequestDTO.getMeetingImages())
-                                .stream()
-                                .filter(file -> !file.isEmpty())
-                                .map(file -> {
-                                    try {
-                                        return Base64.getEncoder().encodeToString(file.getBytes());
-                                    } catch (Exception e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                })
-                                .collect(Collectors.toList());
+        for (MaaMeetingRequestDTO req : dtoList) {
+            MaaMeeting meeting = new MaaMeeting();
+            meeting.setMeetingDate(req.getMeetingDate());
+            meeting.setPlace(req.getPlace());
+            meeting.setParticipants(req.getParticipants());
+            meeting.setAshaId(req.getAshaId());
 
-                        String imagesJson = null;
-                        try {
-                            imagesJson = objectMapper.writeValueAsString(base64Images);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                        meeting.setMeetingImagesJson(imagesJson);
+            List<String> base64Images = new ArrayList<>();
+
+            // 🟢 1️⃣ Convert any images inside DTO itself
+            if (req.getMeetingImages() != null && req.getMeetingImages().length > 0) {
+                for (MultipartFile file : req.getMeetingImages()) {
+                    if (file != null && !file.isEmpty()) {
+                        base64Images.add(Base64.getEncoder().encodeToString(file.getBytes()));
                     }
                 }
-        );
+            }
 
+            // 🟢 2️⃣ Convert any separate uploaded files (from @RequestPart("files"))
+            if (files != null && !files.isEmpty()) {
+                for (MultipartFile file : files) {
+                    if (file != null && !file.isEmpty()) {
+                        base64Images.add(Base64.getEncoder().encodeToString(file.getBytes()));
+                    }
+                }
+            }
 
-        return repository.save(meeting);
+            // 🟢 3️⃣ Convert all collected base64 images to JSON array string
+            if (!base64Images.isEmpty()) {
+                try {
+                    String imagesJson = objectMapper.writeValueAsString(base64Images);
+                    meeting.setMeetingImagesJson(imagesJson);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting image list to JSON", e);
+                }
+            }
+
+            meetings.add(meeting);
+        }
+
+        // 🟢 4️⃣ Save all records together
+        return repository.saveAll(meetings);
     }
+
 
     public List<MaaMeetingResponseDTO> getAllMeetings() throws Exception {
         List<MaaMeeting> meetings = repository.findAll();

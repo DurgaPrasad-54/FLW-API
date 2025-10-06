@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,15 +30,18 @@ public class MaaMeetingController {
         this.service = service;
     }
 
-    @PostMapping("/saveAll")
-    public ResponseEntity<?> saveMeeting(@RequestBody List<MaaMeetingRequestDTO> dto) {
+    @PostMapping(value = "/saveAll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveMeeting(
+            @RequestPart("data") List<MaaMeetingRequestDTO> dto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         try {
-            MaaMeeting saved = service.saveMeeting(dto);
-            return ResponseEntity.ok(saved);
+             service.saveMeeting(dto, files);
+            return ResponseEntity.ok("Saved Successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/getAll")
     @ApiResponses(value = {
