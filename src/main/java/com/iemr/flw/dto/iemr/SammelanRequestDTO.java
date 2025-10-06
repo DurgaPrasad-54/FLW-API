@@ -1,6 +1,7 @@
 package com.iemr.flw.dto.iemr;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -12,6 +13,6 @@ public class SammelanRequestDTO {
     private Timestamp date;                 // Meeting date
     private String place;                   // Dropdown: HWC / Anganwadi Centre / Community Center
     private Integer participants;           // Number of participants attended
-    private List<AttachmentDTO> attachments; // Min 2, Max 5 files
+    private MultipartFile[] attachments; // up to 5 images
 
 }

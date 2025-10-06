@@ -23,6 +23,6 @@ public class SammelanAttachment {
 
     private String fileName;
     private String fileType;
-    private Long fileSize;
-    private String storagePath;
+    @Lob
+    private byte[] fileData;
 }
