@@ -60,7 +60,27 @@ public class CoupleServiceImpl implements CoupleService {
                 EligibleCoupleRegister existingECR =
 //                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
+                if (it.getKitPhoto() != null && it.getKitPhoto().length > 0) {
+                    List<String> base64Images = List.of(it.getKitPhoto())
+                            .stream()
+                            .filter(file -> !file.isEmpty())
+                            .map(file -> {
+                                try {
+                                    return Base64.getEncoder().encodeToString(file.getBytes());
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .collect(Collectors.toList());
 
+                    String imagesJson = null;
+                    try {
+                        imagesJson = mapper.writeValueAsString(base64Images);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    existingECR.setKitPhoto(imagesJson);
+                }
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
                     if(existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 3) {
                         IncentiveActivity activity1 =
@@ -72,33 +92,18 @@ public class CoupleServiceImpl implements CoupleService {
                         createIncentiveRecord(recordList, it, activity2);
                     }
                     Long id = existingECR.getId();
-                    if (it.getKitPhoto() != null && it.getKitPhoto().length > 0) {
-                        List<String> base64Images = List.of(it.getKitPhoto())
-                                .stream()
-                                .filter(file -> !file.isEmpty())
-                                .map(file -> {
-                                    try {
-                                        return Base64.getEncoder().encodeToString(file.getBytes());
-                                    } catch (Exception e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                })
-                                .collect(Collectors.toList());
 
-                        String imagesJson = null;
-                        try {
-                            imagesJson = mapper.writeValueAsString(base64Images);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                        existingECR.setKitPhoto(imagesJson);
-                    }
                     modelMapper.map(it, existingECR);
                     existingECR.setId(id);
                 } else {
                     existingECR = new EligibleCoupleRegister();
                     modelMapper.map(it, existingECR);
                     existingECR.setId(null);
+                }
+                if(existingECR.getIsKitHandedOver() && !existingECR.getKitPhoto().isEmpty()){
+                    IncentiveActivity handoverKitActivity =
+                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", "FAMILY PLANNING");
+                    createIncentiveRecord(recordList, it, handoverKitActivity);
                 }
                 ecrList.add(existingECR);
             });
