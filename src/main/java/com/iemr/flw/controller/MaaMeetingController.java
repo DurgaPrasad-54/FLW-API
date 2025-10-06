@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,21 @@ public class MaaMeetingController {
 
     @PostMapping(value = "/saveAll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveMeeting(
-            @RequestPart("data") List<MaaMeetingRequestDTO> dto,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+            @RequestPart("meetingDate") String meetingDate,
+            @RequestPart("place") String place,
+            @RequestPart("participants") String participants,
+            @RequestPart("ashaId") String ashaId,
+            @RequestPart(value = "meetingImages", required = false) List<MultipartFile> meetingImages) {
         try {
-             service.saveMeeting(dto, files);
-            return ResponseEntity.ok("Saved Successfully");
+            MaaMeetingRequestDTO dto = new MaaMeetingRequestDTO();
+            dto.setMeetingDate(LocalDate.parse(meetingDate));
+            dto.setPlace(place);
+            dto.setParticipants(Integer.parseInt(participants));
+            dto.setAshaId(Long.parseLong(ashaId));
+            dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
+
+             service.saveMeeting(dto);
+             return ResponseEntity.ok("Saved Successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
