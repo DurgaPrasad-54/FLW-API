@@ -1,6 +1,7 @@
 package com.iemr.flw.controller;
 
 import com.iemr.flw.domain.iemr.MaaMeeting;
+import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.MaaMeetingListResponseDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingRequestDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingResponseDTO;
@@ -54,18 +55,18 @@ public class MaaMeetingController {
     }
 
 
-    @GetMapping("/getAll")
+    @PostMapping("/getAll")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully fetched meetings",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = MaaMeetingListResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    public ResponseEntity<?> getMeetings() {
+    public ResponseEntity<?> getMeetings(@RequestBody GetBenRequestHandler getBenRequestHandler) {
         MaaMeetingListResponseDTO response = new MaaMeetingListResponseDTO();
 
         try {
-            response.setData(service.getAllMeetings());
+            response.setData(service.getAllMeetings(getBenRequestHandler));
             response.setStatusCode(200);
             response.setStatus("Success");
             return ResponseEntity.ok(response);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.MaaMeeting;
+import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.MaaMeetingRequestDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingResponseDTO;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
@@ -68,8 +69,9 @@ public class MaaMeetingService {
 
 
 
-    public List<MaaMeetingResponseDTO> getAllMeetings() throws Exception {
-        List<MaaMeeting> meetings = repository.findAll();
+    public List<MaaMeetingResponseDTO> getAllMeetings(GetBenRequestHandler getBenRequestHandler) throws Exception {
+        List<MaaMeeting> meetings = repository.findByAshaId(getBenRequestHandler.getAshaId());
+
         return meetings.stream().map(meeting -> {
             MaaMeetingResponseDTO dto = new MaaMeetingResponseDTO();
             dto.setId(meeting.getId());
@@ -80,12 +82,14 @@ public class MaaMeetingService {
 
             try {
                 if (meeting.getMeetingImagesJson() != null) {
-                    List<String> images = objectMapper.readValue(
+                    List<String> base64Images = objectMapper.readValue(
                             meeting.getMeetingImagesJson(),
-                            new TypeReference<List<String>>() {
-                            }
+                            new TypeReference<List<String>>() {}
                     );
-                    dto.setMeetingImages(images);
+
+                    dto.setMeetingImages(base64Images);
+                } else {
+                    dto.setMeetingImages(List.of());
                 }
             } catch (Exception e) {
                 dto.setMeetingImages(List.of());
@@ -94,4 +98,5 @@ public class MaaMeetingService {
             return dto;
         }).collect(Collectors.toList());
     }
+
 }

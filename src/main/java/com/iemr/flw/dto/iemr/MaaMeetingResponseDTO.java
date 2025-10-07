@@ -31,5 +31,5 @@ public class MaaMeetingResponseDTO {
 
     @Schema(description = "Meeting images in base64 array",
             example = "[\"iVBORw0KGgoAAAANSUhEUgAA...\", \"iVBORw0KGgoAAAANSUhEUgBB...\"]")
-    private List<String> meetingImages;
+    private List<String > meetingImages;
 }
