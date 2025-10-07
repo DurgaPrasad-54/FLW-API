@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,24 +38,26 @@ public class MaaMeetingController {
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
+            @RequestPart("createdBy") String createdBy,
             @RequestPart(value = "meetingImages", required = false) List<MultipartFile> meetingImages) {
         try {
             MaaMeetingRequestDTO dto = new MaaMeetingRequestDTO();
-            dto.setMeetingDate(LocalDate.parse(meetingDate));
+            dto.setMeetingDate(Timestamp.valueOf(meetingDate));
             dto.setPlace(place);
             dto.setParticipants(Integer.parseInt(participants));
-            dto.setAshaId(Long.parseLong(ashaId));
+            dto.setAshaId(Integer.parseInt(ashaId));
+            dto.setCreatedBY(createdBy);
             dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
 
-             service.saveMeeting(dto);
-             return ResponseEntity.ok("Saved Successfully");
+            MaaMeeting saved = service.saveMeeting(dto);
+            return ResponseEntity.ok("Saved Successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @PostMapping("/getAll")
+    @GetMapping("/getAll")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully fetched meetings",
                     content = @Content(mediaType = "application/json",
