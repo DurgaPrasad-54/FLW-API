@@ -173,7 +173,10 @@ public class EligibleCoupleRegister {
 
 
     @Lob
-    @Column(name = "kit_photo", columnDefinition = "LONGTEXT")
-    private String kitPhoto;
+    @Column(name = "kit_photo1", columnDefinition = "LONGTEXT")
+    private String kitPhoto1;
+
+    @Column(name = "kit_photo2", columnDefinition = "LONGTEXT")
+    private String kitPhoto2;
 }
 

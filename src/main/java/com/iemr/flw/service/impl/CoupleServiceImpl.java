@@ -60,14 +60,14 @@ public class CoupleServiceImpl implements CoupleService {
                 EligibleCoupleRegister existingECR =
 //                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
-                if (it.getKitPhoto() != null && !it.getKitPhoto().isEmpty()) {
-                    try {
-                        // kitPhoto me sirf URI list hai → JSON bahut chhota hoga
-                        String json = mapper.writeValueAsString(it.getKitPhoto());
-                        existingECR.setKitPhoto(json);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException("Error converting kitPhoto list to JSON", e);
-                    }
+                if (it.getKitPhoto1() != null && !it.getKitPhoto1().isEmpty()) {
+                    existingECR.setKitPhoto1(it.getKitPhoto1());
+
+                }
+
+                if (it.getKitPhoto2() != null && !it.getKitPhoto2().isEmpty()) {
+                    existingECR.setKitPhoto2(it.getKitPhoto2());
+
                 }
 
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
@@ -89,7 +89,7 @@ public class CoupleServiceImpl implements CoupleService {
                     modelMapper.map(it, existingECR);
                     existingECR.setId(null);
                 }
-                if(existingECR.getIsKitHandedOver() && !existingECR.getKitPhoto().isEmpty()){
+                if(existingECR.getIsKitHandedOver() && (!existingECR.getKitPhoto1().isEmpty() || !existingECR.getKitPhoto2().isEmpty())){
                     IncentiveActivity handoverKitActivity =
                             incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", "FAMILY PLANNING");
                     createIncentiveRecord(recordList, it, handoverKitActivity);

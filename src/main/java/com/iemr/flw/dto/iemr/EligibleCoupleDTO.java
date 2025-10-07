@@ -114,6 +114,8 @@ public class EligibleCoupleDTO implements Serializable {
 
     private Timestamp kitHandedOverDate;
 
-    private List<String> kitPhoto;
+    private String kitPhoto1;
+
+    private String kitPhoto2;
 
 }
