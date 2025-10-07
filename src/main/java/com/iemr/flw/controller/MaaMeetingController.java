@@ -58,7 +58,7 @@ public class MaaMeetingController {
     }
 
 
-    @GetMapping("/getAll")
+    @PostMapping("/getAll")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully fetched meetings",
                     content = @Content(mediaType = "application/json",
