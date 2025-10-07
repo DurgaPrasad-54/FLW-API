@@ -14,7 +14,7 @@ public class MaaMeetingResponseDTO {
     private Long id;
 
     @Schema(description = "Date of the meeting", example = "2025-09-06")
-    private Timestamp meetingDate;
+    private LocalDate meetingDate;
 
     @Schema(description = "Place of the meeting", example = "HWC")
     private String place;

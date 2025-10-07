@@ -17,7 +17,7 @@ public class MaaMeeting {
     private Long id;
 
     @Column(name = "meeting_date")
-    private Timestamp meetingDate;
+    private LocalDate meetingDate;
 
     @Column(name = "place")
     private String place;

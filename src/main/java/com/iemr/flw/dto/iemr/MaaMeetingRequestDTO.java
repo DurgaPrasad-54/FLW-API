@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class MaaMeetingRequestDTO {
-    private Timestamp meetingDate;
+    private LocalDate meetingDate;
     private String place;
     private Integer participants;
     private MultipartFile[] meetingImages; // up to 5 images

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -109,16 +110,16 @@ public class MaaMeetingService {
         IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", "CHILD HEALTH");
 
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), meeting.getMeetingDate(), 0L);
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L);
 
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(incentiveActivity.getId());
-            record.setCreatedDate(meeting.getMeetingDate());
+            record.setCreatedDate(Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()));
             record.setCreatedBy(meeting.getCreatedBy());
-            record.setStartDate(meeting.getMeetingDate());
-            record.setEndDate(meeting.getMeetingDate());
-            record.setUpdatedDate(meeting.getMeetingDate());
+            record.setStartDate(Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()));
+            record.setEndDate(Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()));
+            record.setUpdatedDate(Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()));
             record.setUpdatedBy(meeting.getCreatedBy());
             record.setBenId(0L);
             record.setAshaId(meeting.getAshaId());
