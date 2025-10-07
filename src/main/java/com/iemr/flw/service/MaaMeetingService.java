@@ -3,7 +3,10 @@ package com.iemr.flw.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.domain.iemr.IncentiveActivity;
+import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.domain.iemr.MaaMeeting;
+import com.iemr.flw.domain.iemr.UwinSession;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.MaaMeetingRequestDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingResponseDTO;
@@ -46,6 +49,7 @@ public class MaaMeetingService {
         meeting.setPlace(req.getPlace());
         meeting.setParticipants(req.getParticipants());
         meeting.setAshaId(req.getAshaId());
+        meeting.setCreatedBy(req.getCreatedBY());
 
         // Convert meeting images to Base64 JSON
         if (req.getMeetingImages() != null && req.getMeetingImages().length > 0) {
@@ -63,6 +67,8 @@ public class MaaMeetingService {
             String imagesJson = objectMapper.writeValueAsString(base64Images);
             meeting.setMeetingImagesJson(imagesJson);
         }
+        checkAndAddIncentive(meeting);
+
 
         return repository.save(meeting);
     }
@@ -79,6 +85,7 @@ public class MaaMeetingService {
             dto.setPlace(meeting.getPlace());
             dto.setParticipants(meeting.getParticipants());
             dto.setAshaId(meeting.getAshaId());
+            dto.setCreatedBy(meeting.getCreatedBy());
 
             try {
                 if (meeting.getMeetingImagesJson() != null) {
@@ -97,6 +104,28 @@ public class MaaMeetingService {
 
             return dto;
         }).collect(Collectors.toList());
+    }
+    private void checkAndAddIncentive(MaaMeeting meeting) {
+        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", "CHILD HEALTH");
+
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), meeting.getMeetingDate(), 0L);
+
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(incentiveActivity.getId());
+            record.setCreatedDate(meeting.getMeetingDate());
+            record.setCreatedBy(meeting.getCreatedBy());
+            record.setStartDate(meeting.getMeetingDate());
+            record.setEndDate(meeting.getMeetingDate());
+            record.setUpdatedDate(meeting.getMeetingDate());
+            record.setUpdatedBy(meeting.getCreatedBy());
+            record.setBenId(0L);
+            record.setAshaId(meeting.getAshaId());
+            record.setAmount(Long.valueOf(incentiveActivity.getRate()));
+            recordRepo.save(record);
+        }
+
     }
 
 }

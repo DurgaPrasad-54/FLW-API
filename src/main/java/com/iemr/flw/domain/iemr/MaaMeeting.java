@@ -3,6 +3,7 @@ package com.iemr.flw.domain.iemr;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
@@ -16,7 +17,7 @@ public class MaaMeeting {
     private Long id;
 
     @Column(name = "meeting_date")
-    private LocalDate meetingDate;
+    private Timestamp meetingDate;
 
     @Column(name = "place")
     private String place;
@@ -31,10 +32,13 @@ public class MaaMeeting {
     private Integer year;
 
     @Column(name = "asha_id")
-    private Long ashaId;
+    private Integer ashaId;
 
     // Store multiple images as JSON of base64 strings
     @Lob
     @Column(name = "meeting_images", columnDefinition = "LONGTEXT")
     private String meetingImagesJson;
+
+    @Column(name = "created_by")
+    private String createdBy;
 }
