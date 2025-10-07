@@ -6,9 +6,12 @@ import com.iemr.flw.dto.iemr.UwinSessionResponseDTO;
 import com.iemr.flw.service.UwinSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,16 +24,21 @@ public class UwinSessionController {
 
     private final UwinSessionService service;
 
-    @RequestMapping(value = "saveAll",method = RequestMethod.POST,headers = "Authorization")
+    @RequestMapping(value = "saveAll",method = RequestMethod.POST,headers = "Authorization",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UwinSessionResponseDTO> saveSession(
-            @RequestBody UwinSessionRequestDTO uwinSessionRequestDTO) throws Exception {
+            @RequestPart("meetingDate") String meetingDate,
+            @RequestPart("place") String place,
+            @RequestPart("participants") String participants,
+            @RequestPart("ashaId") String ashaId,
+            @RequestPart("createdBy") String createdBy,
+            @RequestPart(value = "meetingImages", required = false) List<MultipartFile> images) throws Exception {
 
         UwinSessionRequestDTO dto = new UwinSessionRequestDTO();
-        dto.setAshaId(uwinSessionRequestDTO.getAshaId());
-        dto.setDate(uwinSessionRequestDTO.getDate());
-        dto.setPlace(uwinSessionRequestDTO.getPlace());
-        dto.setParticipants(uwinSessionRequestDTO.getParticipants());
-        dto.setAttachments(uwinSessionRequestDTO.getAttachments());
+        dto.setAshaId(Integer.valueOf(ashaId));
+        dto.setDate(Timestamp.valueOf(meetingDate));
+        dto.setPlace(place);
+        dto.setParticipants(Integer.valueOf(participants));
+        dto.setAttachments(images != null ? images.toArray(new MultipartFile[0]) : null);
 
         return ResponseEntity.ok(service.saveSession(dto));
     }

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -64,7 +65,6 @@ public class UwinSessionServiceImpl implements UwinSessionService {
         }
 
 
-        String json = objectMapper.writeValueAsString(req.getAttachments());
 
         // 🧩 Save record
         UwinSession session = new UwinSession();
@@ -72,8 +72,21 @@ public class UwinSessionServiceImpl implements UwinSessionService {
         session.setDate(req.getDate());
         session.setPlace(req.getPlace());
         session.setParticipants(req.getParticipants());
-        session.setAttachmentsJson(json);
+        if (req.getAttachments() != null && req.getAttachments().length > 0) {
+            List<String> base64Images = Arrays.stream(req.getAttachments())
+                    .filter(file -> !file.isEmpty())
+                    .map(file -> {
+                        try {
+                            return Base64.getEncoder().encodeToString(file.getBytes());
+                        } catch (IOException e) {
+                            throw new RuntimeException("Error converting image to Base64", e);
+                        }
+                    })
+                    .collect(Collectors.toList());
 
+            String imagesJson = objectMapper.writeValueAsString(base64Images);
+            session.setAttachmentsJson(imagesJson);
+        }
 
         repo.save(session);
         checkAndAddIncentive(session);
@@ -85,7 +98,7 @@ public class UwinSessionServiceImpl implements UwinSessionService {
         dto.setDate(session.getDate());
         dto.setPlace(session.getPlace());
         dto.setParticipants(session.getParticipants());
-        dto.setAttachments(req.getAttachments());
+        dto.setAttachments(Collections.singletonList(session.getAttachmentsJson()));
 
         return dto;
     }

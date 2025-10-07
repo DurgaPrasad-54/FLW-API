@@ -12,5 +12,5 @@ public class UwinSessionRequestDTO {
     private Timestamp date;
     private String place;
     private Integer participants;
-    private List<String> attachments;
+    private MultipartFile[] attachments;
 }
