@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class EligibleCoupleDTO implements Serializable {
@@ -113,6 +114,6 @@ public class EligibleCoupleDTO implements Serializable {
 
     private Timestamp kitHandedOverDate;
 
-    private MultipartFile [] kitPhoto;
+    private List<String> kitPhoto;
 
 }
