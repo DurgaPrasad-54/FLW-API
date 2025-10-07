@@ -60,27 +60,16 @@ public class CoupleServiceImpl implements CoupleService {
                 EligibleCoupleRegister existingECR =
 //                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
-                if (it.getKitPhoto() != null && it.getKitPhoto().length > 0) {
-                    List<String> base64Images = List.of(it.getKitPhoto())
-                            .stream()
-                            .filter(file -> !file.isEmpty())
-                            .map(file -> {
-                                try {
-                                    return Base64.getEncoder().encodeToString(file.getBytes());
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            })
-                            .collect(Collectors.toList());
-
-                    String imagesJson = null;
+                if (it.getKitPhoto() != null && !it.getKitPhoto().isEmpty()) {
                     try {
-                        imagesJson = mapper.writeValueAsString(base64Images);
+                        // kitPhoto me sirf URI list hai → JSON bahut chhota hoga
+                        String json = mapper.writeValueAsString(it.getKitPhoto());
+                        existingECR.setKitPhoto(json);
                     } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Error converting kitPhoto list to JSON", e);
                     }
-                    existingECR.setKitPhoto(imagesJson);
                 }
+
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
                     if(existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 3) {
                         IncentiveActivity activity1 =
