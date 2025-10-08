@@ -25,13 +25,14 @@ public class UwinSessionController {
     private final UwinSessionService service;
 
     @RequestMapping(value = "saveAll",method = RequestMethod.POST,headers = "Authorization",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UwinSessionResponseDTO> saveSession(
+    public ResponseEntity<?> saveSession(
             @RequestPart("meetingDate") String meetingDate,
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
             @RequestPart("createdBy") String createdBy,
             @RequestPart(value = "meetingImages", required = false) List<MultipartFile> images) throws Exception {
+        Map<String, Object> response = new LinkedHashMap<>();
 
         UwinSessionRequestDTO dto = new UwinSessionRequestDTO();
         dto.setAshaId(Integer.valueOf(ashaId));
@@ -40,8 +41,16 @@ public class UwinSessionController {
         dto.setParticipants(Integer.valueOf(participants));
         dto.setCreatedBy(createdBy);
         dto.setAttachments(images != null ? images.toArray(new MultipartFile[0]) : null);
+        UwinSessionResponseDTO uwinSessionResponse = service.saveSession(dto);
+        if(uwinSessionResponse!=null){
+            response.put("statusCode", 200);
+            response.put("message", "Data saved successfully");
+        }else {
+            response.put("statusCode", 500);
+            response.put("message", "Something went wrong");
+        }
 
-        return ResponseEntity.ok(service.saveSession(dto));
+        return ResponseEntity.ok(response);
     }
 
     @RequestMapping(value = "getAll",method = RequestMethod.POST,headers = "Authorization")
