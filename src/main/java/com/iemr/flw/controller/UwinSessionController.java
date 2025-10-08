@@ -38,6 +38,7 @@ public class UwinSessionController {
         dto.setDate(Timestamp.valueOf(meetingDate));
         dto.setPlace(place);
         dto.setParticipants(Integer.valueOf(participants));
+        dto.setCreatedBy(createdBy);
         dto.setAttachments(images != null ? images.toArray(new MultipartFile[0]) : null);
 
         return ResponseEntity.ok(service.saveSession(dto));

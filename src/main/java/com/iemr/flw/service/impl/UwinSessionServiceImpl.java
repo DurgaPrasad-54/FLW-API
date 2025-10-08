@@ -72,6 +72,7 @@ public class UwinSessionServiceImpl implements UwinSessionService {
         session.setDate(req.getDate());
         session.setPlace(req.getPlace());
         session.setParticipants(req.getParticipants());
+        session.setCreatedBy(req.getCreatedBy());
         if (req.getAttachments() != null && req.getAttachments().length > 0) {
             List<String> base64Images = Arrays.stream(req.getAttachments())
                     .filter(file -> !file.isEmpty())
