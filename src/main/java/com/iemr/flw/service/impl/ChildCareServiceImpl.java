@@ -61,10 +61,18 @@ public class ChildCareServiceImpl implements ChildCareService {
     @Override
     public String registerHBYC(List<HbycRequestDTO> hbycDTOs) {
         try {
+
             List<HbycChildVisit> hbycList = new ArrayList<>();
             hbycDTOs.forEach(it -> {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                // Convert to LocalDate
+                LocalDate localDate = LocalDate.parse(it.getVisitDate(), formatter);
+
+                // Convert LocalDate to Timestamp (00:00:00 by default)
+                Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
                 HbycChildVisit hbyc =
-                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDate(it.getBeneficiaryId(), it.getFields().getHbycVisitDate());
+                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDate(it.getBeneficiaryId(), visitDate);
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();
@@ -465,19 +473,26 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void createIncentiveRecordforHbyncVisit(HbycChildVisit data, Long benId, IncentiveActivity immunizationActivity, String createdBy) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        // Convert to LocalDate
+        LocalDate localDate = LocalDate.parse(data.getHbycVisitDate(), formatter);
+
+        // Convert LocalDate to Timestamp (00:00:00 by default)
+        Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getHbycVisitDate(), benId);
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), visitDate, benId);
 
 
         if (record == null) {
 
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
-            record.setCreatedDate(data.getHbycVisitDate());
+            record.setCreatedDate(visitDate);
             record.setCreatedBy(createdBy);
-            record.setStartDate(data.getHbycVisitDate());
-            record.setEndDate(data.getHbycVisitDate());
-            record.setUpdatedDate(data.getHbycVisitDate());
+            record.setStartDate(visitDate);
+            record.setEndDate(visitDate);
+            record.setUpdatedDate(visitDate);
             record.setUpdatedBy(createdBy);
             record.setBenId(benId);
             record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
@@ -488,19 +503,26 @@ public class ChildCareServiceImpl implements ChildCareService {
 
 
     private void createIncentiveRecordforHbyncOrsDistribution(HbycChildVisit data, Long benId, IncentiveActivity immunizationActivity, String createdBy) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        // Convert to LocalDate
+        LocalDate localDate = LocalDate.parse(data.getHbycVisitDate(), formatter);
+
+        // Convert LocalDate to Timestamp (00:00:00 by default)
+        Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), data.getHbycVisitDate(), benId);
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), visitDate, benId);
 
 
         if (record == null) {
 
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
-            record.setCreatedDate(data.getHbycVisitDate());
+            record.setCreatedDate(visitDate);
             record.setCreatedBy(createdBy);
-            record.setStartDate(data.getHbycVisitDate());
-            record.setEndDate(data.getHbycVisitDate());
-            record.setUpdatedDate(data.getHbycVisitDate());
+            record.setStartDate(visitDate);
+            record.setEndDate(visitDate);
+            record.setUpdatedDate(visitDate);
             record.setUpdatedBy(createdBy);
             record.setBenId(benId);
             record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));

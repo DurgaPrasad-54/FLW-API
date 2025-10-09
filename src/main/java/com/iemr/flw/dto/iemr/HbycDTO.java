@@ -16,8 +16,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Data
@@ -31,16 +30,16 @@ public class HbycDTO {
     private String hbycVisit; // 3 Months, 6 Months, etc.
 
     @SerializedName("hbyc_due_date")
-    private LocalDate hbycDueDate;
+    private String hbycDueDate;
 
     @SerializedName("hbyc_visit_date")
-    private Timestamp hbycVisitDate;
+    private String hbycVisitDate;
 
     @SerializedName("is_baby_alive")
     private Boolean isBabyAlive;
 
     @SerializedName("date_of_death")
-    private LocalDate dateOfDeath;
+    private String dateOfDeath;
 
     @SerializedName("reason_for_death")
     private String reasonForDeath;

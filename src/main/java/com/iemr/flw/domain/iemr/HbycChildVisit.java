@@ -2,8 +2,6 @@ package com.iemr.flw.domain.iemr;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,16 +28,16 @@ public class HbycChildVisit {
     private String hbycVisit; // 3 Months, 6 Months, etc.
 
     @Column(name = "hbyc_due_date")
-    private LocalDate hbycDueDate;
+    private String hbycDueDate;
 
     @Column(name = "hbyc_visit_date")
-    private Timestamp hbycVisitDate;
+    private String hbycVisitDate;
 
     @Column(name = "is_baby_alive")
     private Boolean isBabyAlive = true;
 
     @Column(name = "date_of_death")
-    private LocalDate dateOfDeath;
+    private String dateOfDeath;
 
     @Column(name = "reason_for_death")
     private String reasonForDeath;
