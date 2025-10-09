@@ -1,71 +1,126 @@
 package com.iemr.flw.dto.iemr;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class HbycDTO {
 
-    private Long id;
 
-    private Long benId;
+    @SerializedName("beneficiary_id")
+    private Long beneficiaryId;
 
-    private String subcenterName;
+    @SerializedName("hbyc_visit")
+    private String hbycVisit; // 3 Months, 6 Months, etc.
 
-    private String primaryHealthCenterName;
+    @SerializedName("hbyc_due_date")
+    private LocalDate hbycDueDate;
 
-    private Integer villagePopulation;
+    @SerializedName("hbyc_visit_date")
+    private Timestamp hbycVisitDate;
 
-    private Integer infantPopulation;
+    @SerializedName("is_baby_alive")
+    private Boolean isBabyAlive;
 
-    private Timestamp visitDate;
+    @SerializedName("date_of_death")
+    private LocalDate dateOfDeath;
 
-    private String hbycAgeCategory;
+    @SerializedName("reason_for_death")
+    private String reasonForDeath;
 
-    private Boolean orsPacketDelivered;
+    @SerializedName("place_of_death")
+    private String placeOfDeath;
 
-    private Boolean ironFolicAcidGiven;
+    @SerializedName("other_place_of_death")
+    private String otherPlaceOfDeath;
 
-    private Boolean isVaccinatedByAge;
+    @SerializedName("baby_weight")
+    private BigDecimal babyWeight; // 0.5 - 7.0
 
-    private Boolean wasIll;
+    @SerializedName("is_child_sick")
+    private Boolean isChildSick;
 
-    private Boolean referred;
+    @SerializedName("is_exclusive_breastfeeding")
+    private Boolean isExclusiveBreastfeeding;
 
-    private Boolean supplementsGiven;
+    @SerializedName("is_mother_counseled_exbf")
+    private Boolean isMotherCounseledExbf;
 
-    private Boolean byHeightLength;
+    @SerializedName("has_child_started_complementary_feeding")
+    private Boolean hasChildStartedComplementaryFeeding;
 
-    private Boolean childrenWeighingLessReferred;
+    @SerializedName("is_mother_counseled_cf")
+    private Boolean isMotherCounseledCf;
 
-    private Boolean weightAccordingToAge;
+    @SerializedName("is_weight_recorded_by_aww")
+    private Boolean isWeightRecordedByAww;
 
-    private Boolean delayInDevelopment;
+    @SerializedName("is_developmental_delay")
+    private Boolean isDevelopmentalDelay;
 
-    private Boolean referredToHealthInstitite;
+    @SerializedName("is_measles_vaccine_given")
+    private Boolean isMeaslesVaccineGiven;
 
-    private Boolean vitaminASupplementsGiven;
+    @SerializedName("is_vitamin_a_given")
+    private Boolean isVitaminAGiven;
 
-    private String deathAge;
+    @SerializedName("is_ors_available")
+    private Boolean isOrsAvailable;
 
-    private String deathCause;
+    @SerializedName("is_ifa_syrup_available")
+    private Boolean isIfaSyrupAvailable;
 
-    private Boolean qmOrAnmInformed;
+    @SerializedName("is_ors_given")
+    private Boolean isOrsGiven;
 
-    private String deathPlace;
+    @SerializedName("is_ifa_syrup_given")
+    private Boolean isIfaSyrupGiven;
 
-    private Boolean superVisorOn;
+    @SerializedName("is_handwashing_counseling_given")
+    private Boolean isHandwashingCounselingGiven;
 
-    private Boolean orsShortage;
+    @SerializedName("is_parenting_counseling_given")
+    private Boolean isParentingCounselingGiven;
 
-    private Boolean ifaDecreased;
+    @SerializedName("is_family_planning_counseling_given")
+    private Boolean isFamilyPlanningCounselingGiven;
 
-    private String createdBy;
+    @SerializedName("diarrhoea_episode")
+    private Boolean diarrhoeaEpisode;
 
-    private Timestamp createdDate;
+    @SerializedName("pneumonia_symptoms")
+    private Boolean pneumoniaSymptoms;
 
-    private Timestamp updatedDate;
+    @SerializedName("temperature")
+    private BigDecimal temperature;
 
-    private String updatedBy;
+    @SerializedName("mcp_card_images")
+    private List<String> mcpCardImages;
+
+    @SerializedName("created_at")
+    private LocalDateTime createdAt;
+
+    @SerializedName("updated_at")
+    private LocalDateTime updatedAt;
+
+    // Getters and Setters
+
+
 }

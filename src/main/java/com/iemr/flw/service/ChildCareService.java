@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChildCareService {
 
-    String registerHBYC(List<HbycDTO> hbycDTOs);
+    String registerHBYC(List<HbycRequestDTO> hbycDTOs);
 
     List<HbycDTO> getHbycRecords(GetBenRequestHandler dto);
 

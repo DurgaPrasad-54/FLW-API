@@ -20,4 +20,6 @@ public interface HbncVisitRepo extends JpaRepository<HbncVisit, Long> {
     HbncVisit findByBeneficiaryIdAndVisit_day(@Param("beneficiaryId") Long beneficiaryId,
                                               @Param("visitDay") String visitDay);
 
+    List<HbncVisit> findByAshaId(Integer ashaId);
+
 }
