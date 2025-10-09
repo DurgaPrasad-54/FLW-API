@@ -32,7 +32,7 @@ public class ChildCareController {
     private ChildCareService childCareService;
 
     @Operation(summary = "save HBYC details")
-    @RequestMapping(value = {"/hbyc/saveAll"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/hbycVisit/saveAll"}, method = {RequestMethod.POST})
     public String saveHbycRecords(@RequestBody List<HbycRequestDTO> hbycDTOs,
                                   @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
