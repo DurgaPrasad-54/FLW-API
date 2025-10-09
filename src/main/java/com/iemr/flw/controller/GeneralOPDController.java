@@ -24,6 +24,7 @@
 */
 package com.iemr.flw.controller;
 
+import com.iemr.flw.domain.iemr.GeneralOpdData;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.GeneralOpdDto;
 import com.iemr.flw.service.BeneficiaryService;
@@ -35,6 +36,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,19 +57,24 @@ public class GeneralOPDController {
     @Autowired
     private GeneralOpdService generalOpdService;
 
-    @RequestMapping(value = "getBeneficiaries", method = RequestMethod.POST, headers = "Authorization")
+    @RequestMapping(value = "getBeneficiaries", method = RequestMethod.POST)
     @Operation(summary = "get beneficiary data for given user ")
-    public ResponseEntity<Map<String, Object>> getBeneficiaryDataByAsha(@RequestBody GetBenRequestHandler requestDTO, @RequestHeader(value = "Authorization") String authorization) {
+    public ResponseEntity<Map<String, Object>> getBeneficiaryDataByAsha(@RequestBody GetBenRequestHandler requestDTO) {
         Map<String, Object> response = new LinkedHashMap<>();
         try {
 
+            Page<GeneralOpdData> pageResult = generalOpdService.getOutreachData(requestDTO.getVillageID(),requestDTO.getUserName());
+
+            // Response map
             Map<String, Object> data = new HashMap<>();
             data.put("userId", requestDTO.getUserId());
-            data.put("entries", generalOpdService.getOpdListForAsha(requestDTO, authorization));
+            data.put("entries", pageResult.getContent());
+
             response.put("data", data);
             response.put("statusCode", 200);
             response.put("errorMessage", "Success");
             response.put("status", "Success");
+
         } catch (Exception e) {
             logger.error("Error in get data : " + e);
             response.put("status", 500);
@@ -73,4 +82,7 @@ public class GeneralOPDController {
         }
         return ResponseEntity.ok(response);
     }
+
+
+
 } 
