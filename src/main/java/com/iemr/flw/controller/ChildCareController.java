@@ -54,14 +54,14 @@ public class ChildCareController {
     }
 
     @Operation(summary = "get List of HBYC details")
-    @RequestMapping(value = {"/hbyc/getAll"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/hbycVisit/getAll"}, method = {RequestMethod.POST})
     public String getHbycRecords(@RequestBody GetBenRequestHandler requestDTO,
                                  @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
             logger.info("fetching All HBYC Details for user: " + requestDTO.getAshaId());
             if (requestDTO != null) {
-                List<HbycDTO> result = childCareService.getHbycRecords(requestDTO);
+                List<HbycVisitResponseDTO> result = childCareService.getHbycRecords(requestDTO);
                 Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
                 String s = gson.toJson(result);
                 if (s != null)

@@ -18,4 +18,7 @@ public interface HbycRepo extends JpaRepository<HbycChildVisit, Long> {
     @Query(" SELECT hbyc FROM HBYC hbyc WHERE hbyc.createdBy = :userId and hbyc.createdDate >= :fromDate and hbyc.createdDate <= :toDate")
     List<HBYC> getAllHbycByBenId(@Param("userId") String userId,
                                  @Param("fromDate") Timestamp fromDate, @Param("toDate") Timestamp toDate);
+
+
+    List<HbycChildVisit> findByUserId(Integer ashaId);
 }

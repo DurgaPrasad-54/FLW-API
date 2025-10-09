@@ -21,6 +21,9 @@ public class HbycChildVisit {
     @Column(name = "beneficiary_id")
     private Long beneficiaryId;
 
+    @Column(name = "household_id")
+    private Long houseHoldId;
+
     @Column(name = "user_id")
     private Integer userId;
 

@@ -29,14 +29,17 @@ public class HbycDTO {
     @SerializedName("visit_day")
     private String hbycVisit; // 3 Months, 6 Months, etc.
 
+    @SerializedName("household_id")
+    private Long houseHoldId;
+
     @SerializedName("due_date")
     private String hbycDueDate;
 
-    @SerializedName("hbyc_visit_date")
+    @SerializedName("visit_date")
     private String hbycVisitDate;
 
     @SerializedName("is_baby_alive")
-    private Boolean isBabyAlive;
+    private String isBabyAlive; // Yes/No
 
     @SerializedName("date_of_death")
     private String dateOfDeath;
@@ -51,63 +54,63 @@ public class HbycDTO {
     private String otherPlaceOfDeath;
 
     @SerializedName("baby_weight")
-    private BigDecimal babyWeight; // 0.5 - 7.0
+    private BigDecimal babyWeight;
 
     @SerializedName("is_child_sick")
-    private Boolean isChildSick;
+    private String isChildSick;
 
-    @SerializedName("is_exclusive_breastfeeding")
-    private Boolean isExclusiveBreastfeeding;
+    @SerializedName("exclusive_breastfeeding")
+    private String isExclusiveBreastfeeding;
 
-    @SerializedName("is_mother_counseled_exbf")
-    private Boolean isMotherCounseledExbf;
+    @SerializedName("mother_counseled_ebf")
+    private String isMotherCounseledExbf;
 
-    @SerializedName("has_child_started_complementary_feeding")
-    private Boolean hasChildStartedComplementaryFeeding;
+    @SerializedName("complementary_feeding")
+    private String hasChildStartedComplementaryFeeding;
 
-    @SerializedName("is_mother_counseled_cf")
-    private Boolean isMotherCounseledCf;
+    @SerializedName("mother_counseled_cf")
+    private String isMotherCounseledCf;
 
-    @SerializedName("is_weight_recorded_by_aww")
-    private Boolean isWeightRecordedByAww;
+    @SerializedName("weight_recorded")
+    private String isWeightRecordedByAww;
 
-    @SerializedName("is_developmental_delay")
-    private Boolean isDevelopmentalDelay;
+    @SerializedName("developmental_delay")
+    private String isDevelopmentalDelay;
 
-    @SerializedName("is_measles_vaccine_given")
-    private Boolean isMeaslesVaccineGiven;
+    @SerializedName("measles_vaccine")
+    private String isMeaslesVaccineGiven;
 
-    @SerializedName("is_vitamin_a_given")
-    private Boolean isVitaminAGiven;
+    @SerializedName("vitamin_a")
+    private String isVitaminAGiven;
 
-    @SerializedName("is_ors_available")
-    private Boolean isOrsAvailable;
+    @SerializedName("ors_available")
+    private String isOrsAvailable;
 
-    @SerializedName("is_ifa_syrup_available")
-    private Boolean isIfaSyrupAvailable;
+    @SerializedName("ifa_available")
+    private String isIfaSyrupAvailable;
 
-    @SerializedName("is_ors_given")
-    private Boolean isOrsGiven;
+    @SerializedName("ors_given")
+    private String isOrsGiven;
 
-    @SerializedName("is_ifa_syrup_given")
-    private Boolean isIfaSyrupGiven;
+    @SerializedName("ifa_given")
+    private String isIfaSyrupGiven;
 
-    @SerializedName("is_handwashing_counseling_given")
-    private Boolean isHandwashingCounselingGiven;
+    @SerializedName("handwash_counseling")
+    private String isHandwashingCounselingGiven;
 
-    @SerializedName("is_parenting_counseling_given")
-    private Boolean isParentingCounselingGiven;
+    @SerializedName("parenting_counseling")
+    private String isParentingCounselingGiven;
 
-    @SerializedName("is_family_planning_counseling_given")
-    private Boolean isFamilyPlanningCounselingGiven;
+    @SerializedName("family_planning_counseling")
+    private String isFamilyPlanningCounselingGiven;
 
     @SerializedName("diarrhoea_episode")
-    private Boolean diarrhoeaEpisode;
+    private String diarrhoeaEpisode;
 
-    @SerializedName("pneumonia_symptoms")
-    private Boolean pneumoniaSymptoms;
+    @SerializedName("breathing_difficulty")
+    private String pneumoniaSymptoms;
 
-    @SerializedName("temperature")
+    @SerializedName("temperature_check")
     private BigDecimal temperature;
 
     @SerializedName("mcp_card_images")
@@ -119,7 +122,7 @@ public class HbycDTO {
     @SerializedName("updated_at")
     private LocalDateTime updatedAt;
 
-    // Getters and Setters
+
 
 
 }

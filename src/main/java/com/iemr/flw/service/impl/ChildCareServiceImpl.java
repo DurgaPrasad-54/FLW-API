@@ -95,18 +95,62 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     @Override
-    public List<HbycDTO> getHbycRecords(GetBenRequestHandler dto) {
+    public List<HbycVisitResponseDTO> getHbycRecords(GetBenRequestHandler dto) {
+        List<HbycVisitResponseDTO> result = new ArrayList<>();
+
         try {
-            String user = beneficiaryRepo.getUserName(dto.getAshaId());
-            List<HBYC> hbycList =
-                    hbycRepo.getAllHbycByBenId(user, dto.getFromDate(), dto.getToDate());
-            return hbycList.stream()
-                    .map(hbyc -> mapper.convertValue(hbyc, HbycDTO.class))
-                    .collect(Collectors.toList());
+            List<HbycChildVisit> hbycChildVisits = hbycRepo.findByUserId(dto.getAshaId());
+
+            for (HbycChildVisit hbycChildVisit : hbycChildVisits) {
+                HbycVisitResponseDTO hbycRequestDTO = new HbycVisitResponseDTO();
+                hbycRequestDTO.setId(hbycChildVisit.getId());
+                hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiaryId());
+                hbycRequestDTO.setHouseHoldId(hbycChildVisit.getHouseHoldId());
+                hbycRequestDTO.setVisitDate(hbycChildVisit.getHbycVisitDate());
+
+                // Prepare dynamic fields map
+                Map<String, Object> fields = new HashMap<>();
+                addIfValid(fields, "visit_day", hbycChildVisit.getHbycVisit());
+                addIfValid(fields, "due_date", hbycChildVisit.getHbycDueDate());
+                addIfValid(fields, "visit_date", hbycChildVisit.getHbycVisitDate());
+                addIfValid(fields, "is_baby_alive", convert(hbycChildVisit.getIsBabyAlive()));
+                addIfValid(fields, "date_of_death", hbycChildVisit.getDateOfDeath());
+                addIfValid(fields, "reason_for_death", hbycChildVisit.getReasonForDeath());
+                addIfValid(fields, "place_of_death", hbycChildVisit.getPlaceOfDeath());
+                addIfValid(fields, "other_place_of_death", hbycChildVisit.getOtherPlaceOfDeath());
+                addIfValid(fields, "baby_weight", hbycChildVisit.getBabyWeight());
+                addIfValid(fields, "is_child_sick", convert(hbycChildVisit.getIsChildSick()));
+                addIfValid(fields, "exclusive_breastfeeding", convert(hbycChildVisit.getIsExclusiveBreastfeeding()));
+                addIfValid(fields, "mother_counseled_ebf", convert(hbycChildVisit.getIsMotherCounseledExbf()));
+                addIfValid(fields, "complementary_feeding", convert(hbycChildVisit.getHasChildStartedComplementaryFeeding()));
+                addIfValid(fields, "mother_counseled_cf", convert(hbycChildVisit.getIsMotherCounseledCf()));
+                addIfValid(fields, "weight_recorded", convert(hbycChildVisit.getIsWeightRecordedByAww()));
+                addIfValid(fields, "developmental_delay", convert(hbycChildVisit.getIsDevelopmentalDelay()));
+                addIfValid(fields, "measles_vaccine", convert(hbycChildVisit.getIsMeaslesVaccineGiven()));
+                addIfValid(fields, "vitamin_a", convert(hbycChildVisit.getIsVitaminAGiven()));
+                addIfValid(fields, "ors_available", convert(hbycChildVisit.getIsOrsAvailable()));
+                addIfValid(fields, "ifa_available", convert(hbycChildVisit.getIsIfaSyrupAvailable()));
+                addIfValid(fields, "ors_given", convert(hbycChildVisit.getIsOrsGiven()));
+                addIfValid(fields, "ifa_given", convert(hbycChildVisit.getIsIfaSyrupGiven()));
+                addIfValid(fields, "handwash_counseling", convert(hbycChildVisit.getIsHandwashingCounselingGiven()));
+                addIfValid(fields, "parenting_counseling", convert(hbycChildVisit.getIsParentingCounselingGiven()));
+                addIfValid(fields, "family_planning_counseling", convert(hbycChildVisit.getIsFamilyPlanningCounselingGiven()));
+                addIfValid(fields, "diarrhoea_episode", convert(hbycChildVisit.getDiarrhoeaEpisode()));
+                addIfValid(fields, "breathing_difficulty", convert(hbycChildVisit.getPneumoniaSymptoms()));
+                addIfValid(fields, "temperature_check", hbycChildVisit.getTemperature());
+                addIfValid(fields, "mcp_card_images", hbycChildVisit.getMcpCardImages());
+
+                // Set fields map in DTO
+                hbycRequestDTO.setFields(fields);
+                result.add(hbycRequestDTO);
+            }
+
         } catch (Exception e) {
-            logger.info("error while fetching hbyc details: " + e.getMessage());
+            logger.error("Error while fetching HBYC details: ", e);
         }
-        return null;
+
+        return result;
+
     }
 
     @Override

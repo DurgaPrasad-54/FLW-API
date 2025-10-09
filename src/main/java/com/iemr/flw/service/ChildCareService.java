@@ -10,7 +10,7 @@ public interface ChildCareService {
 
     String registerHBYC(List<HbycRequestDTO> hbycDTOs);
 
-    List<HbycDTO> getHbycRecords(GetBenRequestHandler dto);
+    List<HbycVisitResponseDTO> getHbycRecords(GetBenRequestHandler dto);
 
     List<HbncVisitResponseDTO> getHBNCDetails(GetBenRequestHandler dto);
 
