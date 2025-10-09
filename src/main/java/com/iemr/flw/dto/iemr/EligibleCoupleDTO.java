@@ -112,7 +112,7 @@ public class EligibleCoupleDTO implements Serializable {
 
     private Boolean isKitHandedOver;
 
-    private Timestamp kitHandedOverDate;
+    private String kitHandedOverDate;
 
     private String kitPhoto1;
 

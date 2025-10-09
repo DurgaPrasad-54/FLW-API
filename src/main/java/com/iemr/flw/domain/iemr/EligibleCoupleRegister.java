@@ -169,8 +169,7 @@ public class EligibleCoupleRegister {
     private Boolean isKitHandedOver;
 
     @Column(name = "is_kit_handed_over_date")
-    private Timestamp kitHandedOverDate;
-
+    private String kitHandedOverDate;
 
     @Lob
     @Column(name = "kit_photo1", columnDefinition = "LONGTEXT")
