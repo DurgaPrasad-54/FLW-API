@@ -347,57 +347,41 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void checkAndAddHbncIncentives(List<HbncVisit> hbncVisits) {
+        hbncVisits.forEach(hbncVisit -> {
+            boolean isVisitDone = List.of("1st Day", "3rd Day", "7th Day", "42nd Day")
+                    .stream()
+                    .allMatch(hbncVisits::contains);
 
-        // Group all visits by beneficiary
-        Map<Long, List<HbncVisit>> visitsByBen = hbncVisits.stream()
-                .collect(Collectors.groupingBy(HbncVisit::getBeneficiaryId));
-
-        visitsByBen.forEach((benId, visits) -> {
-
-            // Extract all visit day names or day numbers
-            Set<String> completedDays = visits.stream()
-                    .map(HbncVisit::getVisit_day) // e.g. "1st Day"
-                    .collect(Collectors.toSet());
-
-            boolean hasMandatoryVisits = completedDays.containsAll(
-                    List.of("1st Day", "3rd Day", "7th Day", "42nd Day")
-            );
-
-            boolean allSevenVisitsDone = completedDays.containsAll(
-                    List.of("1st Day", "3rd Day", "7th Day", "14th Day", "21st Day", "28th Day", "42nd Day")
-            );
-
-            boolean isSncuOrLBW = visits.stream()
-                    .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu())
-                            || Boolean.TRUE.equals(v.getBaby_weight()));
-
-            boolean isChildDeath = visits.stream()
-                    .anyMatch(v -> Boolean.FALSE.equals(v.getIs_baby_alive()));
-
-            // --- Incentive #1: HBNC 0–42 days (Rs. 250)
-            if (hasMandatoryVisits) {
+            boolean isBabyDisChargeSNCUA = hbncVisits.stream()
+                    .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu()));
+            Long benId = hbncVisit.getBeneficiaryId();
+            if (hbncVisit.getVisit_day().equals("42nd Day")) {
                 IncentiveActivity visitActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", "CHILD HEALTH");
-                createIncentiveRecordforHbncVisit(visits.get(0), benId, visitActivity);
-            }
 
-            // --- Incentive #2: SNCU/LBW Follow-up (Rs. 200)
-            if (isSncuOrLBW && allSevenVisitsDone) {
-                IncentiveActivity sncuActivity =
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
+
+            }
+            if (hbncVisit.getVisit_day().equals("42nd Day") && isBabyDisChargeSNCUA) {
+                IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", "CHILD HEALTH");
-                createIncentiveRecordforHbncVisit(visits.get(0), benId, sncuActivity);
+
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
+
+            }
+            if(!hbncVisit.getIs_baby_alive()){
+                IncentiveActivity isChildDeathActivity =
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
+
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity);
             }
 
-            // --- Incentive #3: Child Death Reporting
-            if (isChildDeath) {
-                IncentiveActivity deathActivity =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
-                createIncentiveRecordforHbncVisit(visits.get(0), benId, deathActivity);
-            }
+
 
         });
-    }
 
+
+    }
 
     private void checkAndAddIncentives(List<ChildVaccination> vaccinationList) {
 
