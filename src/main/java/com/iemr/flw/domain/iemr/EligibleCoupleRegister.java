@@ -1,5 +1,6 @@
 package com.iemr.flw.domain.iemr;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "t_eligible_couple_register", schema = "db_iemr")
 @Data
+@JsonInclude(JsonInclude.Include.ALWAYS) // Null values included
 public class EligibleCoupleRegister {
 
     @Id
