@@ -78,6 +78,8 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc = new HbycChildVisit();
                     modelMapper.map(it, hbyc);
                     hbyc.setId(null);
+                    hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
+                    hbyc.setCreatedBy(it.getUserName());
 
                 }
                 hbycList.add(hbyc);
