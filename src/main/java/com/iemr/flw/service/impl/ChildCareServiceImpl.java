@@ -64,15 +64,9 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             List<HbycChildVisit> hbycList = new ArrayList<>();
             hbycDTOs.forEach(it -> {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-                // Convert to LocalDate
-                LocalDate localDate = LocalDate.parse(it.getVisitDate(), formatter);
-
-                // Convert LocalDate to Timestamp (00:00:00 by default)
-                Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
                 HbycChildVisit hbyc =
-                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDate(it.getBeneficiaryId(), visitDate);
+                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisit(it.getBeneficiaryId(), it.getFields().getHbycVisit());
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();

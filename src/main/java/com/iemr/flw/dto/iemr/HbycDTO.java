@@ -26,10 +26,10 @@ public class HbycDTO {
     @SerializedName("beneficiary_id")
     private Long beneficiaryId;
 
-    @SerializedName("hbyc_visit")
+    @SerializedName("visit_day")
     private String hbycVisit; // 3 Months, 6 Months, etc.
 
-    @SerializedName("hbyc_due_date")
+    @SerializedName("due_date")
     private String hbycDueDate;
 
     @SerializedName("hbyc_visit_date")
