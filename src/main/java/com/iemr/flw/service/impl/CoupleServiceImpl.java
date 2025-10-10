@@ -53,6 +53,7 @@ public class CoupleServiceImpl implements CoupleService {
 
     private final Logger logger = LoggerFactory.getLogger(CoupleServiceImpl.class);
 
+
     @Override
     public String registerEligibleCouple(List<EligibleCoupleDTO> eligibleCoupleDTOs, MultipartFile kitPhoto1, MultipartFile kitPhoto2) {
         try {
