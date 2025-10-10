@@ -4,10 +4,12 @@ import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.IncentiveActivityDTO;
 import com.iemr.flw.dto.iemr.IncentiveRequestDTO;
 import com.iemr.flw.service.IncentiveService;
+import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.response.OutputResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,15 @@ public class IncentiveController {
     private final Logger logger = LoggerFactory.getLogger(IncentiveController.class);
 
     @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
     IncentiveService incentiveService;
 
     @Operation(summary = "save incentive master")
     @RequestMapping(value = { "/masterData/saveAll" }, method = { RequestMethod.POST })
-    public String saveIncentiveMasterData(@RequestBody List<IncentiveActivityDTO> activityDTOS) {
+    public String saveIncentiveMasterData(@RequestBody List<IncentiveActivityDTO> activityDTOS,@RequestHeader(value = "Authorization") String authorization, HttpServletRequest request) {
+        String userName = jwtUtil.extractUsername(authorization);
+        logger.info("Ben_UserName:"+userName);
         OutputResponse response = new OutputResponse();
         try {
             logger.info("Saving All incentives");
