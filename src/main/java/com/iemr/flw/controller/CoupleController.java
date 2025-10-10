@@ -6,11 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +17,7 @@ import com.iemr.flw.service.CoupleService;
 import com.iemr.flw.utils.response.OutputResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(value = "/couple", headers = "Authorization")
@@ -31,15 +28,21 @@ public class CoupleController {
     @Autowired
     private CoupleService coupleService;
 
+    private String kitPhoto1;
+
+    private String kitPhoto2;
+
     @Operation(summary = "save eligible couple registration details")
     @RequestMapping(value = { "/register/saveAll" }, method = { RequestMethod.POST })
-    public String saveEligibleCouple(@RequestBody List<EligibleCoupleDTO> eligibleCoupleDTOs,
-            @RequestHeader(value = "Authorization") String Authorization) {
+    public String saveEligibleCouple(@RequestPart("data") List<EligibleCoupleDTO> eligibleCoupleDTOs,
+                                     @RequestPart(value = "kitPhoto1", required = false) MultipartFile kitPhoto1,
+                                     @RequestPart(value = "kitPhoto2", required = false) MultipartFile kitPhoto2,
+                                     @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
             logger.info("Saving All Eligible Couple Details");
             if (eligibleCoupleDTOs != null) {
-                String s = coupleService.registerEligibleCouple(eligibleCoupleDTOs);
+                String s = coupleService.registerEligibleCouple(eligibleCoupleDTOs,kitPhoto1,kitPhoto2);
                 if (s != null)
                     response.setResponse(s);
                 else

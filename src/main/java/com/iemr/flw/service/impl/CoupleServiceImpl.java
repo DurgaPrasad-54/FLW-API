@@ -18,7 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -52,7 +54,7 @@ public class CoupleServiceImpl implements CoupleService {
     private final Logger logger = LoggerFactory.getLogger(CoupleServiceImpl.class);
 
     @Override
-    public String registerEligibleCouple(List<EligibleCoupleDTO> eligibleCoupleDTOs) {
+    public String registerEligibleCouple(List<EligibleCoupleDTO> eligibleCoupleDTOs, MultipartFile kitPhoto1, MultipartFile kitPhoto2) {
         try {
             List<EligibleCoupleRegister> ecrList = new ArrayList<>();
             List<IncentiveActivityRecord> recordList = new ArrayList<>();
@@ -60,13 +62,26 @@ public class CoupleServiceImpl implements CoupleService {
                 EligibleCoupleRegister existingECR =
 //                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
-                if (it.getKitPhoto1() != null && !it.getKitPhoto1().isEmpty()) {
-                    existingECR.setKitPhoto1(it.getKitPhoto1());
+                if (kitPhoto1 != null && !kitPhoto1.isEmpty()) {
+                    String kitPhoto1base64Image = null;
+                    try {
+                        kitPhoto1base64Image = Base64.getEncoder().encodeToString(kitPhoto1.getBytes());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    existingECR.setKitPhoto1(String.valueOf(kitPhoto1base64Image));
 
                 }
 
-                if (it.getKitPhoto2() != null && !it.getKitPhoto2().isEmpty()) {
-                    existingECR.setKitPhoto2(it.getKitPhoto2());
+
+                if (kitPhoto2 != null && !kitPhoto2.isEmpty()) {
+                    String kitPhoto2base64Image = null;
+                    try {
+                        kitPhoto2base64Image = Base64.getEncoder().encodeToString(kitPhoto2.getBytes());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    existingECR.setKitPhoto2(String.valueOf(kitPhoto2base64Image));
 
                 }
 
@@ -285,4 +300,6 @@ public class CoupleServiceImpl implements CoupleService {
         }
         return null;
     }
+
+
 }
