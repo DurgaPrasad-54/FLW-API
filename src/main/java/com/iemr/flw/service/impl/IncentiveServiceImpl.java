@@ -9,11 +9,14 @@ import com.iemr.flw.domain.iemr.IncentiveActivityLangMapping;
 import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.IncentiveActivityLangMappingRepo;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
+import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
 import com.iemr.flw.service.IncentiveService;
+import com.iemr.flw.utils.JwtUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +46,11 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Autowired
     IncentiveRecordRepo recordRepo;
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserServiceRoleRepo userRepo;
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
         try {
@@ -118,10 +127,11 @@ public class IncentiveServiceImpl implements IncentiveService {
 
                 return dto;
             }).collect(Collectors.toList());
+            checkMonthlyAshaIncentive();
 
             Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
-            return gson.toJson(dtos);
 
+            return gson.toJson(dtos);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,4 +166,44 @@ public class IncentiveServiceImpl implements IncentiveService {
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(dtos);
     }
+    private void checkMonthlyAshaIncentive(){
+        IncentiveActivity MOBILEBILLREIMB_ACTIVITY = incentivesRepo.findIncentiveMasterByNameAndGroup("MOBILE_BILL_REIMB", GroupName.OTHER_INCENTIVES.getDisplayName());
+        IncentiveActivity ADDITIONAL_ASHA_INCENTIVE = incentivesRepo.findIncentiveMasterByNameAndGroup("ADDITIONAL_ASHA_INCENTIVE", GroupName.ADDITIONAL_INCENTIVE.getDisplayName());
+        IncentiveActivity ASHA_MONTHLY_ROUTINE = incentivesRepo.findIncentiveMasterByNameAndGroup("ASHA_MONTHLY_ROUTINE", GroupName.ASHA_MONTHLY_ROUTINE.getDisplayName());
+        if(MOBILEBILLREIMB_ACTIVITY!=null){
+            addMonthlyAshaIncentiveRecord(MOBILEBILLREIMB_ACTIVITY);
+        }
+        if(ADDITIONAL_ASHA_INCENTIVE!=null){
+            addMonthlyAshaIncentiveRecord(ADDITIONAL_ASHA_INCENTIVE);
+
+        }
+
+        if(ASHA_MONTHLY_ROUTINE!=null){
+            addMonthlyAshaIncentiveRecord(ASHA_MONTHLY_ROUTINE);
+
+        }
+    }
+
+    private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity){
+
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.from(Instant.now()), 0L);
+
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(incentiveActivity.getId());
+            record.setCreatedDate(Timestamp.from(Instant.now()));
+            record.setCreatedBy(jwtUtil.getUserNameFromStorage());
+            record.setStartDate(Timestamp.from(Instant.now()));
+            record.setEndDate(Timestamp.from(Instant.now()));
+            record.setUpdatedDate(Timestamp.from(Instant.now()));
+            record.setUpdatedBy(jwtUtil.getUserNameFromStorage());
+            record.setBenId(0L);
+            record.setAshaId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+            record.setAmount(Long.valueOf(incentiveActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
+
 }

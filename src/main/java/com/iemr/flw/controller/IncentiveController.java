@@ -24,8 +24,7 @@ public class IncentiveController {
 
     private final Logger logger = LoggerFactory.getLogger(IncentiveController.class);
 
-    @Autowired
-    private JwtUtil jwtUtil;
+
     @Autowired
     IncentiveService incentiveService;
 
@@ -56,8 +55,7 @@ public class IncentiveController {
             @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
-            String userName = jwtUtil.getUserNameFromStorage();
-            logger.info("Ben_UserName:"+userName);
+
             logger.info("get All incentives");
 
             // add logic for different state or district
