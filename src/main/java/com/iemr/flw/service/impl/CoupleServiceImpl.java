@@ -62,7 +62,7 @@ public class CoupleServiceImpl implements CoupleService {
                 EligibleCoupleRegister existingECR =
 //                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
-                if (kitPhoto1 != null && !kitPhoto1.isEmpty()) {
+                if (kitPhoto1 != null) {
                     String kitPhoto1base64Image = null;
                     try {
                         kitPhoto1base64Image = Base64.getEncoder().encodeToString(kitPhoto1.getBytes());
@@ -74,7 +74,7 @@ public class CoupleServiceImpl implements CoupleService {
                 }
 
 
-                if (kitPhoto2 != null && !kitPhoto2.isEmpty()) {
+                if (kitPhoto2 != null) {
                     String kitPhoto2base64Image = null;
                     try {
                         kitPhoto2base64Image = Base64.getEncoder().encodeToString(kitPhoto2.getBytes());
