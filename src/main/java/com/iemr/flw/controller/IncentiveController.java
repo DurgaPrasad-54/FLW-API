@@ -32,8 +32,6 @@ public class IncentiveController {
     @Operation(summary = "save incentive master")
     @RequestMapping(value = { "/masterData/saveAll" }, method = { RequestMethod.POST })
     public String saveIncentiveMasterData(@RequestBody List<IncentiveActivityDTO> activityDTOS,@RequestHeader(value = "Authorization") String authorization, HttpServletRequest request) {
-        String userName = jwtUtil.extractUsername(authorization);
-        logger.info("Ben_UserName:"+userName);
         OutputResponse response = new OutputResponse();
         try {
             logger.info("Saving All incentives");
@@ -58,6 +56,9 @@ public class IncentiveController {
             @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
+            logger.info("Authorization:"+Authorization);
+            String userName = jwtUtil.extractUsername(Authorization);
+            logger.info("Ben_UserName:"+userName);
             logger.info("get All incentives");
 
             // add logic for different state or district
