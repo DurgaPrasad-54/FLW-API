@@ -6,6 +6,7 @@ import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.CdrDTO;
 import com.iemr.flw.dto.iemr.MdsrDTO;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.DeathReportsService;
@@ -138,7 +139,7 @@ public class DeathReportsServiceImpl implements DeathReportsService {
             Long benId = beneficiaryRepo.getBenIdFromRegID(cdr.getBenId()).longValue();
             Integer userId = userRepo.getUserIdByName(cdr.getCreatedBy());
             IncentiveActivity immunizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", "CHILD HEALTH");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", GroupName.CHILD_HEALTH.getDisplayName());
             createIncentiveRecord(cdr,benId,userId,immunizationActivity);
         });
     }
@@ -150,7 +151,8 @@ public class DeathReportsServiceImpl implements DeathReportsService {
             Long benId = beneficiaryRepo.getBenIdFromRegID(mdsr.getBenId()).longValue();
             Integer userId = userRepo.getUserIdByName(mdsr.getCreatedBy());
             IncentiveActivity immunizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("MATERNAL_DEATH_REPORT", "MATERNAL HEALTH");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("MATERNAL_DEATH_REPORT", GroupName.MATERNAL_HEALTH.getDisplayName());
+
             createIncentiveRecord(mdsr,benId,userId,immunizationActivity);
         });
     }

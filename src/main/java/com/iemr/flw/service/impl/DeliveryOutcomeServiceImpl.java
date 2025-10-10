@@ -127,6 +127,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             // Determine delivery number
             int deliveryNumber = deliveryOutcome.getDeliveryOutcome(); // 1,2,3,4
             if(deliveryOutcome.getIsJSYBenificiary()!=null){
+
                 isJsyBeneficiary = deliveryOutcome.getIsJSYBenificiary();
 
             }
@@ -143,31 +144,71 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             String location = "Rural";
 
             // JSY incentive name construction
-
             List<String> activityNames = new ArrayList<>();
+
+
             if(location.equalsIgnoreCase("Rural")) {
                 switch(deliveryNumber) {
                     case 1:
-                        if(isJsyBeneficiary) activityNames.add("JSY_1ST_DEL_ANC_RURAL");
-                        if(institutionalDelivery) activityNames.add("JSY_1ST_DEL_INST_RURAL");
+                        if(isJsyBeneficiary){
+                            if(deliveryOutcome.getLiveBirth()==0){
+                                activityNames.add("JSY_1ST_DEL_ANC_RURAL");
+                            }
+                        }
+                        if(institutionalDelivery) {
+                            if(deliveryOutcome.getLiveBirth()==0)
+                                activityNames.add("JSY_1ST_DEL_INST_RURAL");
+                        }
                         break;
+
                     case 2:
-                        if(isJsyBeneficiary) activityNames.add("JSY_2ND_DEL_ANC_RURAL");
-                        if(institutionalDelivery) activityNames.add("JSY_2ND_DEL_INST_RURAL");
+                        if(isJsyBeneficiary){
+                            if(deliveryOutcome.getLiveBirth()==1){
+                                activityNames.add("JSY_2ND_DEL_ANC_RURAL");
+                            }
+                        }
+                        if(institutionalDelivery) {
+                            if(deliveryOutcome.getLiveBirth()==1)
+                                activityNames.add("JSY_2ND_DEL_INST_RURAL");
+                        }
                         break;
+
                     case 3:
-                        if(isJsyBeneficiary) activityNames.add("JSY_3RD_DEL_ANC_RURAL");
-                        if(institutionalDelivery) activityNames.add("JSY_3RD_DEL_INST_RURAL");
+                        if(isJsyBeneficiary){
+                            if(deliveryOutcome.getLiveBirth()==2){
+                                activityNames.add("JSY_3RD_DEL_ANC_RURAL");
+                            }
+                        }
+                        if(institutionalDelivery) {
+                            if(deliveryOutcome.getLiveBirth()==2)
+                                activityNames.add("JSY_3RD_DEL_INST_RURAL");
+                        }
                         break;
+
                     case 4:
-                        if(isJsyBeneficiary) activityNames.add("JSY_4TH_DEL_ANC_RURAL");
-                        if(institutionalDelivery) activityNames.add("JSY_4TH_DEL_INST_RURAL");
+                        if(isJsyBeneficiary){
+                            if(deliveryOutcome.getLiveBirth()==3){
+                                activityNames.add("JSY_4TH_DEL_ANC_RURAL");
+                            }
+                        }
+                        if(institutionalDelivery) {
+                            if(deliveryOutcome.getLiveBirth()==3)
+                                activityNames.add("JSY_4TH_DEL_INST_RURAL");
+                        }
                         break;
                 }
             } else if(location.equalsIgnoreCase("Urban")) {
-                if(isJsyBeneficiary) activityNames.add("JSY_ANC_URBAN");
-                if(institutionalDelivery) activityNames.add("JSY_INST_URBAN");
+                if(isJsyBeneficiary){
+                    if(deliveryOutcome.getLiveBirth()==0){
+                        activityNames.add("JSY_ANC_URBAN");
+                    }
+                }
+                if(institutionalDelivery){
+                    if(deliveryOutcome.getLiveBirth()==0)
+                        activityNames.add("JSY_INST_URBAN");
+                }
             }
+
 
             // For each activity, create record
             for(String activityName : activityNames){
