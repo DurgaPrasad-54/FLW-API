@@ -39,6 +39,7 @@ public class SammelanController {
             @RequestPart(value = "meetingImages", required = false) MultipartFile[] images) {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
+        sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
         sammelanRequestDTO.setDate(Timestamp.valueOf(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
 
