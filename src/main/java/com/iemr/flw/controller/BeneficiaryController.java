@@ -2,9 +2,11 @@ package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.service.BeneficiaryService;
+import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.response.OutputResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +22,19 @@ public class BeneficiaryController {
     @Autowired
     BeneficiaryService beneficiaryService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @RequestMapping(value = "/getBeneficiaryData", method = RequestMethod.POST)
     @Operation(summary = "get beneficiary data for given user ")
     public String getBeneficiaryDataByAsha(@RequestBody GetBenRequestHandler requestDTO,
-                                           @RequestHeader(value = "Authorization") String authorization) {
+                                           @RequestHeader(value = "Authorization") String authorization, HttpServletRequest request) {
         OutputResponse response = new OutputResponse();
+
+        String userName = jwtUtil.extractUsername(authorization);
+        logger.info("Ben_UserName:"+userName);
         try {
+
             if (requestDTO != null) {
                 logger.info("request object with timestamp : " + new Timestamp(System.currentTimeMillis()) + " "
                         + requestDTO);
