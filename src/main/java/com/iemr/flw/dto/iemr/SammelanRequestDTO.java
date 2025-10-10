@@ -13,6 +13,5 @@ public class SammelanRequestDTO {
     private Timestamp date;                 // Meeting date
     private String place;                   // Dropdown: HWC / Anganwadi Centre / Community Center
     private Integer participants;           // Number of participants attended
-    private MultipartFile[] attachments; // up to 5 images
 
 }

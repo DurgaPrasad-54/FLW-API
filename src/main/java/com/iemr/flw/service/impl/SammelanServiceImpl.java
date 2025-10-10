@@ -11,6 +11,7 @@ import com.iemr.flw.repo.iemr.SammelanRecordRepository;
 import com.iemr.flw.service.SammelanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -33,67 +34,65 @@ public class SammelanServiceImpl implements SammelanService {
 
 
     @Override
-    public SammelanResponseDTO submitSammelan(List<SammelanRequestDTO> dto) {
+    public SammelanResponseDTO submitSammelan(SammelanRequestDTO sammelanRequestDTO, MultipartFile[] images) {
         SammelanResponseDTO response = new SammelanResponseDTO();
 
         try {
-            dto.forEach(sammelanRequestDTO -> {
-                validateRequest(sammelanRequestDTO);
-                LocalDate localDate = sammelanRequestDTO.getDate().toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
+            validateRequest(sammelanRequestDTO);
+            LocalDate localDate = sammelanRequestDTO.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
-                YearMonth ym = YearMonth.from(localDate);
+            YearMonth ym = YearMonth.from(localDate);
 
-                // Check for existing record in same month
-                boolean exists = recordRepo.existsByAshaIdAndMeetingDateBetween(
-                        sammelanRequestDTO.getAshaId(),
-                        ym.atDay(1),
-                        ym.atEndOfMonth()
-                );
-                if (exists) {
-                    throw new IllegalArgumentException("Sammelan already submitted for this month.");
+            // Check for existing record in same month
+            boolean exists = recordRepo.existsByAshaIdAndMeetingDateBetween(
+                    sammelanRequestDTO.getAshaId(),
+                    ym.atDay(1),
+                    ym.atEndOfMonth()
+            );
+            if (exists) {
+                throw new IllegalArgumentException("Sammelan already submitted for this month.");
+            }
+
+            // Save Sammelan record
+            record = new SammelanRecord();
+            record.setAshaId(sammelanRequestDTO.getAshaId());
+            record.setMeetingDate(sammelanRequestDTO.getDate());
+            record.setPlace(sammelanRequestDTO.getPlace());
+            record.setParticipants(sammelanRequestDTO.getParticipants());
+            record = recordRepo.save(record);
+
+            // Save Attachments
+            if (images != null && images.length > 0) {
+                List<String> base64Images = List.of(images)
+                        .stream()
+                        .filter(file -> !file.isEmpty())
+                        .map(file -> {
+                            try {
+                                return Base64.getEncoder().encodeToString(file.getBytes());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .collect(Collectors.toList());
+
+                String imagesJson = null;
+                try {
+                    imagesJson = objectMapper.writeValueAsString(base64Images);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
                 }
-
-                // Save Sammelan record
-                record = new SammelanRecord();
-                record.setAshaId(sammelanRequestDTO.getAshaId());
-                record.setMeetingDate(sammelanRequestDTO.getDate());
-                record.setPlace(sammelanRequestDTO.getPlace());
-                record.setParticipants(sammelanRequestDTO.getParticipants());
-                record = recordRepo.save(record);
-
-                // Save Attachments
-                if (sammelanRequestDTO.getAttachments() != null && sammelanRequestDTO.getAttachments().length > 0) {
-                    List<String> base64Images = List.of(sammelanRequestDTO.getAttachments())
-                            .stream()
-                            .filter(file -> !file.isEmpty())
-                            .map(file -> {
-                                try {
-                                    return Base64.getEncoder().encodeToString(file.getBytes());
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            })
-                            .collect(Collectors.toList());
-
-                    String imagesJson = null;
-                    try {
-                        imagesJson = objectMapper.writeValueAsString(base64Images);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                    record.setAttachments(imagesJson);
-                }
+                record.setAttachments(imagesJson);
+            }
 
 
-                // Prepare Response DTO
-                response.setId(record.getId());
-                response.setAshaId(record.getAshaId());
-                response.setDate(record.getMeetingDate());
-                response.setPlace(record.getPlace());
-                response.setParticipants(record.getParticipants());
-            });
+            // Prepare Response DTO
+            response.setId(record.getId());
+            response.setAshaId(record.getAshaId());
+            response.setDate(record.getMeetingDate());
+            response.setPlace(record.getPlace());
+            response.setParticipants(record.getParticipants());
 
 
         } catch (Exception e) {
@@ -146,9 +145,7 @@ public class SammelanServiceImpl implements SammelanService {
         if (dto.getParticipants() < 0 || dto.getParticipants() > 999) {
             throw new IllegalArgumentException("Participants must be between 0–999.");
         }
-        if (dto.getAttachments() == null) {
-            throw new IllegalArgumentException("Minimum 2 attachments required.");
-        }
+
 
     }
 }

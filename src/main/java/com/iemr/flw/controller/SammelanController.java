@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,19 @@ public class SammelanController {
 
     @RequestMapping(value = "saveAll",method = RequestMethod.POST)
     public ResponseEntity<SammelanResponseDTO> create(
-            @RequestBody  @Valid List<SammelanRequestDTO> payload) {
 
-        SammelanResponseDTO resp = service.submitSammelan(payload);
+            @RequestPart("date") String date,
+            @RequestPart("place") String place,
+            @RequestPart("participants") String participants,
+            @RequestPart("ashaId") String ashaId,
+            @RequestPart(value = "meetingImages", required = false) MultipartFile[] images) {
+        SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
+        sammelanRequestDTO.setPlace(place);
+        sammelanRequestDTO.setDate(Timestamp.valueOf(date));
+        sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
+
+
+        SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO,images);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
