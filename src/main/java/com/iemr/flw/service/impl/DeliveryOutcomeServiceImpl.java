@@ -223,9 +223,9 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             String placeOfDelivery = deliveryOutcome.getPlaceOfDelivery();
 
             if (placeOfDelivery != null &&
-                    !placeOfDelivery.equalsIgnoreCase("home") &&
-                    !placeOfDelivery.equalsIgnoreCase("in transit") &&
-                    !placeOfDelivery.equalsIgnoreCase("other private hospital")) {
+                    (!placeOfDelivery.equalsIgnoreCase("home") ||
+                    !placeOfDelivery.equalsIgnoreCase("in transit") ||
+                    !placeOfDelivery.equalsIgnoreCase("other private hospital"))) {
 
                 // Institutional delivery (eligible case)
                 if (institutionalDeliveryActivityAM != null) {
