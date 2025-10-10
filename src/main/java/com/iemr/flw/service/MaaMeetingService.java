@@ -10,6 +10,7 @@ import com.iemr.flw.domain.iemr.UwinSession;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.MaaMeetingRequestDTO;
 import com.iemr.flw.dto.iemr.MaaMeetingResponseDTO;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
 import com.iemr.flw.repo.iemr.MaaMeetingRepository;
@@ -107,8 +108,19 @@ public class MaaMeetingService {
         }).collect(Collectors.toList());
     }
     private void checkAndAddIncentive(MaaMeeting meeting) {
-        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", "CHILD HEALTH");
+        IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.CHILD_HEALTH.getDisplayName());
+        IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.ACTIVITY.getDisplayName());
+       if(incentiveActivityAM!=null){
+           addIncentive(incentiveActivityAM,meeting);
+       }
+       if(incentiveActivityCH!=null){
+           addIncentive(incentiveActivityCH,meeting);
 
+       }
+
+    }
+
+    private void  addIncentive(IncentiveActivity incentiveActivity,MaaMeeting meeting){
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L);
 

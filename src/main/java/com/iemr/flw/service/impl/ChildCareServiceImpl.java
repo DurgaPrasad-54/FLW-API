@@ -403,20 +403,21 @@ public class ChildCareServiceImpl implements ChildCareService {
 
            GroupName.setIsCh(false);
             Long benId = hbncVisit.getBeneficiaryId();
-            if (hbncVisit.getVisit_day().equals("1st Day")) {
-                IncentiveActivity visitActivity =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.CHILD_HEALTH.getDisplayName());
+            if (hbncVisit.getVisit_day().equals("42nd Day")) {
+                IncentiveActivity visitActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.CHILD_HEALTH.getDisplayName());
+                IncentiveActivity visitActivityCH= incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.ACTIVITY.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityAM,"HBNC_0_42_DAYS");
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityCH,"HBNC_0_42_DAYS_CH");
 
             }
             logger.info("getDischarged_from_sncu"+hbncVisit.getDischarged_from_sncu());
 
-            if (hbncVisit.getVisit_day().equals("1st Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
+            if (hbncVisit.getVisit_day().equals("7th Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity,"SNCU_LBW_FOLLOWUP");
 
             }
             logger.info("getIs_baby_alive"+hbncVisit.getIs_baby_alive());
@@ -424,7 +425,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 IncentiveActivity isChildDeathActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", GroupName.CHILD_HEALTH.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity);
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity,"CHILD_DEATH_REPORTING");
             }
 
 
@@ -484,9 +485,8 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
     }
 
-    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
-        logger.info("immunizationActivity "+immunizationActivity.getName());
-
+    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity,String activityName) {
+        logger.info("RecordIncentive"+activityName);
 
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
