@@ -22,17 +22,14 @@ public class BeneficiaryController {
     @Autowired
     BeneficiaryService beneficiaryService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+
 
     @RequestMapping(value = "/getBeneficiaryData", method = RequestMethod.POST)
     @Operation(summary = "get beneficiary data for given user ")
     public String getBeneficiaryDataByAsha(@RequestBody GetBenRequestHandler requestDTO,
-                                           @RequestHeader(value = "Authorization") String authorization, HttpServletRequest request) {
+                                           @RequestHeader(value = "Authorization") String authorization) {
         OutputResponse response = new OutputResponse();
 
-        String userName = jwtUtil.extractUsername(authorization);
-        logger.info("Ben_UserName:"+userName);
         try {
 
             if (requestDTO != null) {
