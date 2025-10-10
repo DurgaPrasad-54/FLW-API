@@ -141,6 +141,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
              if(rmnchBeneficiaryDetailsRmnch.isPresent()){
                  logger.info("rmnchBeneficiaryDetailsRmnch"+rmnchBeneficiaryDetailsRmnch.get());
              }
+
             String location = "Rural";
 
             // JSY incentive name construction
@@ -217,7 +218,27 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
                     createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivity);
                 }
             }
+            IncentiveActivity institutionalDeliveryActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_MOTIVATE_INST_DEL", GroupName.MATERNAL_HEALTH.getDisplayName());
+            IncentiveActivity institutionalDeliveryActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_MOTIVATE_INST_DEL", GroupName.MATERNAL_HEALTH.getDisplayName());
+            String placeOfDelivery = deliveryOutcome.getPlaceOfDelivery();
+
+            if (placeOfDelivery != null &&
+                    !placeOfDelivery.equalsIgnoreCase("home") &&
+                    !placeOfDelivery.equalsIgnoreCase("in transit") &&
+                    !placeOfDelivery.equalsIgnoreCase("other private hospital")) {
+
+                // Institutional delivery (eligible case)
+                if (institutionalDeliveryActivityAM != null) {
+                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityAM);
+                }
+
+                if (institutionalDeliveryActivityCH != null) {
+                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityCH);
+                }
+            }
         });
+
+
 
     }
     private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity) {

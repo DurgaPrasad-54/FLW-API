@@ -27,6 +27,7 @@ package com.iemr.flw.service.impl;
 import com.iemr.flw.controller.CoupleController;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.iemr.*;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.VillageLevelFormService;
 import org.slf4j.Logger;
@@ -252,15 +253,17 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         Timestamp timestamp = Timestamp.valueOf(localDate.atStartOfDay());
         logger.info("timestamp" + timestamp);
 
-        IncentiveActivity villageFormEntryActivity;
-        villageFormEntryActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(formType, "CHILD HEALTH");
+        IncentiveActivity villageFormEntryActivityAM;
+        IncentiveActivity villageFormEntryActivityCH;
+        villageFormEntryActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup(formType, GroupName.CHILD_HEALTH.getDisplayName());
+        villageFormEntryActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup(formType, GroupName.ACTIVITY.getDisplayName());
 
-        if (villageFormEntryActivity != null) {
+        if (villageFormEntryActivityAM != null) {
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivity.getId(), timestamp, null);
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityAM.getId(), timestamp, null);
             if (record == null) {
                 record = new IncentiveActivityRecord();
-                record.setActivityId(villageFormEntryActivity.getId());
+                record.setActivityId(villageFormEntryActivityAM.getId());
                 record.setCreatedDate(timestamp);
                 record.setCreatedBy(createdBY);
                 record.setStartDate(timestamp);
@@ -268,8 +271,26 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
                 record.setUpdatedDate(timestamp);
                 record.setUpdatedBy(createdBY);
                 record.setAshaId(userID);
-                record.setName(villageFormEntryActivity.getName());
-                record.setAmount(Long.valueOf(villageFormEntryActivity.getRate()));
+                record.setAmount(Long.valueOf(villageFormEntryActivityAM.getRate()));
+                recordRepo.save(record);
+
+            }
+        }
+
+        if (villageFormEntryActivityCH != null) {
+            IncentiveActivityRecord record = recordRepo
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityCH.getId(), timestamp, null);
+            if (record == null) {
+                record = new IncentiveActivityRecord();
+                record.setActivityId(villageFormEntryActivityCH.getId());
+                record.setCreatedDate(timestamp);
+                record.setCreatedBy(createdBY);
+                record.setStartDate(timestamp);
+                record.setEndDate(timestamp);
+                record.setUpdatedDate(timestamp);
+                record.setUpdatedBy(createdBY);
+                record.setAshaId(userID);
+                record.setAmount(Long.valueOf(villageFormEntryActivityCH.getRate()));
                 recordRepo.save(record);
 
             }

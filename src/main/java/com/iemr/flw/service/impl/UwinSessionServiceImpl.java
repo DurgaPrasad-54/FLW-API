@@ -128,25 +128,48 @@ public class UwinSessionServiceImpl implements UwinSessionService {
     }
 
     private void checkAndAddIncentive(UwinSession session) {
-        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_MOBILIZATION_SESSIONS", GroupName.IMMUNIZATION.getDisplayName());
+        IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_MOBILIZATION_SESSIONS", GroupName.IMMUNIZATION.getDisplayName());
+        IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_MOBILIZATION_SESSIONS", GroupName.ACTIVITY.getDisplayName());
 
-        IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), session.getDate(), 0L);
 
-        if (record == null) {
-            record = new IncentiveActivityRecord();
-            record.setActivityId(incentiveActivity.getId());
-            record.setCreatedDate(session.getDate());
-            record.setCreatedBy(session.getCreatedBy());
-            record.setStartDate(session.getDate());
-            record.setEndDate(session.getDate());
-            record.setUpdatedDate(session.getDate());
-            record.setUpdatedBy(session.getCreatedBy());
-            record.setBenId(0L);
-            record.setAshaId(session.getAshaId());
-            record.setAmount(Long.valueOf(incentiveActivity.getRate()));
-            recordRepo.save(record);
+         if(incentiveActivityAM!=null){
+             IncentiveActivityRecord record = recordRepo
+                     .findRecordByActivityIdCreatedDateBenId(incentiveActivityAM.getId(), session.getDate(), 0L);
+             if (record == null) {
+                 record = new IncentiveActivityRecord();
+                 record.setActivityId(incentiveActivityAM.getId());
+                 record.setCreatedDate(session.getDate());
+                 record.setCreatedBy(session.getCreatedBy());
+                 record.setStartDate(session.getDate());
+                 record.setEndDate(session.getDate());
+                 record.setUpdatedDate(session.getDate());
+                 record.setUpdatedBy(session.getCreatedBy());
+                 record.setBenId(0L);
+                 record.setAshaId(session.getAshaId());
+                 record.setAmount(Long.valueOf(incentiveActivityAM.getRate()));
+                 recordRepo.save(record);
+             }
+         }
+
+        if(incentiveActivityCH!=null){
+            IncentiveActivityRecord record = recordRepo
+                    .findRecordByActivityIdCreatedDateBenId(incentiveActivityCH.getId(), session.getDate(), 0L);
+            if (record == null) {
+                record = new IncentiveActivityRecord();
+                record.setActivityId(incentiveActivityCH.getId());
+                record.setCreatedDate(session.getDate());
+                record.setCreatedBy(session.getCreatedBy());
+                record.setStartDate(session.getDate());
+                record.setEndDate(session.getDate());
+                record.setUpdatedDate(session.getDate());
+                record.setUpdatedBy(session.getCreatedBy());
+                record.setBenId(0L);
+                record.setAshaId(session.getAshaId());
+                record.setAmount(Long.valueOf(incentiveActivityCH.getRate()));
+                recordRepo.save(record);
+            }
         }
+
 
     }
 }
