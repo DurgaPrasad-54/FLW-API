@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.Gson;
@@ -33,7 +34,7 @@ public class CoupleController {
     private String kitPhoto2;
 
     @Operation(summary = "save eligible couple registration details")
-    @RequestMapping(value = { "/register/saveAll" }, method = { RequestMethod.POST })
+    @RequestMapping(value = { "/register/saveAll" }, method = { RequestMethod.POST },consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveEligibleCouple(@RequestPart("data") List<EligibleCoupleDTO> eligibleCoupleDTOs,
                                      @RequestPart(value = "kitPhoto1", required = false) MultipartFile kitPhoto1,
                                      @RequestPart(value = "kitPhoto2", required = false) MultipartFile kitPhoto2,
