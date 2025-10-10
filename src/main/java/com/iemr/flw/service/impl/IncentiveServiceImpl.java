@@ -198,18 +198,18 @@ public class IncentiveServiceImpl implements IncentiveService {
     }
 
     private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity){
-
+       Timestamp timestamp = Timestamp.valueOf(LocalDate.now().atStartOfDay());
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(LocalDate.now().atStartOfDay()), 0L);
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), timestamp, 0L);
 
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(incentiveActivity.getId());
-            record.setCreatedDate(Timestamp.from(Instant.now()));
+            record.setCreatedDate(timestamp);
             record.setCreatedBy(jwtUtil.getUserNameFromStorage());
-            record.setStartDate(Timestamp.from(Instant.now()));
-            record.setEndDate(Timestamp.from(Instant.now()));
-            record.setUpdatedDate(Timestamp.from(Instant.now()));
+            record.setStartDate(timestamp);
+            record.setEndDate(timestamp);
+            record.setUpdatedDate(timestamp);
             record.setUpdatedBy(jwtUtil.getUserNameFromStorage());
             record.setBenId(0L);
             record.setAshaId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
