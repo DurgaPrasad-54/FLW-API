@@ -404,7 +404,8 @@ public class ChildCareServiceImpl implements ChildCareService {
             boolean isBabyDisChargeSNCUA = hbncVisits.stream()
                     .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu()));
             Long benId = hbncVisit.getBeneficiaryId();
-            if (hbncVisit.getVisit_day().equals("42nd Day")) {
+            GroupName.setIsCh(true);
+            if (hbncVisit.getVisit_day().equals("1st Day")) {
                 IncentiveActivity visitActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.CHILD_HEALTH.getDisplayName());
 
