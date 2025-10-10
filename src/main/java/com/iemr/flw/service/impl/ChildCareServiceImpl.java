@@ -401,7 +401,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     .stream()
                     .allMatch(hbncVisits::contains);
 
-           GroupName.setIsCh(true);
+           GroupName.setIsCh(false);
             Long benId = hbncVisit.getBeneficiaryId();
             if (hbncVisit.getVisit_day().equals("1st Day")) {
                 IncentiveActivity visitActivity =
