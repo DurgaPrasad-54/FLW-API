@@ -36,7 +36,7 @@ public class SammelanController {
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
-            @RequestPart(value = "meetingImages", required = false) MultipartFile[] images) {
+            @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));

@@ -34,8 +34,8 @@ public class CoupleController {
     private String kitPhoto2;
 
     @Operation(summary = "save eligible couple registration details")
-    @RequestMapping(value = { "/register/saveAll" }, method = { RequestMethod.POST })
-    public String saveEligibleCouple(@RequestBody List<EligibleCoupleDTO> eligibleCoupleDTOs,
+    @RequestMapping(value = { "/register/saveAll" }, method = { RequestMethod.POST },consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String saveEligibleCouple(@RequestPart("data") List<EligibleCoupleDTO> eligibleCoupleDTOs,
                                      @RequestPart(value = "kitPhoto1", required = false) MultipartFile kitPhoto1,
                                      @RequestPart(value = "kitPhoto2", required = false) MultipartFile kitPhoto2,
                                      @RequestHeader(value = "Authorization") String Authorization) {
