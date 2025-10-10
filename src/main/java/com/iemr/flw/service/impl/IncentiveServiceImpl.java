@@ -82,14 +82,6 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
 
         try {
-           Integer stateId=  userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId();
-            if(stateId==5){
-                GroupName.setIsCh(false);
-
-            }else if(stateId==9){
-                GroupName.setIsCh(true);
-
-            }
 
 
             List<IncentiveActivity> incs = incentivesRepo.findAll();
@@ -112,7 +104,6 @@ public class IncentiveServiceImpl implements IncentiveService {
 
 
                     }else  if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
-                        GroupName.setIsCh(false);
 
                         if(mapping.getAssameActivityDescription()!=null){
                             dto.setDescription(mapping.getAssameActivityDescription());

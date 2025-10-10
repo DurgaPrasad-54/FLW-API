@@ -401,10 +401,8 @@ public class ChildCareServiceImpl implements ChildCareService {
                     .stream()
                     .allMatch(hbncVisits::contains);
 
-            boolean isBabyDisChargeSNCUA = hbncVisits.stream()
-                    .anyMatch(v -> Boolean.TRUE.equals(v.getDischarged_from_sncu()));
+
             Long benId = hbncVisit.getBeneficiaryId();
-            GroupName.setIsCh(true);
             if (hbncVisit.getVisit_day().equals("1st Day")) {
                 IncentiveActivity visitActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.CHILD_HEALTH.getDisplayName());
@@ -412,7 +410,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
 
             }
-            if (hbncVisit.getVisit_day().equals("42nd Day") && isBabyDisChargeSNCUA) {
+            if (hbncVisit.getVisit_day().equals("7th Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
