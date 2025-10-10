@@ -99,8 +99,12 @@ public class IncentiveServiceImpl implements IncentiveService {
                     dto.setGroupName(mapping.getGroup());
                     if(Objects.equals(incentiveRequestDTO.getLangCode(), "en")){
                         dto.setDescription(mapping.getDescription());
+                        GroupName.setIsCh(true);
+
 
                     }else  if(Objects.equals(incentiveRequestDTO.getLangCode(), "as")){
+                        GroupName.setIsCh(false);
+
                         if(mapping.getAssameActivityDescription()!=null){
                             dto.setDescription(mapping.getAssameActivityDescription());
 

@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan(basePackages = {"com.iemr.flw.domain.identity", "com.iemr.flw.domain.iemr"})
 @EnableScheduling
 public class FlwApplication extends SpringBootServletInitializer {
-    private Boolean IS_CH =true;
 
     public static void main(String[] args) {
 
@@ -38,8 +37,5 @@ public class FlwApplication extends SpringBootServletInitializer {
 
         return new FLWApplBeans();
     }
-    @PostConstruct
-    public void init() {
-        GroupName.setIsCh(IS_CH);
-    }
+
 }
