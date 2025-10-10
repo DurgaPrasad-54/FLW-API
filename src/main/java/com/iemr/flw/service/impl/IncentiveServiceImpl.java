@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -199,7 +200,7 @@ public class IncentiveServiceImpl implements IncentiveService {
     private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity){
 
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.from(Instant.now()), 0L);
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(LocalDate.now().atStartOfDay()), 0L);
 
         if (record == null) {
             record = new IncentiveActivityRecord();
