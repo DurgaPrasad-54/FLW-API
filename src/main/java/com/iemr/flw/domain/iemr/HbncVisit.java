@@ -104,4 +104,7 @@ public class HbncVisit {
     @Column(name = "created_date")
     private Timestamp createdDate;
 
+    @Column(name = "baby_eyes_swollen")
+    private Boolean babyEyesSwollen;
+
 };

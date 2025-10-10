@@ -90,6 +90,9 @@ import java.util.List;
   @Column(name = "updated_by")
   private String updatedBy;
 
+  @Column(name = "baby_eyes_swollen")
+  private Boolean babyEyesSwollen;
+
 
  }
 
