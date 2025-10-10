@@ -401,7 +401,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     .stream()
                     .allMatch(hbncVisits::contains);
 
-
+           GroupName.setIsCh(true);
             Long benId = hbncVisit.getBeneficiaryId();
             if (hbncVisit.getVisit_day().equals("1st Day")) {
                 IncentiveActivity visitActivity =
@@ -417,6 +417,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity);
 
             }
+            logger.info("getIs_baby_alive"+hbncVisit.getIs_baby_alive());
             if (!hbncVisit.getIs_baby_alive()) {
                 IncentiveActivity isChildDeathActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", GroupName.CHILD_HEALTH.getDisplayName());
@@ -481,6 +482,7 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
+
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
 
