@@ -410,7 +410,9 @@ public class ChildCareServiceImpl implements ChildCareService {
                 createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivity);
 
             }
-            if (hbncVisit.getVisit_day().equals("7th Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
+            logger.info("getDischarged_from_sncu"+hbncVisit.getDischarged_from_sncu());
+
+            if (hbncVisit.getVisit_day().equals("1st Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
@@ -432,6 +434,7 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void checkAndAddIncentives(List<ChildVaccination> vaccinationList) {
+
 
         vaccinationList.forEach(vaccination -> {
             Long benId = beneficiaryRepo.getBenIdFromRegID(vaccination.getBeneficiaryRegId()).longValue();
@@ -482,6 +485,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity) {
+        logger.info("immunizationActivity "+immunizationActivity.getName());
+
 
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
