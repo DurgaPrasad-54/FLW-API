@@ -56,8 +56,7 @@ public class IncentiveController {
             @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
-            logger.info("Authorization:"+Authorization);
-            String userName = jwtUtil.extractUsername(Authorization);
+            String userName = jwtUtil.getUserNameFromStorage();
             logger.info("Ben_UserName:"+userName);
             logger.info("get All incentives");
 
