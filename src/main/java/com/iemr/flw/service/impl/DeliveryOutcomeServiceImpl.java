@@ -10,6 +10,7 @@ import com.iemr.flw.domain.iemr.IncentiveActivity;
 import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.DeliveryOutcomeDTO;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.identity.HouseHoldRepo;
 import com.iemr.flw.repo.iemr.DeliveryOutcomeRepo;
@@ -170,7 +171,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
             // For each activity, create record
             for(String activityName : activityNames){
-                IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(activityName,"JSY");
+                IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup(activityName, GroupName.JSY.getDisplayName());
                 if(incentiveActivity != null){
                     createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivity);
                 }

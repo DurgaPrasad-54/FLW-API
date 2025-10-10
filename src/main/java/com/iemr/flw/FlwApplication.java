@@ -1,8 +1,10 @@
 package com.iemr.flw;
 
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.utils.FLWApplBeans;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,8 +18,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan(basePackages = {"com.iemr.flw.domain.identity", "com.iemr.flw.domain.iemr"})
 @EnableScheduling
 public class FlwApplication extends SpringBootServletInitializer {
+    private Boolean IS_CH =true;
 
     public static void main(String[] args) {
+
+
         SpringApplication.run(applicationClass, args);
     }
 
@@ -32,5 +37,9 @@ public class FlwApplication extends SpringBootServletInitializer {
     public FLWApplBeans instantiateBeans(){
 
         return new FLWApplBeans();
+    }
+    @PostConstruct
+    public void init() {
+        GroupName.setIsCh(IS_CH);
     }
 }

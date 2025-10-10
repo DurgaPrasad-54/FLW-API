@@ -6,6 +6,7 @@ import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.MaternalHealthService;
@@ -323,35 +324,35 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
           if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MALE STERILIZATION")){
 
             IncentiveActivity maleSterilizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", "FAMILY PLANNING");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
             if (maleSterilizationActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, maleSterilizationActivity);
             }
         }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("FEMALE STERILIZATION")){
 
             IncentiveActivity femaleSterilizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", "FAMILY PLANNING");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
             if (femaleSterilizationActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivity);
             }
         }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MiniLap")){
 
             IncentiveActivity miniLapActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MINILAP", "FAMILY PLANNING");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MINILAP", GroupName.FAMILY_PLANNING.getDisplayName());
             if (miniLapActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, miniLapActivity);
             }
         }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("Condom")){
 
             IncentiveActivity comdomActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", GroupName.FAMILY_PLANNING.getDisplayName());
             if (comdomActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, comdomActivity);
             }
         }else  if(ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("Copper T (IUCD)")){
 
             IncentiveActivity copperTActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", GroupName.FAMILY_PLANNING.getDisplayName());
             if (copperTActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, copperTActivity);
             }
@@ -383,14 +384,14 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     private void checkAndAddIncentives(List<ANCVisit> ancList) {
 
         IncentiveActivity anc1Activity =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC_REGISTRATION_1ST_TRIM", "MATERNAL HEALTH");
+                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC_REGISTRATION_1ST_TRIM", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity ancFullActivity =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", "MATERNAL HEALTH");
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
 
-        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", "MATERNAL HEALTH");
+        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
 
-        IncentiveActivity identifiedHrpActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", "MATERNAL HEALTH");
+        IncentiveActivity identifiedHrpActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
 
 
         if (anc1Activity != null) {

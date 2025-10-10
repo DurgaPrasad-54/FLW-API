@@ -7,6 +7,7 @@ import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.domain.iemr.UwinSession;
 import com.iemr.flw.dto.iemr.UwinSessionRequestDTO;
 import com.iemr.flw.dto.iemr.UwinSessionResponseDTO;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
 import com.iemr.flw.repo.iemr.IncentivesRepo;
 import com.iemr.flw.repo.iemr.UserServiceRoleRepo;
@@ -127,7 +128,7 @@ public class UwinSessionServiceImpl implements UwinSessionService {
     }
 
     private void checkAndAddIncentive(UwinSession session) {
-        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_MOBILIZATION_SESSIONS", "IMMUNIZATION");
+        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_MOBILIZATION_SESSIONS", GroupName.IMMUNIZATION.getDisplayName());
 
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), session.getDate(), 0L);
