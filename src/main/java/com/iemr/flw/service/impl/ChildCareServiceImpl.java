@@ -62,20 +62,20 @@ public class ChildCareServiceImpl implements ChildCareService {
             hbycDTOs.forEach(it -> {
 
                 HbycChildVisit hbyc =
-                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDay(it.getBeneficiaryId(), it.getFields().getHbycVisitDay());
+                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDay(it.getBeneficiaryId(), it.getFields().getVisit_day());
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();
                     modelMapper.map(it, hbyc);
                     hbyc.setId(id);
-                    hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
-                    hbyc.setCreatedBy(it.getUserName());
+                    hbyc.setUser_id(userRepo.getUserIdByName(it.getUserName()));
+                    hbyc.setCreated_by(it.getUserName());
                 } else {
                     hbyc = new HbycChildVisit();
                     modelMapper.map(it, hbyc);
                     hbyc.setId(null);
-                    hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
-                    hbyc.setCreatedBy(it.getUserName());
+                    hbyc.setUser_id(userRepo.getUserIdByName(it.getUserName()));
+                    hbyc.setCreated_by(it.getUserName());
 
                 }
                 hbycList.add(hbyc);
@@ -100,41 +100,42 @@ public class ChildCareServiceImpl implements ChildCareService {
             for (HbycChildVisit hbycChildVisit : hbycChildVisits) {
                 HbycVisitResponseDTO hbycRequestDTO = new HbycVisitResponseDTO();
                 hbycRequestDTO.setId(hbycChildVisit.getId());
-                hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiaryId());
-                hbycRequestDTO.setHouseHoldId(hbycChildVisit.getHouseHoldId());
-                hbycRequestDTO.setVisitDate(hbycChildVisit.getHbycVisitDate());
+                hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiary_id());
+                hbycRequestDTO.setHouseHoldId(hbycChildVisit.getHousehold_id());
+                hbycRequestDTO.setVisitDate(hbycChildVisit.getHbyc_visit_date());
 
                 // Prepare dynamic fields map
                 Map<String, Object> fields = new HashMap<>();
-                addIfValid(fields, "visit_day", hbycChildVisit.getHbycVisitDay());
-                addIfValid(fields, "due_date", hbycChildVisit.getHbycDueDate());
-                addIfValid(fields, "visit_date", hbycChildVisit.getHbycVisitDate());
-                addIfValid(fields, "is_baby_alive", convert(hbycChildVisit.getIsBabyAlive()));
-                addIfValid(fields, "date_of_death", hbycChildVisit.getDateOfDeath());
-                addIfValid(fields, "reason_for_death", hbycChildVisit.getReasonForDeath());
-                addIfValid(fields, "place_of_death", hbycChildVisit.getPlaceOfDeath());
-                addIfValid(fields, "other_place_of_death", hbycChildVisit.getOtherPlaceOfDeath());
-                addIfValid(fields, "baby_weight", hbycChildVisit.getBabyWeight());
-                addIfValid(fields, "is_child_sick", convert(hbycChildVisit.getIsChildSick()));
-                addIfValid(fields, "exclusive_breastfeeding", convert(hbycChildVisit.getIsExclusiveBreastfeeding()));
-                addIfValid(fields, "mother_counseled_ebf", convert(hbycChildVisit.getIsMotherCounseledExbf()));
-                addIfValid(fields, "complementary_feeding", convert(hbycChildVisit.getHasChildStartedComplementaryFeeding()));
-                addIfValid(fields, "mother_counseled_cf", convert(hbycChildVisit.getIsMotherCounseledCf()));
-                addIfValid(fields, "weight_recorded", convert(hbycChildVisit.getIsWeightRecordedByAww()));
-                addIfValid(fields, "developmental_delay", convert(hbycChildVisit.getIsDevelopmentalDelay()));
-                addIfValid(fields, "measles_vaccine", convert(hbycChildVisit.getIsMeaslesVaccineGiven()));
-                addIfValid(fields, "vitamin_a", convert(hbycChildVisit.getIsVitaminAGiven()));
-                addIfValid(fields, "ors_available", convert(hbycChildVisit.getIsOrsAvailable()));
-                addIfValid(fields, "ifa_available", convert(hbycChildVisit.getIsIfaSyrupAvailable()));
-                addIfValid(fields, "ors_given", convert(hbycChildVisit.getIsOrsGiven()));
-                addIfValid(fields, "ifa_given", convert(hbycChildVisit.getIsIfaSyrupGiven()));
-                addIfValid(fields, "handwash_counseling", convert(hbycChildVisit.getIsHandwashingCounselingGiven()));
-                addIfValid(fields, "parenting_counseling", convert(hbycChildVisit.getIsParentingCounselingGiven()));
-                addIfValid(fields, "family_planning_counseling", convert(hbycChildVisit.getIsFamilyPlanningCounselingGiven()));
-                addIfValid(fields, "diarrhoea_episode", convert(hbycChildVisit.getDiarrhoeaEpisode()));
-                addIfValid(fields, "breathing_difficulty", convert(hbycChildVisit.getPneumoniaSymptoms()));
+                addIfValid(fields, "visit_day", hbycChildVisit.getVisit_day());
+                addIfValid(fields, "due_date", hbycChildVisit.getHbyc_due_date());
+                addIfValid(fields, "visit_date", hbycChildVisit.getHbyc_visit_date());
+                addIfValid(fields, "is_baby_alive", convert(hbycChildVisit.getIs_baby_alive()));
+                addIfValid(fields, "date_of_death", hbycChildVisit.getDate_of_death());
+                addIfValid(fields, "reason_for_death", hbycChildVisit.getReason_for_death());
+                addIfValid(fields, "place_of_death", hbycChildVisit.getPlace_of_death());
+                addIfValid(fields, "other_place_of_death", hbycChildVisit.getOther_place_of_death());
+                addIfValid(fields, "baby_weight", hbycChildVisit.getBaby_weight());
+                addIfValid(fields, "is_child_sick", convert(hbycChildVisit.getIs_child_sick()));
+                addIfValid(fields, "exclusive_breastfeeding", convert(hbycChildVisit.getIs_exclusive_breastfeeding()));
+                addIfValid(fields, "mother_counseled_ebf", convert(hbycChildVisit.getIs_mother_counseled_exbf()));
+                addIfValid(fields, "complementary_feeding", convert(hbycChildVisit.getHas_child_started_complementary_feeding()));
+                addIfValid(fields, "mother_counseled_cf", convert(hbycChildVisit.getIs_mother_counseled_cf()));
+                addIfValid(fields, "weight_recorded", convert(hbycChildVisit.getIs_weight_recorded_by_aww()));
+                addIfValid(fields, "developmental_delay", convert(hbycChildVisit.getIs_developmental_delay()));
+                addIfValid(fields, "measles_vaccine", convert(hbycChildVisit.getIs_measles_vaccine_given()));
+                addIfValid(fields, "vitamin_a", convert(hbycChildVisit.getIs_vitamin_a_given()));
+                addIfValid(fields, "ors_available", convert(hbycChildVisit.getIs_ors_available()));
+                addIfValid(fields, "ifa_available", convert(hbycChildVisit.getIs_ifa_syrup_available()));
+                addIfValid(fields, "ors_given", convert(hbycChildVisit.getIs_ors_given()));
+                addIfValid(fields, "ifa_given", convert(hbycChildVisit.getIs_ifa_syrup_given()));
+                addIfValid(fields, "handwash_counseling", convert(hbycChildVisit.getIs_handwashing_counseling_given()));
+                addIfValid(fields, "parenting_counseling", convert(hbycChildVisit.getIs_parenting_counseling_given()));
+                addIfValid(fields, "family_planning_counseling", convert(hbycChildVisit.getIs_family_planning_counseling_given()));
+                addIfValid(fields, "diarrhoea_episode", convert(hbycChildVisit.getDiarrhoea_episode()));
+                addIfValid(fields, "breathing_difficulty", convert(hbycChildVisit.getPneumonia_symptoms()));
                 addIfValid(fields, "temperature_check", hbycChildVisit.getTemperature());
-                addIfValid(fields, "mcp_card_images", hbycChildVisit.getMcpCardImages());
+                addIfValid(fields, "mcp_card_images", hbycChildVisit.getMcp_card_images());
+
 
                 // Set fields map in DTO
                 hbycRequestDTO.setFields(fields);
@@ -379,23 +380,23 @@ public class ChildCareServiceImpl implements ChildCareService {
             IncentiveActivity hbyncOrsPacketActivityCH =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if (hbyncVisitActivity != null) {
-                if (hbyc.getHbycVisitDate() != null) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreatedBy());
+                if (hbyc.getHbyc_visit_date() != null) {
+                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiary_id(), hbyncVisitActivity, hbyc.getCreated_by());
 
                 }
 
             }
             if (hbyncOrsPacketActivityAM != null) {
-                if (hbyc.getIsOrsGiven()) {
-                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityAM, hbyc.getCreatedBy());
+                if (hbyc.getIs_ors_given()) {
+                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiary_id(), hbyncOrsPacketActivityAM, hbyc.getCreated_by());
 
                 }
 
             }
 
             if (hbyncOrsPacketActivityCH != null) {
-                if (hbyc.getIsOrsGiven()) {
-                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityCH, hbyc.getCreatedBy());
+                if (hbyc.getIs_ors_given()) {
+                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiary_id(), hbyncOrsPacketActivityCH, hbyc.getCreated_by());
 
                 }
 
@@ -548,7 +549,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Convert to LocalDate
-        LocalDate localDate = LocalDate.parse(data.getHbycVisitDate(), formatter);
+        LocalDate localDate = LocalDate.parse(data.getHbyc_visit_date(), formatter);
 
         // Convert LocalDate to Timestamp (00:00:00 by default)
         Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
@@ -578,7 +579,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Convert to LocalDate
-        LocalDate localDate = LocalDate.parse(data.getHbycVisitDate(), formatter);
+        LocalDate localDate = LocalDate.parse(data.getHbyc_visit_date(), formatter);
 
         // Convert LocalDate to Timestamp (00:00:00 by default)
         Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());

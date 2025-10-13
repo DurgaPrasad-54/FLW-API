@@ -20,109 +20,109 @@ public class HbycChildVisit {
     private Long id;
 
     @Column(name = "beneficiary_id")
-    private Long beneficiaryId;
+    private Long beneficiary_id;
 
     @Column(name = "household_id")
-    private Long houseHoldId;
+    private Long household_id;
 
     @Column(name = "visit_day")
-    private String hbycVisitDay; // 3 Months, 6 Months, etc.
+    private String visit_day; // 3 Months, 6 Months, etc.
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Integer user_id;
 
     @Column(name = "hbyc_due_date")
-    private String hbycDueDate;
+    private String hbyc_due_date;
 
     @Column(name = "hbyc_visit_date")
-    private String hbycVisitDate;
+    private String hbyc_visit_date;
 
     @Column(name = "is_baby_alive")
-    private Boolean isBabyAlive = true;
+    private Boolean is_baby_alive = true;
 
     @Column(name = "date_of_death")
-    private String dateOfDeath;
+    private String date_of_death;
 
     @Column(name = "reason_for_death")
-    private String reasonForDeath;
+    private String reason_for_death;
 
     @Column(name = "place_of_death")
-    private String placeOfDeath;
+    private String place_of_death;
 
     @Column(name = "other_place_of_death")
-    private String otherPlaceOfDeath;
+    private String other_place_of_death;
 
     @Column(name = "baby_weight")
-    private BigDecimal babyWeight; // 0.5 - 7.0
+    private BigDecimal baby_weight; // 0.5 - 7.0
 
     @Column(name = "is_child_sick")
-    private Boolean isChildSick;
+    private Boolean is_child_sick;
 
     @Column(name = "is_exclusive_breastfeeding")
-    private Boolean isExclusiveBreastfeeding;
+    private Boolean is_exclusive_breastfeeding;
 
     @Column(name = "is_mother_counseled_exbf")
-    private Boolean isMotherCounseledExbf;
+    private Boolean is_mother_counseled_exbf;
 
     @Column(name = "has_child_started_complementary_feeding")
-    private Boolean hasChildStartedComplementaryFeeding;
+    private Boolean has_child_started_complementary_feeding;
 
     @Column(name = "is_mother_counseled_cf")
-    private Boolean isMotherCounseledCf;
+    private Boolean is_mother_counseled_cf;
 
     @Column(name = "is_weight_recorded_by_aww")
-    private Boolean isWeightRecordedByAww;
+    private Boolean is_weight_recorded_by_aww;
 
     @Column(name = "is_developmental_delay")
-    private Boolean isDevelopmentalDelay;
+    private Boolean is_developmental_delay;
 
     @Column(name = "is_measles_vaccine_given")
-    private Boolean isMeaslesVaccineGiven;
+    private Boolean is_measles_vaccine_given;
 
     @Column(name = "is_vitamin_a_given")
-    private Boolean isVitaminAGiven;
+    private Boolean is_vitamin_a_given;
 
     @Column(name = "is_ors_available")
-    private Boolean isOrsAvailable;
+    private Boolean is_ors_available;
 
     @Column(name = "is_ifa_syrup_available")
-    private Boolean isIfaSyrupAvailable;
+    private Boolean is_ifa_syrup_available;
 
     @Column(name = "is_ors_given")
-    private Boolean isOrsGiven;
+    private Boolean is_ors_given;
 
     @Column(name = "is_ifa_syrup_given")
-    private Boolean isIfaSyrupGiven;
+    private Boolean is_ifa_syrup_given;
 
     @Column(name = "is_handwashing_counseling_given")
-    private Boolean isHandwashingCounselingGiven;
+    private Boolean is_handwashing_counseling_given;
 
     @Column(name = "is_parenting_counseling_given")
-    private Boolean isParentingCounselingGiven;
+    private Boolean is_parenting_counseling_given;
 
     @Column(name = "is_family_planning_counseling_given")
-    private Boolean isFamilyPlanningCounselingGiven;
+    private Boolean is_family_planning_counseling_given;
 
     @Column(name = "diarrhoea_episode")
-    private Boolean diarrhoeaEpisode;
+    private Boolean diarrhoea_episode;
 
     @Column(name = "pneumonia_symptoms")
-    private Boolean pneumoniaSymptoms;
+    private Boolean pneumonia_symptoms;
 
     @Column(name = "temperature")
     private BigDecimal temperature;
 
     @Column(name = "mcp_card_images", columnDefinition = "json")
-    private List<String> mcpCardImages;
+    private List<String> mcp_card_images;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updated_at;
 
     @Column(name = "created_by")
-    private String createdBy;
+    private String created_by;
 
     // Getters and Setters
 }

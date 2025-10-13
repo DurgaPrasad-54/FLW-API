@@ -24,103 +24,103 @@ public class HbycDTO {
 
 
     @SerializedName("beneficiary_id")
-    private Long beneficiaryId;
+    private Long beneficiary_id;
 
     @SerializedName("visit_day")
-    private String hbycVisitDay; // 3 Months, 6 Months, etc.
+    private String visit_day; // 3 Months, 6 Months, etc.
 
     @SerializedName("household_id")
     private Long houseHoldId;
 
     @SerializedName("due_date")
-    private String hbycDueDate;
+    private String due_date;
 
     @SerializedName("visit_date")
-    private String hbycVisitDate;
+    private String visit_date;
 
     @SerializedName("is_baby_alive")
-    private String isBabyAlive; // Yes/No
+    private String is_baby_alive; // Yes/No
 
     @SerializedName("date_of_death")
-    private String dateOfDeath;
+    private String date_of_death;
 
     @SerializedName("reason_for_death")
-    private String reasonForDeath;
+    private String reason_for_death;
 
     @SerializedName("place_of_death")
-    private String placeOfDeath;
+    private String place_of_death;
 
     @SerializedName("other_place_of_death")
-    private String otherPlaceOfDeath;
+    private String other_place_of_death;
 
     @SerializedName("baby_weight")
-    private BigDecimal babyWeight;
+    private BigDecimal baby_weight;
 
     @SerializedName("is_child_sick")
-    private String isChildSick;
+    private String is_child_sick;
 
     @SerializedName("exclusive_breastfeeding")
-    private String isExclusiveBreastfeeding;
+    private String exclusive_breastfeeding;
 
     @SerializedName("mother_counseled_ebf")
-    private String isMotherCounseledExbf;
+    private String mother_counseled_ebf;
 
     @SerializedName("complementary_feeding")
-    private String hasChildStartedComplementaryFeeding;
+    private String complementary_feeding;
 
     @SerializedName("mother_counseled_cf")
-    private String isMotherCounseledCf;
+    private String mother_counseled_cf;
 
     @SerializedName("weight_recorded")
-    private String isWeightRecordedByAww;
+    private String weight_recorded;
 
     @SerializedName("developmental_delay")
-    private String isDevelopmentalDelay;
+    private String developmental_delay;
 
     @SerializedName("measles_vaccine")
-    private String isMeaslesVaccineGiven;
+    private String measles_vaccine;
 
     @SerializedName("vitamin_a")
-    private String isVitaminAGiven;
+    private String vitamin_a;
 
     @SerializedName("ors_available")
-    private String isOrsAvailable;
+    private String ors_available;
 
     @SerializedName("ifa_available")
-    private String isIfaSyrupAvailable;
+    private String ifa_available;
 
     @SerializedName("ors_given")
-    private String isOrsGiven;
+    private String ors_given;
 
     @SerializedName("ifa_given")
-    private String isIfaSyrupGiven;
+    private String ifa_given;
 
     @SerializedName("handwash_counseling")
-    private String isHandwashingCounselingGiven;
+    private String handwash_counseling;
 
     @SerializedName("parenting_counseling")
-    private String isParentingCounselingGiven;
+    private String parenting_counseling;
 
     @SerializedName("family_planning_counseling")
-    private String isFamilyPlanningCounselingGiven;
+    private String family_planning_counseling;
 
     @SerializedName("diarrhoea_episode")
-    private String diarrhoeaEpisode;
+    private String diarrhoea_episode;
 
     @SerializedName("breathing_difficulty")
-    private String pneumoniaSymptoms;
+    private String breathing_difficulty;
 
     @SerializedName("temperature_check")
-    private BigDecimal temperature;
+    private BigDecimal tempertemperature_checkature;
 
     @SerializedName("mcp_card_images")
-    private List<String> mcpCardImages;
+    private List<String> mcp_card_images;
 
     @SerializedName("created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
     @SerializedName("updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updated_at;
 
 
 
