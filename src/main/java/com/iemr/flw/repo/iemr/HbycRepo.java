@@ -21,5 +21,5 @@ public interface HbycRepo extends JpaRepository<HbycChildVisit, Long> {
 
     List<HbycChildVisit> findByUserId(Integer ashaId);
 
-    HbycChildVisit findHBYCByBeneficiaryIdAndHbycVisit_day(Long beneficiaryId, String visit_day);
+    HbycChildVisit findHBYCByBeneficiaryIdAndVisit_day(Long beneficiaryId, String visit_day);
 }
