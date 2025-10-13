@@ -68,13 +68,13 @@ public class ChildCareServiceImpl implements ChildCareService {
                     Long id = hbyc.getId();
                     modelMapper.map(it, hbyc);
                     hbyc.setId(id);
-                    hbyc.setUser_id(userRepo.getUserIdByName(it.getUserName()));
+                    hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
                     hbyc.setCreated_by(it.getUserName());
                 } else {
                     hbyc = new HbycChildVisit();
                     modelMapper.map(it, hbyc);
                     hbyc.setId(null);
-                    hbyc.setUser_id(userRepo.getUserIdByName(it.getUserName()));
+                    hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
                     hbyc.setCreated_by(it.getUserName());
 
                 }
@@ -95,7 +95,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         List<HbycVisitResponseDTO> result = new ArrayList<>();
 
         try {
-            List<HbycChildVisit> hbycChildVisits = hbycRepo.findByUser_id(dto.getAshaId());
+            List<HbycChildVisit> hbycChildVisits = hbycRepo.findByUserId(dto.getAshaId());
 
             for (HbycChildVisit hbycChildVisit : hbycChildVisits) {
                 HbycVisitResponseDTO hbycRequestDTO = new HbycVisitResponseDTO();

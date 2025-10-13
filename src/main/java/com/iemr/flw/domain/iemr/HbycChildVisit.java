@@ -29,7 +29,7 @@ public class HbycChildVisit {
     private String visit_day; // 3 Months, 6 Months, etc.
 
     @Column(name = "user_id")
-    private Integer user_id;
+    private Integer userId;
 
     @Column(name = "hbyc_due_date")
     private String hbyc_due_date;
