@@ -24,7 +24,7 @@ public class HbycDTO {
 
 
     @SerializedName("beneficiary_id")
-    private Long beneficiary_id;
+    private Long beneficiaryId;
 
     @SerializedName("visit_day")
     private String visit_day; // 3 Months, 6 Months, etc.

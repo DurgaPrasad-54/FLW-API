@@ -62,7 +62,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             hbycDTOs.forEach(it -> {
 
                 HbycChildVisit hbyc =
-                        hbycRepo.findHBYCByBeneficiary_IdAndHbycVisitDay(it.getBeneficiaryId(), it.getFields().getVisit_day());
+                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDay(it.getBeneficiaryId(), it.getFields().getVisit_day());
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();

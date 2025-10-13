@@ -20,7 +20,7 @@ public class HbycChildVisit {
     private Long id;
 
     @Column(name = "beneficiary_id")
-    private Long beneficiary_id;
+    private Long beneficiaryId;
 
     @Column(name = "household_id")
     private Long household_id;
