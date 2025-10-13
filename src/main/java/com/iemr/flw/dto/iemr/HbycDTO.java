@@ -22,15 +22,8 @@ import java.util.List;
 @Data
 public class HbycDTO {
 
-
-    @SerializedName("beneficiary_id")
-    private Long beneficiaryId;
-
     @SerializedName("visit_day")
     private String visit_day; // 3 Months, 6 Months, etc.
-
-    @SerializedName("household_id")
-    private Long houseHoldId;
 
     @SerializedName("due_date")
     private String due_date;
@@ -111,7 +104,7 @@ public class HbycDTO {
     private String breathing_difficulty;
 
     @SerializedName("temperature_check")
-    private BigDecimal tempertemperature_checkature;
+    private BigDecimal temperature_check;
 
     @SerializedName("mcp_card_images")
     private List<String> mcp_card_images;
@@ -121,6 +114,7 @@ public class HbycDTO {
 
     @SerializedName("updated_at")
     private LocalDateTime updated_at;
+
 
 
 
