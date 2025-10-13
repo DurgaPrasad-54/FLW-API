@@ -1,5 +1,7 @@
 package com.iemr.flw.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iemr.flw.domain.iemr.HbncVisit;
@@ -35,11 +37,16 @@ public class ChildCareController {
     @RequestMapping(value = {"/hbycVisit/saveAll"}, method = {RequestMethod.POST})
     public String saveHbycRecords(@RequestBody List<HbycRequestDTO> hbycDTOs,
                                   @RequestHeader(value = "Authorization") String Authorization) {
-        logger.info("Request: "+hbycDTOs.toString());
-        logger.info("Request: "+hbycDTOs);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty print
+
+        // Request log
+
         OutputResponse response = new OutputResponse();
 
         try {
+            String json = mapper.writeValueAsString(hbycDTOs);
+            logger.info("📥 Incoming HBYC Request: \n" + json);
             logger.info("Saving All HBYC Details");
             if (hbycDTOs != null) {
                 String s = childCareService.registerHBYC(hbycDTOs);
@@ -84,6 +91,7 @@ public class ChildCareController {
     public String saveHBNCVisit(@RequestBody List<HbncRequestDTO> hbncRequestDTOs,
                                 @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
+
         try {
             if (!hbncRequestDTOs.isEmpty()) {
                 logger.info("Saving HBNC details at: " + new Timestamp(System.currentTimeMillis()));

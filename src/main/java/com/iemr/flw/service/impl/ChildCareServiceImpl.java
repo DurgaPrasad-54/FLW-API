@@ -100,7 +100,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             for (HbycChildVisit hbycChildVisit : hbycChildVisits) {
                 HbycVisitResponseDTO hbycRequestDTO = new HbycVisitResponseDTO();
                 hbycRequestDTO.setId(hbycChildVisit.getId());
-                hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiary_id());
+                hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiaryId());
                 hbycRequestDTO.setHouseHoldId(hbycChildVisit.getHousehold_id());
                 hbycRequestDTO.setVisitDate(hbycChildVisit.getHbyc_visit_date());
 
@@ -381,14 +381,14 @@ public class ChildCareServiceImpl implements ChildCareService {
                     incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if (hbyncVisitActivity != null) {
                 if (hbyc.getHbyc_visit_date() != null) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiary_id(), hbyncVisitActivity, hbyc.getCreated_by());
+                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
 
                 }
 
             }
             if (hbyncOrsPacketActivityAM != null) {
                 if (hbyc.getIs_ors_given()) {
-                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiary_id(), hbyncOrsPacketActivityAM, hbyc.getCreated_by());
+                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityAM, hbyc.getCreated_by());
 
                 }
 
@@ -396,7 +396,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             if (hbyncOrsPacketActivityCH != null) {
                 if (hbyc.getIs_ors_given()) {
-                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiary_id(), hbyncOrsPacketActivityCH, hbyc.getCreated_by());
+                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityCH, hbyc.getCreated_by());
 
                 }
 
