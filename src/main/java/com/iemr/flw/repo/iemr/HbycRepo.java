@@ -15,12 +15,7 @@ import java.util.List;
 public interface HbycRepo extends JpaRepository<HbycChildVisit, Long> {
 
 
-    @Query(" SELECT hbyc FROM HBYC hbyc WHERE hbyc.createdBy = :userId and hbyc.createdDate >= :fromDate and hbyc.createdDate <= :toDate")
-    List<HBYC> getAllHbycByBenId(@Param("userId") String userId,
-                                 @Param("fromDate") Timestamp fromDate, @Param("toDate") Timestamp toDate);
-
-
-    List<HbycChildVisit> findByUserId(Integer ashaId);
+    List<HbycChildVisit> findByUser_id(Integer ashaId);
 
     @Query("SELECT v FROM HbycChildVisit v WHERE v.beneficiaryId = :beneficiaryId AND v.visit_day = :visitDay")
     HbycChildVisit findByBeneficiaryIdAndVisit_day(@Param("beneficiaryId") Long beneficiaryId,

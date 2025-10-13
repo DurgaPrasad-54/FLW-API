@@ -95,7 +95,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         List<HbycVisitResponseDTO> result = new ArrayList<>();
 
         try {
-            List<HbycChildVisit> hbycChildVisits = hbycRepo.findByUserId(dto.getAshaId());
+            List<HbycChildVisit> hbycChildVisits = hbycRepo.findByUser_id(dto.getAshaId());
 
             for (HbycChildVisit hbycChildVisit : hbycChildVisits) {
                 HbycVisitResponseDTO hbycRequestDTO = new HbycVisitResponseDTO();
