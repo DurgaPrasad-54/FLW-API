@@ -1,5 +1,6 @@
 package com.iemr.flw.domain.iemr;
 
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,11 +25,11 @@ public class HbycChildVisit {
     @Column(name = "household_id")
     private Long houseHoldId;
 
+    @Column(name = "visit_day")
+    private String hbycVisitDay; // 3 Months, 6 Months, etc.
+
     @Column(name = "user_id")
     private Integer userId;
-
-    @Column(name = "hbyc_visit")
-    private String hbycVisit; // 3 Months, 6 Months, etc.
 
     @Column(name = "hbyc_due_date")
     private String hbycDueDate;

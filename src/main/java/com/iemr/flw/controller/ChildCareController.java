@@ -55,8 +55,7 @@ public class ChildCareController {
 
     @Operation(summary = "get List of HBYC details")
     @RequestMapping(value = {"/hbycVisit/getAll"}, method = {RequestMethod.POST})
-    public String getHbycRecords(@RequestBody GetBenRequestHandler requestDTO,
-                                 @RequestHeader(value = "Authorization") String Authorization) {
+    public String getHbycRecords(@RequestBody GetBenRequestHandler requestDTO) {
         OutputResponse response = new OutputResponse();
         try {
             logger.info("fetching All HBYC Details for user: " + requestDTO.getAshaId());

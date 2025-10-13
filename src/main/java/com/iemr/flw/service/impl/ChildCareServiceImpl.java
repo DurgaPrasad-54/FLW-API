@@ -62,7 +62,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             hbycDTOs.forEach(it -> {
 
                 HbycChildVisit hbyc =
-                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisit(it.getBeneficiaryId(), it.getFields().getHbycVisit());
+                        hbycRepo.findHBYCByBeneficiaryIdAndHbycVisitDay(it.getBeneficiaryId(), it.getFields().getHbycVisitDay());
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();
@@ -106,7 +106,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
                 // Prepare dynamic fields map
                 Map<String, Object> fields = new HashMap<>();
-                addIfValid(fields, "visit_day", hbycChildVisit.getHbycVisit());
+                addIfValid(fields, "visit_day", hbycChildVisit.getHbycVisitDay());
                 addIfValid(fields, "due_date", hbycChildVisit.getHbycDueDate());
                 addIfValid(fields, "visit_date", hbycChildVisit.getHbycVisitDate());
                 addIfValid(fields, "is_baby_alive", convert(hbycChildVisit.getIsBabyAlive()));
