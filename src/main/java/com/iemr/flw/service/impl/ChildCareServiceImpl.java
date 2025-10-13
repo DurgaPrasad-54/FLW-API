@@ -60,19 +60,20 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             List<HbycChildVisit> hbycList = new ArrayList<>();
             hbycDTOs.forEach(it -> {
-
+                HbycDTO hbycDTO = it.getFields();
+                hbycDTO.setVisit_date(it.getVisitDate());
                 HbycChildVisit hbyc =
-                        hbycRepo.findByBeneficiaryIdAndVisit_day(it.getBeneficiaryId(), it.getFields().getVisit_day());
+                        hbycRepo.findByBeneficiaryIdAndVisit_day(it.getBeneficiaryId(), hbycDTO.getVisit_day());
 
                 if (hbyc != null) {
                     Long id = hbyc.getId();
-                    modelMapper.map(it, hbyc);
+                    modelMapper.map(it, hbycDTO);
                     hbyc.setId(id);
                     hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
                     hbyc.setCreated_by(it.getUserName());
                 } else {
                     hbyc = new HbycChildVisit();
-                    modelMapper.map(it, hbyc);
+                    modelMapper.map(it, hbycDTO);
                     hbyc.setId(null);
                     hbyc.setUserId(userRepo.getUserIdByName(it.getUserName()));
                     hbyc.setCreated_by(it.getUserName());

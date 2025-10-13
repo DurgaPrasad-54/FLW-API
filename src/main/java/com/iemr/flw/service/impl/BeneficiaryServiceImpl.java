@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.iemr.flw.domain.iemr.IncentiveActivity;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.iemr.GeneralOpdRepo;
+import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
+import com.iemr.flw.repo.iemr.IncentivesRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +67,11 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     @Autowired
     private GeneralOpdRepo generalOpdRepo;
 
+    @Autowired
+    IncentivesRepo incentivesRepo;
 
+    @Autowired
+    IncentiveRecordRepo recordRepo;
     @Override
     public String getBenData(GetBenRequestHandler request, String authorisation) throws Exception {
         String outputResponse = null;
@@ -372,6 +380,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("otherPlaceOfDeath", benDetailsRMNCH_OBJ.getOtherPlaceOfDeath());
 
 
+
                     resultMap.put("BenRegId", m.getBenRegId());
 
                     // adding asha id / created by - user id
@@ -402,6 +411,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(response);
     }
+
 
 	private Map<String, Object> getBenHealthDetails(BigInteger benRegId) {
 		Map<String, Object> healthDetails = new HashMap<>();
