@@ -102,13 +102,13 @@ public class ChildCareServiceImpl implements ChildCareService {
                 hbycRequestDTO.setId(hbycChildVisit.getId());
                 hbycRequestDTO.setBeneficiaryId(hbycChildVisit.getBeneficiaryId());
                 hbycRequestDTO.setHouseHoldId(hbycChildVisit.getHousehold_id());
-                hbycRequestDTO.setVisitDate(hbycChildVisit.getHbyc_visit_date());
+                hbycRequestDTO.setVisitDate(hbycChildVisit.getVisit_date());
 
                 // Prepare dynamic fields map
                 Map<String, Object> fields = new HashMap<>();
                 addIfValid(fields, "visit_day", hbycChildVisit.getVisit_day());
                 addIfValid(fields, "due_date", hbycChildVisit.getHbyc_due_date());
-                addIfValid(fields, "visit_date", hbycChildVisit.getHbyc_visit_date());
+                addIfValid(fields, "visit_date", hbycChildVisit.getVisit_date());
                 addIfValid(fields, "is_baby_alive", convert(hbycChildVisit.getIs_baby_alive()));
                 addIfValid(fields, "date_of_death", hbycChildVisit.getDate_of_death());
                 addIfValid(fields, "reason_for_death", hbycChildVisit.getReason_for_death());
@@ -380,7 +380,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             IncentiveActivity hbyncOrsPacketActivityCH =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if (hbyncVisitActivity != null) {
-                if (hbyc.getHbyc_visit_date() != null) {
+                if (hbyc.getVisit_date() != null) {
                     createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
 
                 }
@@ -549,7 +549,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Convert to LocalDate
-        LocalDate localDate = LocalDate.parse(data.getHbyc_visit_date(), formatter);
+        LocalDate localDate = LocalDate.parse(data.getVisit_date(), formatter);
 
         // Convert LocalDate to Timestamp (00:00:00 by default)
         Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
@@ -579,7 +579,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Convert to LocalDate
-        LocalDate localDate = LocalDate.parse(data.getHbyc_visit_date(), formatter);
+        LocalDate localDate = LocalDate.parse(data.getVisit_date(), formatter);
 
         // Convert LocalDate to Timestamp (00:00:00 by default)
         Timestamp visitDate = Timestamp.valueOf(localDate.atStartOfDay());
