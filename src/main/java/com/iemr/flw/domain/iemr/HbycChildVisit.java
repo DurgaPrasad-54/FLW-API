@@ -35,7 +35,7 @@ public class HbycChildVisit {
     private String hbyc_due_date;
 
     @Column(name = "hbyc_visit_date")
-    private String hbyc_visit_date;
+    private String visit_date;
 
     @Column(name = "is_baby_alive")
     private Boolean is_baby_alive = true;
