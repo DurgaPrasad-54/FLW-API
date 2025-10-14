@@ -80,6 +80,37 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc.setBeneficiaryId(it.getBeneficiaryId());
                     hbyc.setVisit_date(it.getVisitDate());
                     hbyc.setHousehold_id(it.getHouseHoldId());
+                    hbyc.setVisit_day(hbycDTO.getVisit_day());
+                    hbyc.setHbyc_due_date(hbycDTO.getDue_date());
+                    hbyc.setBaby_weight(hbycDTO.getBaby_weight());
+                    hbyc.setPlace_of_death(hbycDTO.getPlace_of_death());
+                    hbyc.setReason_for_death(hbycDTO.getReason_for_death());
+                    hbyc.setOther_place_of_death(hbycDTO.getOther_place_of_death());
+                    hbyc.setIs_child_sick(convertBollen(hbycDTO.getIs_child_sick()));
+
+                    hbyc.setIs_baby_alive(convertBollen(hbycDTO.getIs_baby_alive()));
+                    hbyc.setDate_of_death(hbycDTO.getDate_of_death());
+                    hbyc.setExclusive_breastfeeding(convertBollen(hbycDTO.getExclusive_breastfeeding()));
+                    hbyc.setMother_counseled_ebf(convertBollen(hbycDTO.getMother_counseled_ebf()));
+//                    hbyc.setComplementary_feeding(hbycDTO.getComplementary_feeding());
+                    hbyc.setMother_counseled_cf(convertBollen((hbycDTO.getMother_counseled_cf())));
+                    hbyc.setWeight_recorded(convertBollen(hbycDTO.getWeight_recorded()));
+                    hbyc.setDevelopmental_delay(convertBollen(hbycDTO.getDevelopmental_delay()));
+                    hbyc.setMeasles_vaccine(convertBollen(hbycDTO.getMeasles_vaccine()));
+                    hbyc.setVitamin_a(convertBollen(hbycDTO.getVitamin_a()));
+                    hbyc.setOrs_available(convertBollen(hbycDTO.getOrs_available()));
+                    hbyc.setIfa_available(convertBollen(hbycDTO.getIfa_available()));
+                    hbyc.setOrs_given(convertBollen(hbycDTO.getOrs_given()));
+                    hbyc.setIfa_given(convertBollen(hbycDTO.getIfa_given()));
+                    hbyc.setHandwash_counseling(convertBollen(hbycDTO.getHandwash_counseling()));
+                    hbyc.setParenting_counseling(convertBollen(hbycDTO.getParenting_counseling()));
+                    hbyc.setFamily_planning_counseling(convertBollen(hbycDTO.getFamily_planning_counseling()));
+                    hbyc.setDiarrhoea_episode(convertBollen(hbycDTO.getDiarrhoea_episode()));
+//                    hbyc.setBreathing_difficulty(hbycDTO.getBreathing_difficulty());
+                    hbyc.setTemperature(hbycDTO.getTemperature_check());
+                    hbyc.setMcp_card_images(hbycDTO.getMcp_card_images());
+                    hbyc.setCreated_at(hbycDTO.getCreated_at());
+                    hbyc.setUpdated_at(hbycDTO.getUpdated_at());
 
                 }
                 hbycList.add(hbyc);
@@ -110,6 +141,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
                 // Prepare dynamic fields map
                 Map<String, Object> fields = new HashMap<>();
+
                 addIfValid(fields, "visit_day", hbycChildVisit.getVisit_day());
                 addIfValid(fields, "due_date", hbycChildVisit.getHbyc_due_date());
                 addIfValid(fields, "visit_date", hbycChildVisit.getVisit_date());
@@ -120,25 +152,26 @@ public class ChildCareServiceImpl implements ChildCareService {
                 addIfValid(fields, "other_place_of_death", hbycChildVisit.getOther_place_of_death());
                 addIfValid(fields, "baby_weight", hbycChildVisit.getBaby_weight());
                 addIfValid(fields, "is_child_sick", convert(hbycChildVisit.getIs_child_sick()));
-                addIfValid(fields, "exclusive_breastfeeding", convert(hbycChildVisit.getIs_exclusive_breastfeeding()));
-                addIfValid(fields, "mother_counseled_ebf", convert(hbycChildVisit.getIs_mother_counseled_exbf()));
-                addIfValid(fields, "complementary_feeding", convert(hbycChildVisit.getHas_child_started_complementary_feeding()));
-                addIfValid(fields, "mother_counseled_cf", convert(hbycChildVisit.getIs_mother_counseled_cf()));
-                addIfValid(fields, "weight_recorded", convert(hbycChildVisit.getIs_weight_recorded_by_aww()));
-                addIfValid(fields, "developmental_delay", convert(hbycChildVisit.getIs_developmental_delay()));
-                addIfValid(fields, "measles_vaccine", convert(hbycChildVisit.getIs_measles_vaccine_given()));
-                addIfValid(fields, "vitamin_a", convert(hbycChildVisit.getIs_vitamin_a_given()));
-                addIfValid(fields, "ors_available", convert(hbycChildVisit.getIs_ors_available()));
-                addIfValid(fields, "ifa_available", convert(hbycChildVisit.getIs_ifa_syrup_available()));
-                addIfValid(fields, "ors_given", convert(hbycChildVisit.getIs_ors_given()));
-                addIfValid(fields, "ifa_given", convert(hbycChildVisit.getIs_ifa_syrup_given()));
-                addIfValid(fields, "handwash_counseling", convert(hbycChildVisit.getIs_handwashing_counseling_given()));
-                addIfValid(fields, "parenting_counseling", convert(hbycChildVisit.getIs_parenting_counseling_given()));
-                addIfValid(fields, "family_planning_counseling", convert(hbycChildVisit.getIs_family_planning_counseling_given()));
+                addIfValid(fields, "exclusive_breastfeeding", convert(hbycChildVisit.getExclusive_breastfeeding()));
+                addIfValid(fields, "mother_counseled_ebf", convert(hbycChildVisit.getMother_counseled_ebf()));
+//                addIfValid(fields, "complementary_feeding", convert(hbycChildVisit.getComplementary_feeding()));
+                addIfValid(fields, "mother_counseled_cf", convert(hbycChildVisit.getMother_counseled_cf()));
+                addIfValid(fields, "weight_recorded", convert(hbycChildVisit.getWeight_recorded()));
+                addIfValid(fields, "developmental_delay", convert(hbycChildVisit.getDevelopmental_delay()));
+                addIfValid(fields, "measles_vaccine", convert(hbycChildVisit.getMeasles_vaccine()));
+                addIfValid(fields, "vitamin_a", convert(hbycChildVisit.getVitamin_a()));
+                addIfValid(fields, "ors_available", convert(hbycChildVisit.getOrs_available()));
+                addIfValid(fields, "ifa_available", convert(hbycChildVisit.getIfa_available()));
+                addIfValid(fields, "ors_given", convert(hbycChildVisit.getOrs_given()));
+                addIfValid(fields, "ifa_given", convert(hbycChildVisit.getIfa_given()));
+                addIfValid(fields, "handwash_counseling", convert(hbycChildVisit.getHandwash_counseling()));
+                addIfValid(fields, "parenting_counseling", convert(hbycChildVisit.getParenting_counseling()));
+                addIfValid(fields, "family_planning_counseling", convert(hbycChildVisit.getFamily_planning_counseling()));
                 addIfValid(fields, "diarrhoea_episode", convert(hbycChildVisit.getDiarrhoea_episode()));
-                addIfValid(fields, "breathing_difficulty", convert(hbycChildVisit.getPneumonia_symptoms()));
+//                addIfValid(fields, "breathing_difficulty", convert(hbycChildVisit.getBreathing_difficulty()));
                 addIfValid(fields, "temperature_check", hbycChildVisit.getTemperature());
                 addIfValid(fields, "mcp_card_images", hbycChildVisit.getMcp_card_images());
+
 
 
                 // Set fields map in DTO
@@ -215,6 +248,14 @@ public class ChildCareServiceImpl implements ChildCareService {
     private String convert(Boolean value) {
         if (value == null) return null;
         return value ? "Yes" : "No";
+    }
+
+    private Boolean convertBollen(String value) {
+       if(value.equals("Yes")){
+           return  true;
+       }else {
+           return  false;
+       }
     }
 
     private String convert(Object value) {
@@ -391,7 +432,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             }
             if (hbyncOrsPacketActivityAM != null) {
-                if (hbyc.getIs_ors_given()) {
+                if (hbyc.getOrs_given()) {
                     createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityAM, hbyc.getCreated_by());
 
                 }
@@ -399,7 +440,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             }
 
             if (hbyncOrsPacketActivityCH != null) {
-                if (hbyc.getIs_ors_given()) {
+                if (hbyc.getOrs_given()) {
                     createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityCH, hbyc.getCreated_by());
 
                 }

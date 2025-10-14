@@ -59,49 +59,49 @@ public class HbycChildVisit {
     private Boolean is_child_sick;
 
     @Column(name = "is_exclusive_breastfeeding")
-    private Boolean is_exclusive_breastfeeding;
+    private Boolean exclusive_breastfeeding;
 
     @Column(name = "is_mother_counseled_exbf")
-    private Boolean is_mother_counseled_exbf;
+    private Boolean mother_counseled_ebf;
 
     @Column(name = "has_child_started_complementary_feeding")
     private Boolean has_child_started_complementary_feeding;
 
     @Column(name = "is_mother_counseled_cf")
-    private Boolean is_mother_counseled_cf;
+    private Boolean mother_counseled_cf;
 
     @Column(name = "is_weight_recorded_by_aww")
-    private Boolean is_weight_recorded_by_aww;
+    private Boolean weight_recorded;
 
     @Column(name = "is_developmental_delay")
-    private Boolean is_developmental_delay;
+    private Boolean developmental_delay;
 
     @Column(name = "is_measles_vaccine_given")
-    private Boolean is_measles_vaccine_given;
+    private Boolean measles_vaccine;
 
     @Column(name = "is_vitamin_a_given")
-    private Boolean is_vitamin_a_given;
+    private Boolean vitamin_a;
 
     @Column(name = "is_ors_available")
-    private Boolean is_ors_available;
+    private Boolean ors_available;
 
     @Column(name = "is_ifa_syrup_available")
-    private Boolean is_ifa_syrup_available;
+    private Boolean Ifa_available;
 
     @Column(name = "is_ors_given")
-    private Boolean is_ors_given;
+    private Boolean ors_given;
 
     @Column(name = "is_ifa_syrup_given")
-    private Boolean is_ifa_syrup_given;
+    private Boolean ifa_given;
 
     @Column(name = "is_handwashing_counseling_given")
-    private Boolean is_handwashing_counseling_given;
+    private Boolean handwash_counseling;
 
     @Column(name = "is_parenting_counseling_given")
-    private Boolean is_parenting_counseling_given;
+    private Boolean parenting_counseling;
 
     @Column(name = "is_family_planning_counseling_given")
-    private Boolean is_family_planning_counseling_given;
+    private Boolean family_planning_counseling;
 
     @Column(name = "diarrhoea_episode")
     private Boolean diarrhoea_episode;
