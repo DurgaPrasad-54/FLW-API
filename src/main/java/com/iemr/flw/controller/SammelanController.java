@@ -52,7 +52,7 @@ public class SammelanController {
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
-            @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) throws JsonProcessingException {
+            @RequestPart(value = "SammelanImages", required = false) List<MultipartFile> sammelanImages) throws JsonProcessingException {
         Map<String, Object> response = new LinkedHashMap<>();
 
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
@@ -60,11 +60,12 @@ public class SammelanController {
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
         sammelanRequestDTO.setDate(Long.parseLong(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
+        sammelanRequestDTO.setSammelanImages(sammelanImages != null ? sammelanImages.toArray(new MultipartFile[0]) : null);
         ObjectMapper mapper = new ObjectMapper();
 
         String json = mapper.writeValueAsString(sammelanRequestDTO);
         logger.info("📥 Incoming HBYC Request: \n" + json+"date"+date);
-        SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO,images);
+        SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO);
 
         try {
             if (resp != null) {

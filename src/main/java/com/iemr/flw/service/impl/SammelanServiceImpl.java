@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,11 +41,10 @@ public class SammelanServiceImpl implements SammelanService {
 
 
     @Override
-    public SammelanResponseDTO submitSammelan(SammelanRequestDTO sammelanRequestDTO, MultipartFile[] images) {
+    public SammelanResponseDTO submitSammelan(SammelanRequestDTO sammelanRequestDTO) {
         SammelanResponseDTO response = new SammelanResponseDTO();
 
         try {
-
 
             // Save Sammelan record
             record = new SammelanRecord();
@@ -54,30 +55,25 @@ public class SammelanServiceImpl implements SammelanService {
             record.setParticipants(sammelanRequestDTO.getParticipants());
             record = recordRepo.save(record);
 
-            // Save Attachments
-            if (images != null && images.length > 0) {
-                List<String> base64Images = List.of(images)
-                        .stream()
-                        .filter(file -> !file.isEmpty())
-                        .map(file -> {
-                            try {
-                                return Base64.getEncoder().encodeToString(file.getBytes());
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .collect(Collectors.toList());
 
-                String imagesJson = null;
-                try {
-                    imagesJson = objectMapper.writeValueAsString(base64Images);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                if (sammelanRequestDTO.getSammelanImages() != null && sammelanRequestDTO.getSammelanImages().length > 0) {
+                    List<String> base64Images = Arrays.stream(sammelanRequestDTO.getSammelanImages())
+                            .filter(file -> !file.isEmpty())
+                            .map(file -> {
+                                try {
+                                    return Base64.getEncoder().encodeToString(file.getBytes());
+                                } catch (IOException e) {
+                                    throw new RuntimeException("Error converting image to Base64", e);
+                                }
+                            })
+                            .collect(Collectors.toList());
+
+                    String imagesJson = objectMapper.writeValueAsString(base64Images);
+                    record .setAttachments(imagesJson);
                 }
-                record.setAttachments(imagesJson);
-            }
 
-            // Prepare Response DTO
+
+        // Prepare Response DTO
             response.setId(record.getId());
             response.setAshaId(record.getAshaId());
             response.setDate(record.getMeetingDate());

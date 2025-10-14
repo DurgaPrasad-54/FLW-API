@@ -12,6 +12,8 @@ public class SammelanRequestDTO {
     private Integer ashaId;                    // ASHA worker ID
     private Long date;                 // Meeting date
     private String place;                   // Dropdown: HWC / Anganwadi Centre / Community Center
-    private Integer participants;           // Number of participants attended
+    private Integer participants;
+    private MultipartFile[] sammelanImages; // up to 5 images
+// Number of participants attended
 
 }

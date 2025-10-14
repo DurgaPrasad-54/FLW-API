@@ -13,7 +13,7 @@ public interface SammelanService {
      * @param dto request data
      * @return saved SammelanResponseDTO with incentive details
      */
-    public  SammelanResponseDTO submitSammelan(SammelanRequestDTO sammelanRequestDTO, MultipartFile[] images);
+    public  SammelanResponseDTO submitSammelan(SammelanRequestDTO sammelanRequestDTO);
 
     /**
      * Fetch Sammelan history for given ASHA worker
