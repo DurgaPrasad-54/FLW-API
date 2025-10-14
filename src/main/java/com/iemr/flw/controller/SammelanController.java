@@ -1,5 +1,7 @@
 package com.iemr.flw.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.SammelanService;
 import com.iemr.flw.utils.DateUtil;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
@@ -28,6 +32,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping(value = "/sammelans")
 public class SammelanController {
+    private final Logger logger = LoggerFactory.getLogger(DeathReportsController.class);
+
     @Autowired
     private  SammelanService service;
 
@@ -40,14 +46,16 @@ public class SammelanController {
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
-            @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) {
+            @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) throws JsonProcessingException {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
         sammelanRequestDTO.setDate(DateUtil.convertToTimestamp(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
+        ObjectMapper mapper = new ObjectMapper();
 
-
+        String json = mapper.writeValueAsString(sammelanRequestDTO);
+        logger.info("📥 Incoming HBYC Request: \n" + json);
         SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO,images);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
