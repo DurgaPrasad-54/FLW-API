@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -62,6 +63,7 @@ public class SammelanServiceImpl implements SammelanService {
             // Save Sammelan record
             record = new SammelanRecord();
             record.setAshaId(sammelanRequestDTO.getAshaId());
+            logger.info("Meeting Date:"+sammelanRequestDTO.getDate());
             record.setMeetingDate(sammelanRequestDTO.getDate());
             record.setPlace(sammelanRequestDTO.getPlace());
             record.setParticipants(sammelanRequestDTO.getParticipants());
@@ -89,7 +91,6 @@ public class SammelanServiceImpl implements SammelanService {
                 }
                 record.setAttachments(imagesJson);
             }
-
 
             // Prepare Response DTO
             response.setId(record.getId());
