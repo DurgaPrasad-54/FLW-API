@@ -62,7 +62,7 @@ public class SammelanController {
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
         sammelanRequestDTO.setSammelanImages(sammelanImages != null ? sammelanImages.toArray(new MultipartFile[0]) : null);
         ObjectMapper mapper = new ObjectMapper();
-
+        logger.info("Image: "+sammelanImages.size());
         String json = mapper.writeValueAsString(sammelanRequestDTO);
         logger.info("📥 Incoming HBYC Request: \n" + json+"date"+date);
         SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO);
