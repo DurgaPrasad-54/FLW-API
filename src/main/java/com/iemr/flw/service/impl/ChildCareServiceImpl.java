@@ -109,8 +109,6 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc.setBreathing_difficulty(convertBollen(hbycDTO.getBreathing_difficulty()));
                     hbyc.setTemperature(hbycDTO.getTemperature_check());
                     hbyc.setMcp_card_images(hbycDTO.getMcp_card_images());
-                    hbyc.setCreated_at(hbycDTO.getCreated_at());
-                    hbyc.setUpdated_at(hbycDTO.getUpdated_at());
 
                 }
                 hbycList.add(hbyc);
