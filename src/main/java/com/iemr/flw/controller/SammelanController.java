@@ -2,6 +2,7 @@ package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.SammelanService;
+import com.iemr.flw.utils.DateUtil;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/sammelans")
@@ -40,7 +44,7 @@ public class SammelanController {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
-        sammelanRequestDTO.setDate(Timestamp.valueOf(date));
+        sammelanRequestDTO.setDate(DateUtil.convertToTimestamp(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
 
 
