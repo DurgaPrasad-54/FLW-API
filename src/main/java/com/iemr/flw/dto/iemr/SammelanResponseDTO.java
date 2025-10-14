@@ -13,7 +13,7 @@ public class SammelanResponseDTO {
 
     private Long id;
     private Integer ashaId;
-    private LocalDate date;
+    private Long date;
     private String place;
     private Integer participants;
     private List<String> imagePaths;

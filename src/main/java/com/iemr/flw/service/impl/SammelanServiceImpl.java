@@ -43,22 +43,7 @@ public class SammelanServiceImpl implements SammelanService {
         SammelanResponseDTO response = new SammelanResponseDTO();
 
         try {
-            validateRequest(sammelanRequestDTO);
-            LocalDate localDate = sammelanRequestDTO.getDate().atStartOfDay()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
 
-            YearMonth ym = YearMonth.from(localDate);
-
-            // Check for existing record in same month
-            boolean exists = recordRepo.existsByAshaIdAndMeetingDateBetween(
-                    sammelanRequestDTO.getAshaId(),
-                    ym.atDay(1),
-                    ym.atEndOfMonth()
-            );
-            if (exists) {
-                throw new IllegalArgumentException("Sammelan already submitted for this month.");
-            }
 
             // Save Sammelan record
             record = new SammelanRecord();
@@ -136,22 +121,4 @@ public class SammelanServiceImpl implements SammelanService {
         }).collect(Collectors.toList());
     }
 
-    private void validateRequest(SammelanRequestDTO dto) {
-        LocalDate date = dto.getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        if (date == null) {
-            throw new IllegalArgumentException("Date is mandatory.");
-        }
-        if (date.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Date cannot be in future.");
-        }
-        if (date.isBefore(LocalDate.now().minusMonths(2))) {
-            throw new IllegalArgumentException("Backdate not allowed beyond 2 months.");
-        }
-        if (dto.getParticipants() < 0 || dto.getParticipants() > 999) {
-            throw new IllegalArgumentException("Participants must be between 0–999.");
-        }
-
-
-    }
 }
