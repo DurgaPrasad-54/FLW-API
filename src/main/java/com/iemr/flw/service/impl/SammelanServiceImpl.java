@@ -96,7 +96,7 @@ public class SammelanServiceImpl implements SammelanService {
 
     @Override
     public List<SammelanResponseDTO> getSammelanHistory(Integer ashaId) {
-        List<SammelanRecord> records = recordRepo.findByAshaIdOrderByMeetingDateDesc(ashaId);
+        List<SammelanRecord> records = recordRepo.findByAshaId(ashaId);
         return records.stream().map(record -> {
             SammelanResponseDTO dto = new SammelanResponseDTO();
             dto.setId(record.getId());
