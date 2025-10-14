@@ -50,7 +50,7 @@ public class SammelanController {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
-        sammelanRequestDTO.setDate(DateUtil.convertToTimestamp(date));
+        sammelanRequestDTO.setDate(Timestamp.valueOf(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
         ObjectMapper mapper = new ObjectMapper();
 
