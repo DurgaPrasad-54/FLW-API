@@ -79,6 +79,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc.setCreated_by(it.getUserName());
                     hbyc.setBeneficiaryId(it.getBeneficiaryId());
                     hbyc.setVisit_date(it.getVisitDate());
+                    hbyc.setHousehold_id(it.getHouseHoldId());
 
                 }
                 hbycList.add(hbyc);

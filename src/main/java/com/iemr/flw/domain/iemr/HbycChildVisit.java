@@ -116,10 +116,10 @@ public class HbycChildVisit {
     private List<String> mcp_card_images;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime created_at = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updated_at = LocalDateTime.now();
 
     @Column(name = "created_by")
     private String created_by;
