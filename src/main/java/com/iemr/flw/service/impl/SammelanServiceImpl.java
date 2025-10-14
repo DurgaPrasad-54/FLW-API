@@ -53,7 +53,6 @@ public class SammelanServiceImpl implements SammelanService {
             record.setMeetingDate(sammelanRequestDTO.getDate());
             record.setPlace(sammelanRequestDTO.getPlace());
             record.setParticipants(sammelanRequestDTO.getParticipants());
-            record = recordRepo.save(record);
 
 
                 if (sammelanRequestDTO.getSammelanImages() != null && sammelanRequestDTO.getSammelanImages().length > 0) {
@@ -72,7 +71,10 @@ public class SammelanServiceImpl implements SammelanService {
                     record .setAttachments(imagesJson);
                 }
 
+           if(record!=null){
+               record = recordRepo.save(record);
 
+           }
         // Prepare Response DTO
             response.setId(record.getId());
             response.setAshaId(record.getAshaId());
