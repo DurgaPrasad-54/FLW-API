@@ -10,8 +10,6 @@ import java.util.List;
 @Repository
 public interface SammelanRecordRepository extends JpaRepository<SammelanRecord, Long> {
 
-    // Check if ASHA has already submitted record in same month
-    boolean existsByAshaIdAndMeetingDateBetween(Integer ashaId, LocalDate startDate, LocalDate endDate);
 
     // Fetch history
     List<SammelanRecord> findByAshaIdOrderByMeetingDateDesc(Integer ashaId);
