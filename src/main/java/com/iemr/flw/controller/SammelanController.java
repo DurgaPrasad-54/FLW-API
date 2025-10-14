@@ -52,7 +52,7 @@ public class SammelanController {
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
-            @RequestPart(value = "SammelanImages", required = false) List<MultipartFile> sammelanImages) throws JsonProcessingException {
+            @RequestPart(value = "sammelanImages", required = false) List<MultipartFile> sammelanImages) throws JsonProcessingException {
         Map<String, Object> response = new LinkedHashMap<>();
 
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
