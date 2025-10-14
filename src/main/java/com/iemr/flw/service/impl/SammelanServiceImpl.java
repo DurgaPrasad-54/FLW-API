@@ -9,6 +9,8 @@ import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.repo.iemr.SammelanAttachmentRepository;
 import com.iemr.flw.repo.iemr.SammelanRecordRepository;
 import com.iemr.flw.service.SammelanService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class SammelanServiceImpl implements SammelanService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
     @Autowired
     private SammelanRecordRepository recordRepo;
     @Autowired
@@ -97,6 +101,7 @@ public class SammelanServiceImpl implements SammelanService {
 
         } catch (Exception e) {
 
+            logger.info("Exception: "+e.getMessage());
         }
         return response;
 
