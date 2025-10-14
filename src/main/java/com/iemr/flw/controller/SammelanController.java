@@ -55,7 +55,7 @@ public class SammelanController {
         ObjectMapper mapper = new ObjectMapper();
 
         String json = mapper.writeValueAsString(sammelanRequestDTO);
-        logger.info("📥 Incoming HBYC Request: \n" + json);
+        logger.info("📥 Incoming HBYC Request: \n" + json+"date"+date);
         SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO,images);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
