@@ -124,5 +124,11 @@ public class HbycChildVisit {
     @Column(name = "created_by")
     private String created_by;
 
+    @Column(name = "is_breathing_difficulty")
+    private Boolean breathing_difficulty;
+
+    @Column(name = "is_complementary_feeding")
+    private Boolean complementary_feeding;
+
     // Getters and Setters
 }

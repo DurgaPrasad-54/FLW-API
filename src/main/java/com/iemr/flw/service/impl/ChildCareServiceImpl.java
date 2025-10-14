@@ -92,7 +92,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc.setDate_of_death(hbycDTO.getDate_of_death());
                     hbyc.setExclusive_breastfeeding(convertBollen(hbycDTO.getExclusive_breastfeeding()));
                     hbyc.setMother_counseled_ebf(convertBollen(hbycDTO.getMother_counseled_ebf()));
-//                    hbyc.setComplementary_feeding(hbycDTO.getComplementary_feeding());
+                    hbyc.setComplementary_feeding(convertBollen(hbycDTO.getComplementary_feeding()));
                     hbyc.setMother_counseled_cf(convertBollen((hbycDTO.getMother_counseled_cf())));
                     hbyc.setWeight_recorded(convertBollen(hbycDTO.getWeight_recorded()));
                     hbyc.setDevelopmental_delay(convertBollen(hbycDTO.getDevelopmental_delay()));
@@ -106,7 +106,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     hbyc.setParenting_counseling(convertBollen(hbycDTO.getParenting_counseling()));
                     hbyc.setFamily_planning_counseling(convertBollen(hbycDTO.getFamily_planning_counseling()));
                     hbyc.setDiarrhoea_episode(convertBollen(hbycDTO.getDiarrhoea_episode()));
-//                    hbyc.setBreathing_difficulty(hbycDTO.getBreathing_difficulty());
+                    hbyc.setBreathing_difficulty(convertBollen(hbycDTO.getBreathing_difficulty()));
                     hbyc.setTemperature(hbycDTO.getTemperature_check());
                     hbyc.setMcp_card_images(hbycDTO.getMcp_card_images());
                     hbyc.setCreated_at(hbycDTO.getCreated_at());
