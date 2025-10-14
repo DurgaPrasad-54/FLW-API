@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +46,7 @@ public class SammelanRecord {
     private String createdBy;
 
     @Column(name = "created_date")
-    private Timestamp createdDate;
-
+    private Timestamp createdDate = new Timestamp(System.currentTimeMillis());
 
     @Lob
     @Column(columnDefinition = "LONGTEXT",name = "attachments")

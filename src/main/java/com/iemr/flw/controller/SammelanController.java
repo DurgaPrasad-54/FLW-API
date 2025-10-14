@@ -42,7 +42,7 @@ public class SammelanController {
 
 
 
-    @RequestMapping(value = "saveAll",method = RequestMethod.POST)
+    @RequestMapping(value = "saveAll",method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SammelanResponseDTO> create(
 
             @RequestPart("date") String date,
