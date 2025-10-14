@@ -66,4 +66,10 @@ public class EligibleCoupleTracking {
 
     @Column(name = "antra_dose")
     private String antraDose;
+
+    @Column(name = "discharge_summary1")
+    private String dischargeSummary1;
+
+    @Column(name = "discharge_summary2")
+    private String dischargeSummary2;
 }

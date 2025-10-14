@@ -44,4 +44,7 @@ public class EligibleCoupleTrackingDTO implements Serializable {
 
     private String antraDose;
 
+    private String dischargeSummary1;
+    private String dischargeSummary2;
+
 }
