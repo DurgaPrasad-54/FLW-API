@@ -29,7 +29,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -43,13 +45,14 @@ public class SammelanController {
 
 
     @RequestMapping(value = "saveAll",method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<SammelanResponseDTO> create(
+    public ResponseEntity<?> create(
 
             @RequestPart("date") String date,
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
             @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) throws JsonProcessingException {
+        Map<String, Object> response = new LinkedHashMap<>();
 
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
@@ -61,7 +64,23 @@ public class SammelanController {
         String json = mapper.writeValueAsString(sammelanRequestDTO);
         logger.info("📥 Incoming HBYC Request: \n" + json+"date"+date);
         SammelanResponseDTO resp = service.submitSammelan(sammelanRequestDTO,images);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
+
+        try {
+            if (resp != null) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("message", "Data saved successfully");
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+
+        } catch (Exception e) {
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+
+
     }
 
 
