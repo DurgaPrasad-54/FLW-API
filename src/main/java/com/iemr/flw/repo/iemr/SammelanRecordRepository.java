@@ -12,5 +12,5 @@ public interface SammelanRecordRepository extends JpaRepository<SammelanRecord, 
 
 
     // Fetch history
-    List<SammelanRecord> findByAshaIdOrderByMeetingDateDesc(Integer ashaId);
+    List<SammelanRecord> findByAshaId(Integer ashaId);
 }
