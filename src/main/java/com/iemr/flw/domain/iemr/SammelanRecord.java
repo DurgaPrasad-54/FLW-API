@@ -27,7 +27,7 @@ public class SammelanRecord {
 
 
     @Column(name = "meeting_date", nullable = false)
-    private Timestamp meetingDate;
+    private LocalDate meetingDate;
 
 
     @Column(nullable = false)

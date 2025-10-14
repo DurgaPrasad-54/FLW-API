@@ -10,7 +10,7 @@ import java.util.List;
 public class SammelanRequestDTO {
 
     private Integer ashaId;                    // ASHA worker ID
-    private Timestamp date;                 // Meeting date
+    private LocalDate date;                 // Meeting date
     private String place;                   // Dropdown: HWC / Anganwadi Centre / Community Center
     private Integer participants;           // Number of participants attended
 

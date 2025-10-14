@@ -44,7 +44,7 @@ public class SammelanServiceImpl implements SammelanService {
 
         try {
             validateRequest(sammelanRequestDTO);
-            LocalDate localDate = sammelanRequestDTO.getDate().toInstant()
+            LocalDate localDate = sammelanRequestDTO.getDate().atStartOfDay()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
 
@@ -137,7 +137,7 @@ public class SammelanServiceImpl implements SammelanService {
     }
 
     private void validateRequest(SammelanRequestDTO dto) {
-        LocalDate date = dto.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate date = dto.getDate().atStartOfDay().atZone(ZoneId.systemDefault()).toLocalDate();
 
         if (date == null) {
             throw new IllegalArgumentException("Date is mandatory.");

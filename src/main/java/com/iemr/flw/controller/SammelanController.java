@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -52,7 +53,7 @@ public class SammelanController {
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
-        sammelanRequestDTO.setDate(ts);
+        sammelanRequestDTO.setDate(LocalDate.parse(date));
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
         ObjectMapper mapper = new ObjectMapper();
 

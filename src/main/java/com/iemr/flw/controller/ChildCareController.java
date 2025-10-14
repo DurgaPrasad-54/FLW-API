@@ -45,8 +45,7 @@ public class ChildCareController {
         OutputResponse response = new OutputResponse();
 
         try {
-            String json = mapper.writeValueAsString(hbycDTOs);
-            logger.info("📥 Incoming HBYC Request: \n" + json);
+
             logger.info("Saving All HBYC Details");
             if (hbycDTOs != null) {
                 String s = childCareService.registerHBYC(hbycDTOs);
