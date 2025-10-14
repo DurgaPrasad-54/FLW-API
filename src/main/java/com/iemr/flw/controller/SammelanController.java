@@ -2,6 +2,7 @@ package com.iemr.flw.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.SammelanService;
 import com.iemr.flw.utils.DateUtil;
@@ -84,18 +85,18 @@ public class SammelanController {
     }
 
 
-    @GetMapping("/getAll")
+    @PostMapping("/getAll")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully fetched meetings",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SammelanListResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    public ResponseEntity<?> getMeetings(@RequestParam Integer ashaId) {
+    public ResponseEntity<?> getMeetings(@RequestBody GetBenRequestHandler getBenRequestHandler) {
         SammelanListResponseDTO response = new SammelanListResponseDTO();
 
         try {
-            response.setData(service.getSammelanHistory(ashaId));
+            response.setData(service.getSammelanHistory(getBenRequestHandler.getAshaId()));
             response.setStatusCode(200);
             response.setStatus("Success");
             return ResponseEntity.ok(response);
