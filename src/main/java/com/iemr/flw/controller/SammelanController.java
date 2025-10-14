@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
@@ -48,12 +50,14 @@ public class SammelanController {
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
             @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) throws JsonProcessingException {
-        Timestamp ts = new Timestamp(Long.parseLong(date));
-
+        long epochMilli = Long.parseLong(date); // "1760380200000" from request
+        LocalDate localDate = Instant.ofEpochMilli(epochMilli)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
-        sammelanRequestDTO.setDate(LocalDate.parse(date));
+        sammelanRequestDTO.setDate(localDate);
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
         ObjectMapper mapper = new ObjectMapper();
 
