@@ -47,10 +47,12 @@ public class SammelanController {
             @RequestPart("participants") String participants,
             @RequestPart("ashaId") String ashaId,
             @RequestPart(value = "SammelanImages", required = false) MultipartFile[] images) throws JsonProcessingException {
+        Timestamp ts = new Timestamp(Long.parseLong(date));
+
         SammelanRequestDTO sammelanRequestDTO = new SammelanRequestDTO();
         sammelanRequestDTO.setPlace(place);
         sammelanRequestDTO.setParticipants(Integer.valueOf(participants));
-        sammelanRequestDTO.setDate(Timestamp.valueOf(date));
+        sammelanRequestDTO.setDate(ts);
         sammelanRequestDTO.setAshaId(Integer.valueOf(ashaId));
         ObjectMapper mapper = new ObjectMapper();
 
