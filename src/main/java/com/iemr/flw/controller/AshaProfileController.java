@@ -47,7 +47,7 @@ public class AshaProfileController {
     private EmployeeMasterInter employeeMasterInter;
 
     @RequestMapping(value = "editProfile", method = {RequestMethod.POST}, produces = {
-            "application/json"}, consumes = "application/json")
+            "application/json"}, consumes = "application/json", headers = "Authorization")
 
     public ResponseEntity<Map<String, Object>> editEmployee(@RequestBody AshaWorker editEmployee,@RequestHeader(value = "Authorization") String authorization) {
 
