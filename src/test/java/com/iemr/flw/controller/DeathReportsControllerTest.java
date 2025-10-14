@@ -2,9 +2,9 @@ package com.iemr.flw.controller;
 
 import com.google.gson.Gson;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
-import com.iemr.flw.dto.iemr.EligibleCoupleDTO;
-import com.iemr.flw.dto.iemr.EligibleCoupleTrackingDTO;
-import com.iemr.flw.service.CoupleService;
+import com.iemr.flw.dto.iemr.CdrDTO;
+import com.iemr.flw.dto.iemr.MdsrDTO;
+import com.iemr.flw.service.DeathReportsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,14 +20,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class CoupleControllerTest {
+class DeathReportsControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private CoupleService coupleService;
+    private DeathReportsService deathReportsService;
 
     @InjectMocks
-    private CoupleController controller;
+    private DeathReportsController controller;
 
     @BeforeEach
     void setUp() {
@@ -36,10 +36,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCouple_success() throws Exception {
-        List<EligibleCoupleDTO> dtos = Collections.singletonList(new EligibleCoupleDTO());
-        when(coupleService.registerEligibleCouple(any())).thenReturn("data");
-        mockMvc.perform(post("/couple/register/saveAll")
+    void saveCdrRecords_success() throws Exception {
+        List<CdrDTO> dtos = Collections.singletonList(new CdrDTO());
+        when(deathReportsService.registerCDR(any())).thenReturn("data");
+        mockMvc.perform(post("/death-reports/cdr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
@@ -47,19 +47,23 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCouple_noRecordFound() throws Exception {
-        List<EligibleCoupleDTO> dtos = Collections.singletonList(new EligibleCoupleDTO());
-        when(coupleService.registerEligibleCouple(any())).thenReturn(null);
-        mockMvc.perform(post("/couple/register/saveAll")
+    void saveCdrRecords_noRecordFound() throws Exception {
+        List<CdrDTO> dtos = Collections.singletonList(new CdrDTO());
+        when(deathReportsService.registerCDR(any())).thenReturn(null);
+        mockMvc.perform(post("/death-reports/cdr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    assert content.contains("No record found");
+                });
     }
 
     @Test
-    void saveEligibleCouple_invalidRequest() throws Exception {
-        mockMvc.perform(post("/couple/register/saveAll")
+    void saveCdrRecords_invalidRequest() throws Exception {
+        mockMvc.perform(post("/death-reports/cdr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content("null"))
@@ -67,10 +71,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCouple_exception() throws Exception {
-        List<EligibleCoupleDTO> dtos = Collections.singletonList(new EligibleCoupleDTO());
-        when(coupleService.registerEligibleCouple(any())).thenThrow(new RuntimeException("fail"));
-        mockMvc.perform(post("/couple/register/saveAll")
+    void saveCdrRecords_exception() throws Exception {
+        List<CdrDTO> dtos = Collections.singletonList(new CdrDTO());
+        when(deathReportsService.registerCDR(any())).thenThrow(new RuntimeException("fail"));
+        mockMvc.perform(post("/death-reports/cdr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
@@ -78,10 +82,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCoupleTracking_success() throws Exception {
-        List<EligibleCoupleTrackingDTO> dtos = Collections.singletonList(new EligibleCoupleTrackingDTO());
-        when(coupleService.registerEligibleCoupleTracking(any())).thenReturn("data");
-        mockMvc.perform(post("/couple/tracking/saveAll")
+    void saveMdsrRecords_success() throws Exception {
+        List<MdsrDTO> dtos = Collections.singletonList(new MdsrDTO());
+        when(deathReportsService.registerMDSR(any())).thenReturn("data");
+        mockMvc.perform(post("/death-reports/mdsr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
@@ -89,19 +93,23 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCoupleTracking_noRecordFound() throws Exception {
-        List<EligibleCoupleTrackingDTO> dtos = Collections.singletonList(new EligibleCoupleTrackingDTO());
-        when(coupleService.registerEligibleCoupleTracking(any())).thenReturn(null);
-        mockMvc.perform(post("/couple/tracking/saveAll")
+    void saveMdsrRecords_noRecordFound() throws Exception {
+        List<MdsrDTO> dtos = Collections.singletonList(new MdsrDTO());
+        when(deathReportsService.registerMDSR(any())).thenReturn(null);
+        mockMvc.perform(post("/death-reports/mdsr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    assert content.contains("No record found");
+                });
     }
 
     @Test
-    void saveEligibleCoupleTracking_invalidRequest() throws Exception {
-        mockMvc.perform(post("/couple/tracking/saveAll")
+    void saveMdsrRecords_invalidRequest() throws Exception {
+        mockMvc.perform(post("/death-reports/mdsr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content("null"))
@@ -109,10 +117,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void saveEligibleCoupleTracking_exception() throws Exception {
-        List<EligibleCoupleTrackingDTO> dtos = Collections.singletonList(new EligibleCoupleTrackingDTO());
-        when(coupleService.registerEligibleCoupleTracking(any())).thenThrow(new RuntimeException("fail"));
-        mockMvc.perform(post("/couple/tracking/saveAll")
+    void saveMdsrRecords_exception() throws Exception {
+        List<MdsrDTO> dtos = Collections.singletonList(new MdsrDTO());
+        when(deathReportsService.registerMDSR(any())).thenThrow(new RuntimeException("fail"));
+        mockMvc.perform(post("/death-reports/mdsr/saveAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(dtos)))
@@ -120,10 +128,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCouple_success() throws Exception {
-        when(coupleService.getEligibleCoupleRegRecords(any())).thenReturn("data");
+    void getCdrRecords_success() throws Exception {
+        when(deathReportsService.getCdrRecords(any())).thenReturn(Collections.singletonList(new CdrDTO()));
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/register/getAll")
+        mockMvc.perform(post("/death-reports/cdr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
@@ -131,19 +139,20 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCouple_noRecordFound() throws Exception {
-        when(coupleService.getEligibleCoupleRegRecords(any())).thenReturn(null);
+    void getCdrRecords_noRecordFound() throws Exception {
+        when(deathReportsService.getCdrRecords(any())).thenReturn(null);
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/register/getAll")
+        mockMvc.perform(post("/death-reports/cdr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
                 .andExpect(status().isOk());
+        
     }
 
     @Test
-    void getEligibleCouple_invalidRequest() throws Exception {
-        mockMvc.perform(post("/couple/register/getAll")
+    void getCdrRecords_invalidRequest() throws Exception {
+        mockMvc.perform(post("/death-reports/cdr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content("null"))
@@ -151,10 +160,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCouple_exception() throws Exception {
-        when(coupleService.getEligibleCoupleRegRecords(any())).thenThrow(new RuntimeException("fail"));
+    void getCdrRecords_exception() throws Exception {
+        when(deathReportsService.getCdrRecords(any())).thenThrow(new RuntimeException("fail"));
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/register/getAll")
+        mockMvc.perform(post("/death-reports/cdr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
@@ -162,10 +171,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCoupleTracking_success() throws Exception {
-        when(coupleService.getEligibleCoupleTracking(any())).thenReturn(Collections.singletonList(new EligibleCoupleTrackingDTO()));
+    void getMdsrRecords_success() throws Exception {
+        when(deathReportsService.getMdsrRecords(any())).thenReturn(Collections.singletonList(new MdsrDTO()));
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/tracking/getAll")
+        mockMvc.perform(post("/death-reports/mdsr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
@@ -173,10 +182,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCoupleTracking_noRecordFound() throws Exception {
-        when(coupleService.getEligibleCoupleTracking(any())).thenReturn(null);
+    void getMdsrRecords_noRecordFound() throws Exception {
+        when(deathReportsService.getMdsrRecords(any())).thenReturn(null);
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/tracking/getAll")
+        mockMvc.perform(post("/death-reports/mdsr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
@@ -184,8 +193,8 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCoupleTracking_invalidRequest() throws Exception {
-        mockMvc.perform(post("/couple/tracking/getAll")
+    void getMdsrRecords_invalidRequest() throws Exception {
+        mockMvc.perform(post("/death-reports/mdsr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content("null"))
@@ -193,10 +202,10 @@ class CoupleControllerTest {
     }
 
     @Test
-    void getEligibleCoupleTracking_exception() throws Exception {
-        when(coupleService.getEligibleCoupleTracking(any())).thenThrow(new RuntimeException("fail"));
+    void getMdsrRecords_exception() throws Exception {
+        when(deathReportsService.getMdsrRecords(any())).thenThrow(new RuntimeException("fail"));
         GetBenRequestHandler req = new GetBenRequestHandler();
-        mockMvc.perform(post("/couple/tracking/getAll")
+        mockMvc.perform(post("/death-reports/mdsr/getAll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer token")
                 .content(new Gson().toJson(req)))
