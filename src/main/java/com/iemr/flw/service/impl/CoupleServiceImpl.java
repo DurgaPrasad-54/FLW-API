@@ -119,6 +119,44 @@ public class CoupleServiceImpl implements CoupleService {
             return "error while saving ecr details: " + e.getMessage();
         }
     }
+    @Override
+    public String registerEligibleCouple(List<EligibleCoupleDTO> eligibleCoupleDTOs) {
+        try {
+            List<EligibleCoupleRegister> ecrList = new ArrayList<>();
+            List<IncentiveActivityRecord> recordList = new ArrayList<>();
+            eligibleCoupleDTOs.forEach(it -> {
+                EligibleCoupleRegister existingECR =
+//                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenIdAndCreatedDate(it.getBenId(), it.getCreatedDate());
+                        eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
+
+                if (existingECR != null && null != existingECR.getNumLiveChildren()) {
+                    if(existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 3) {
+                        IncentiveActivity activity1 =
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("MARRIAGE_1st_CHILD_GAP", "FAMILY PLANNING");
+                        createIncentiveRecord(recordList, it, activity1);
+                    } else if (existingECR.getNumLiveChildren() == 1 && it.getNumLiveChildren() >= 2 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 2) {
+                        IncentiveActivity activity2 =
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", "FAMILY PLANNING");
+                        createIncentiveRecord(recordList, it, activity2);
+                    }
+                    Long id = existingECR.getId();
+                    modelMapper.map(it, existingECR);
+                    existingECR.setId(id);
+                } else {
+                    existingECR = new EligibleCoupleRegister();
+                    modelMapper.map(it, existingECR);
+                    existingECR.setId(null);
+                }
+                ecrList.add(existingECR);
+            });
+            eligibleCoupleRegisterRepo.saveAll(ecrList);
+            recordRepo.saveAll(recordList);
+            return "no of ecr details saved: " + ecrList.size();
+        } catch (Exception e) {
+            return "error while saving ecr details: " + e.getMessage();
+        }
+    }
+
 
     private void createIncentiveRecord(List<IncentiveActivityRecord> recordList, EligibleCoupleDTO eligibleCoupleDTO, IncentiveActivity activity) {
         if (activity != null) {
