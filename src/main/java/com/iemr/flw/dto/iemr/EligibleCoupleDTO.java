@@ -1,5 +1,7 @@
 package com.iemr.flw.dto.iemr;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -113,6 +115,10 @@ public class EligibleCoupleDTO implements Serializable {
     private Boolean isKitHandedOver;
 
     private String kitHandedOverDate;
+
+    private String kitPhoto1;
+
+    private String kitPhoto2;
 
 
 
