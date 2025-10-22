@@ -391,7 +391,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         IncentiveActivity ancFullActivityCH =
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
 
-        IncentiveActivity abortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
+        IncentiveActivity comprehensiveAbortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity identifiedHrpActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
         IncentiveActivity identifiedHrpActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
@@ -475,16 +475,17 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             });
         }
-        if (abortionActivity != null) {
+        if (comprehensiveAbortionActivity != null) {
 
             ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(abortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-
+                logger.info("record:"+record.getName());
+                logger.info("condition:"+ancVisit.getIsAborted());
                 if (Objects.equals(ancVisit.getIsAborted(), "true")) {
                     if (record == null) {
                         record = new IncentiveActivityRecord();
-                        record.setActivityId(abortionActivity.getId());
+                        record.setActivityId(comprehensiveAbortionActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
                         record.setUpdatedDate(ancVisit.getCreatedDate());
@@ -493,7 +494,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         record.setEndDate(ancVisit.getCreatedDate());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(abortionActivity.getRate()));
+                        record.setAmount(Long.valueOf(comprehensiveAbortionActivity.getRate()));
                         recordRepo.save(record);
                     }
 
