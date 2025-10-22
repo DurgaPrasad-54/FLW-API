@@ -192,20 +192,16 @@ public class IncentiveServiceImpl implements IncentiveService {
     private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity){
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
 
-        LocalDate now = LocalDate.now();
-        LocalDate firstDay = now.withDayOfMonth(1);
-        LocalDate lastDay = now.withDayOfMonth(now.lengthOfMonth());
+        Timestamp startOfMonth = Timestamp.valueOf(LocalDate.now().withDayOfMonth(1).atStartOfDay());
+        Timestamp endOfMonth = Timestamp.valueOf(LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).atTime(23, 59, 59));
 
-        Timestamp startOfMonth = Timestamp.valueOf(firstDay.atStartOfDay());
-        Timestamp endOfMonth = Timestamp.valueOf(lastDay.atTime(23, 59, 59));
+        IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(
+                incentiveActivity.getId(),
+                startOfMonth,
+                endOfMonth,
+                0L
+        );
 
-        IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(
-                        incentiveActivity.getId(),
-                        startOfMonth,
-                        endOfMonth,
-                        0L
-                );
 
         if (record == null) {
             record = new IncentiveActivityRecord();
