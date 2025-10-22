@@ -136,16 +136,16 @@ public class DeathReportsServiceImpl implements DeathReportsService {
     private void checkAndAddIncentives(List<CDR> cdrList) {
 
         cdrList.forEach( cdr -> {
-            Long benId = beneficiaryRepo.getBenIdFromRegID(cdr.getBenId()).longValue();
             Integer userId = userRepo.getUserIdByName(cdr.getCreatedBy());
             IncentiveActivity immunizationActivity =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", GroupName.CHILD_HEALTH.getDisplayName());
-            createIncentiveRecord(cdr,benId,userId,immunizationActivity);
+            createIncentiveRecord(cdr,cdr.getBenId(),userId,immunizationActivity);
         });
     }
 
 
     private void checkAndAddIncentivesMdsr(List<MDSR> mdsrList) {
+
 
         mdsrList.forEach( mdsr -> {
             Long benId = beneficiaryRepo.getBenIdFromRegID(mdsr.getBenId()).longValue();
