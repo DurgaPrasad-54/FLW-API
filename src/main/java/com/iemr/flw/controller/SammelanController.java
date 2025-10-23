@@ -97,12 +97,12 @@ public class SammelanController {
 
         try {
             response.setData(service.getSammelanHistory(getBenRequestHandler.getAshaId()));
-            response.setStatusCode(200);
+            response.setStatusCode(HttpStatus.OK.value());
             response.setStatus("Success");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setStatus("Something went wrong");
+            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()+"\n"+e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
