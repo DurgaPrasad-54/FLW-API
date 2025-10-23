@@ -480,10 +480,12 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                logger.info("record:"+record.getName());
-                logger.info("condition:"+ancVisit.getIsAborted());
+
                 if (Objects.equals(ancVisit.getIsAborted(), "true")) {
+
                     if (record == null) {
+                        logger.info("record:"+record.getName());
+                        logger.info("condition:"+ancVisit.getIsAborted());
                         record = new IncentiveActivityRecord();
                         record.setActivityId(comprehensiveAbortionActivity.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
