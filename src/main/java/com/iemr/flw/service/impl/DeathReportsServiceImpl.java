@@ -184,14 +184,11 @@ public class DeathReportsServiceImpl implements DeathReportsService {
     private void createIncentiveRecord(MDSR mdsr, Long benId, Integer userId, IncentiveActivity immunizationActivity) {
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), mdsr.getCreatedDate(), benId);
-        RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(benId));
-        String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName()+" "+rmnchBeneficiaryDetailsRmnch.getLastName();
         if (record == null) {
             record = new IncentiveActivityRecord();
             record.setActivityId(immunizationActivity.getId());
             record.setCreatedDate(mdsr.getCreatedDate());
             record.setCreatedBy(mdsr.getCreatedBy());
-            record.setName(beneName);
             record.setStartDate(mdsr.getCreatedDate());
             record.setEndDate(mdsr.getCreatedDate());
             record.setUpdatedDate(mdsr.getCreatedDate());
