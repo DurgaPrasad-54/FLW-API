@@ -148,7 +148,7 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        entities = entities.stream().filter(entitie-> incentivesRepo.isExist(entitie.getActivityId())).collect(Collectors.toList());
+        entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId())!=null).collect(Collectors.toList());
         entities.forEach(entry -> {
             if(entry.getName()==null){
                 if(entry.getBenId()!=0){
