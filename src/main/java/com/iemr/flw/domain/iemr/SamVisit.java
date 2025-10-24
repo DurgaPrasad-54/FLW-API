@@ -3,6 +3,7 @@ package com.iemr.flw.domain.iemr;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -65,8 +66,8 @@ public class SamVisit {
     private String createdBy;
 
     @Column(name = "created_date")
-    private LocalDate createdDate = LocalDate.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "update_date")
-    private LocalDate updateDate = LocalDate.now();
+    private LocalDateTime updateDate = LocalDateTime.now();
 }
