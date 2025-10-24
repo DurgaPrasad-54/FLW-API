@@ -68,6 +68,6 @@ public class SamVisit {
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
 
-    @Column(name = "update_date")
-    private LocalDateTime updateDate = LocalDateTime.now();
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate = LocalDateTime.now();
 }
