@@ -227,7 +227,7 @@ public class ChildCareController {
         return response.toString();
     }
     @RequestMapping(value = {"/sam/saveAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> saveSevereAcuteMalnutrition( List<SamDTO> samRequest){
+    public  ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<SamDTO> samRequest){
         Map<String,Object> response = new LinkedHashMap<>();
 
         try {
