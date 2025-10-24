@@ -9,6 +9,7 @@ import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.ChildCareService;
+import com.iemr.flw.utils.JwtUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,9 @@ public class ChildCareServiceImpl implements ChildCareService {
     ObjectMapper mapper = new ObjectMapper();
 
     ModelMapper modelMapper = new ModelMapper();
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
 
@@ -433,8 +437,8 @@ public class ChildCareServiceImpl implements ChildCareService {
                 samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisits.setHouseholdId(samDTO.getHouseHoldId());
                 samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
-                samVisits.setUserId(userRepo.getUserIdByName(samDTO.getUserName()));
-                samVisits.setCreatedBy(samDTO.getUserName());
+                samVisits.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+                samVisits.setCreatedBy(jwtUtil.getUserNameFromStorage());
                 vaccinationList.add(samVisits);
             });
 
