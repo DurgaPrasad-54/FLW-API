@@ -624,18 +624,17 @@ public class ChildCareServiceImpl implements ChildCareService {
                         .equals(childVaccinationRepo.getSecondYearVaccineCount())) {
                     createIncentiveRecord(vaccination, benId, userId, immunizationActivity2CH);
                 }
-            } else if (immunizationServiceId == 8) {
-                IncentiveActivity immunizationActivity5AM =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("DPT_IMMUNIZATION_5_YEARS", GroupName.IMMUNIZATION.getDisplayName());
-                if (immunizationActivity5AM != null && childVaccinationRepo.checkDptVaccinatedUser(vaccination.getBeneficiaryRegId()) == 1) {
-                    createIncentiveRecord(vaccination, benId, userId, immunizationActivity5AM);
-                }
+            }
+            IncentiveActivity immunizationActivity5AM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("DPT_IMMUNIZATION_5_YEARS", GroupName.IMMUNIZATION.getDisplayName());
+            if (immunizationActivity5AM != null && childVaccinationRepo.checkDptVaccinatedUser(vaccination.getBeneficiaryRegId()) == 1) {
+                createIncentiveRecord(vaccination, benId, userId, immunizationActivity5AM);
+            }
 
-                IncentiveActivity immunizationActivity5CH =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("DPT_IMMUNIZATION_5_YEARS", GroupName.ACTIVITY.getDisplayName());
-                if (immunizationActivity5CH != null && childVaccinationRepo.checkDptVaccinatedUser(vaccination.getBeneficiaryRegId()) == 1) {
-                    createIncentiveRecord(vaccination, benId, userId, immunizationActivity5CH);
-                }
+            IncentiveActivity immunizationActivity5CH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("DPT_IMMUNIZATION_5_YEARS", GroupName.ACTIVITY.getDisplayName());
+            if (immunizationActivity5CH != null && childVaccinationRepo.checkDptVaccinatedUser(vaccination.getBeneficiaryRegId()) == 1) {
+                createIncentiveRecord(vaccination, benId, userId, immunizationActivity5CH);
             }
         });
     }
