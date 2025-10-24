@@ -423,24 +423,30 @@ public class ChildCareServiceImpl implements ChildCareService {
 
     @Override
     public String saveSamDetails(List<SamDTO> samRequest) {
-        List<SamVisit> vaccinationList = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        try {
+            List<SamVisit> vaccinationList = new ArrayList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        samRequest.forEach(samDTO -> {
-            SamVisit samVisits = new  SamVisit();
-            modelMapper.map(samVisits,samDTO);
-            samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
-            samVisits.setHouseholdId(samDTO.getHouseHoldId());
-            samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
-            samVisits.setUserId(userRepo.getUserIdByName(samDTO.getUserName()));
-            samVisits.setCreatedBy(samDTO.getUserName());
-            vaccinationList.add(samVisits);
-        });
+            samRequest.forEach(samDTO -> {
+                SamVisit samVisits = new  SamVisit();
+                modelMapper.map(samVisits,samDTO);
+                samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
+                samVisits.setHouseholdId(samDTO.getHouseHoldId());
+                samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
+                samVisits.setUserId(userRepo.getUserIdByName(samDTO.getUserName()));
+                samVisits.setCreatedBy(samDTO.getUserName());
+                vaccinationList.add(samVisits);
+            });
 
-        samVisitRepository.saveAll(vaccinationList);
+            samVisitRepository.saveAll(vaccinationList);
 
 
-        return "Saved " + samRequest.size() + " SAM visit records successfully";
+            return "Saved " + samRequest.size() + " SAM visit records successfully";
+        }catch (Exception e){
+            logger.error(e.getMessage());
+        }
+
+        return "Fail";
 
         // Handle MultipartFile → Base64 JSON
 //            MultipartFile file = dto.getViewDischargeDocs();

@@ -236,18 +236,25 @@ public class ChildCareController {
                if(responseObject!=null){
                    response.put("statusCode", HttpStatus.OK.value());
                    response.put("message", "Data saved successfully");
+                   return ResponseEntity.ok().body(response);
+
                }
 
             }else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+
             }
         }catch (Exception e){
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
+
 
         }
-        return  ResponseEntity.ok(response);
+        return null;
+
     }
 
 
