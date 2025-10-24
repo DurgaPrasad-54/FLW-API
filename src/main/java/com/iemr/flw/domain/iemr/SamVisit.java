@@ -30,7 +30,7 @@ public class SamVisit {
     private String visitLabel;
 
     @Column(name = "muac")
-    private Double muac;
+    private String muac;
 
     @Column(name = "weight_for_height_status")
     private String weightForHeightStatus;
@@ -42,16 +42,16 @@ public class SamVisit {
     private String isChildAdmittedNrc;
 
     @Column(name = "nrc_admission_date")
-    private LocalDate nrcAdmissionDate;
+    private String nrcAdmissionDate;
 
     @Column(name = "is_child_discharged_nrc")
     private String isChildDischargedNrc;
 
     @Column(name = "nrc_discharge_date")
-    private LocalDate nrcDischargeDate;
+    private String nrcDischargeDate;
 
     @Column(name = "follow_up_visit_date")
-    private LocalDate followUpVisitDate;
+    private String followUpVisitDate;
 
     @Column(name = "sam_status")
     private String samStatus;

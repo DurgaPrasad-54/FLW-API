@@ -1,6 +1,6 @@
 package com.iemr.flw.domain.iemr;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,45 +9,45 @@ import java.util.List;
 @Data
 public class SamVisitResponseDTO {
 
-    @SerializedName("beneficiary_id")
+    @JsonProperty("beneficiary_id")
     private Long beneficiaryId;
 
-    @SerializedName("visit_date")
+    @JsonProperty("visit_date")
     private LocalDate visitDate;
 
-    @SerializedName("visit_label")
+    @JsonProperty("visit_label")
     private String visitLabel;
 
-    @SerializedName("muac")
-    private Double muac;
+    @JsonProperty("muac")
+    private String muac;
 
-    @SerializedName("weight_for_height_status")
+    @JsonProperty("weight_for_height_status")
     private String weightForHeightStatus;
 
-    @SerializedName("is_child_referred_nrc")
+    @JsonProperty("is_child_referred_nrc")
     private String isChildReferredNrc;
 
-    @SerializedName("is_child_admitted_nrc")
+    @JsonProperty("is_child_admitted_nrc")
     private String isChildAdmittedNrc;
 
-    @SerializedName("nrc_admission_date")
-    private LocalDate nrcAdmissionDate;
+    @JsonProperty("nrc_admission_date")
+    private String nrcAdmissionDate;
 
-    @SerializedName("is_child_discharged_nrc")
+    @JsonProperty("is_child_discharged_nrc")
     private String isChildDischargedNrc;
 
-    @SerializedName("nrc_discharge_date")
-    private LocalDate nrcDischargeDate;
+    @JsonProperty("nrc_discharge_date")
+    private String nrcDischargeDate;
 
-    @SerializedName("follow_up_visit_date")
-    private LocalDate followUpVisitDate;
+    @JsonProperty("follow_up_visit_date")
+    private String followUpVisitDate;
 
-    @SerializedName("sam_status")
+    @JsonProperty("sam_status")
     private String samStatus;
 
-    @SerializedName("discharge_summary")
+    @JsonProperty("discharge_summary")
     private String dischargeSummary;
 
-    @SerializedName("view_discharge_docs")
+    @JsonProperty("view_discharge_docs")
     private List<String> viewDischargeDocs; // Base64 array or JSON array
 }

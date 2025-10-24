@@ -24,5 +24,5 @@ public interface ChildCareService {
 
     String saveSamDetails(List<SamDTO> samRequest);
 
-    List<SamVisitResponseDTO> getSamVisitsByBeneficiary(GetBenRequestHandler dto);
+    List<SAMResponseDTO> getSamVisitsByBeneficiary(GetBenRequestHandler dto);
 }

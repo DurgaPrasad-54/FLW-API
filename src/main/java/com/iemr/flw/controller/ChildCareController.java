@@ -265,7 +265,7 @@ public class ChildCareController {
         Map<String,Object> response = new LinkedHashMap<>();
 
         try {
-            List<SamVisitResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary(request);
+            List<SAMResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary(request);
 
             if(responseObject!=null){
                 if(responseObject!=null){

@@ -432,13 +432,24 @@ public class ChildCareServiceImpl implements ChildCareService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
             samRequest.forEach(samDTO -> {
+                logger.info(samDTO.getFields().getMuac());
                 SamVisit samVisits = new  SamVisit();
-                modelMapper.map(samVisits,samDTO.getFields());
                 samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisits.setHouseholdId(samDTO.getHouseHoldId());
                 samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
                 samVisits.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
                 samVisits.setCreatedBy(jwtUtil.getUserNameFromStorage());
+                samVisits.setMuac(samDTO.getFields().getMuac());
+                samVisits.setSamStatus(samDTO.getFields().getSam_status());
+                samVisits.setVisitLabel(samDTO.getFields().getVisit_label());
+                samVisits.setWeightForHeightStatus(samDTO.getFields().getWeight_for_height_status());
+                samVisits.setIsChildReferredNrc(samDTO.getFields().getIs_child_referred_nrc());
+                samVisits.setNrcAdmissionDate(samDTO.getFields().getNrc_admission_date());
+                samVisits.setIsChildDischargedNrc(samDTO.getFields().getIs_child_discharged_nrc());
+                samVisits.setNrcDischargeDate(samDTO.getFields().getNrc_discharge_date());
+                samVisits.setFollowUpVisitDate(samDTO.getFields().getFollow_up_visit_date());
+                samVisits.setDischargeSummary(samDTO.getFields().getDischarge_summary());
+                samVisits.setViewDischargeDocs(samDTO.getFields().getView_discharge_docs());
                 vaccinationList.add(samVisits);
             });
 
@@ -481,11 +492,19 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     @Override
-    public List<SamVisitResponseDTO> getSamVisitsByBeneficiary(GetBenRequestHandler request) {
+    public List<SAMResponseDTO> getSamVisitsByBeneficiary(GetBenRequestHandler request) {
 
         List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
+        List<SAMResponseDTO> samResponseListDTO = new ArrayList<>();
 
-        return entities.stream().map(entity -> {
+        for (SamVisit entity : entities) {
+            SAMResponseDTO samResponseDTO = new SAMResponseDTO();
+
+            samResponseDTO.setBeneficiaryId(entity.getBeneficiaryId());
+            samResponseDTO.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
+            samResponseDTO.setHouseHoldId(entity.getHouseholdId());
+            samResponseDTO.setId(entity.getId());
+
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
             dto.setVisitDate(entity.getVisitDate());
@@ -501,20 +520,15 @@ public class ChildCareServiceImpl implements ChildCareService {
             dto.setSamStatus(entity.getSamStatus());
             dto.setDischargeSummary(entity.getDischargeSummary());
 
-            // Convert Base64 JSON string to List<String>
-            try {
-                if (entity.getViewDischargeDocs() != null) {
-                    List<String> base64List = mapper.readValue(
-                            entity.getViewDischargeDocs(), new TypeReference<List<String>>() {});
-                    dto.setViewDischargeDocs(base64List);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            samResponseDTO.setFields(dto);
 
-            return dto;
-        }).collect(Collectors.toList());
+            samResponseListDTO.add(samResponseDTO);
+        }
+
+        return samResponseListDTO;
     }
+
+
 
 
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
