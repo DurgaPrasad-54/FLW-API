@@ -17,10 +17,9 @@ public interface IncentivesRepo extends JpaRepository<IncentiveActivity, Long> {
     @Query("select inc from IncentiveActivity inc where inc.name = :name and inc.group = :group and inc.isDeleted = false")
     IncentiveActivity findIncentiveMasterByNameAndGroup(@Param("name") String name, @Param("group") String group);
 
-    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END " +
-            "FROM IncentiveActivity a " +
+    @Query("SELECT a FROM IncentiveActivity a " +
             "WHERE a.id = :activityId AND a.group <> 'ACTIVITY'")
-    IncentiveActivity findIncentiveMasterById(@Param("id") Long activityId);
+    IncentiveActivity findIncentiveMasterById(@Param("activityId") Long activityId);
 
     @Query("select record from IncentiveActivityRecord record where record.activityId = :id and record.createdDate = :createdDate and record.benId = :benId")
     IncentiveActivityRecord findRecordByActivityIdCreatedDateBenId(@Param("id") Long id, @Param("createdDate") Timestamp createdDate, @Param("benId") Long benId);
