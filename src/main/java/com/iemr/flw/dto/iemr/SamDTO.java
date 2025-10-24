@@ -48,5 +48,5 @@ public class SamDTO {
     private String dischargeSummary;
 
     @SerializedName("view_discharge_docs")
-    private MultipartFile viewDischargeDocs;
+    private String viewDischargeDocs;
 }

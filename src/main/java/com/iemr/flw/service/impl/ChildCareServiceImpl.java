@@ -439,30 +439,32 @@ public class ChildCareServiceImpl implements ChildCareService {
             entity.setFollowUpVisitDate(dto.getFollowUpVisitDate());
             entity.setSamStatus(dto.getSamStatus());
             entity.setDischargeSummary(dto.getDischargeSummary());
+            entity.setViewDischargeDocs(dto.getViewDischargeDocs());
 
-            // Handle MultipartFile → Base64 JSON
-            MultipartFile file = dto.getViewDischargeDocs();
-            if (file != null && !file.isEmpty()) {
-                try {
-                    List<String> base64List = Arrays.asList(file).stream()
-                            .filter(f -> !f.isEmpty())
-                            .map(f -> {
-                                try {
-                                    return Base64.getEncoder().encodeToString(f.getBytes());
-                                } catch (IOException e) {
-                                    throw new RuntimeException("Error converting file to Base64", e);
-                                }
-                            })
-                            .collect(Collectors.toList());
 
-                    String jsonBase64 = mapper.writeValueAsString(base64List);
-                    entity.setViewDischargeDocs(jsonBase64);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return "Failed to process file: " + file.getOriginalFilename();
-                }
-            }
+//            // Handle MultipartFile → Base64 JSON
+//            MultipartFile file = dto.getViewDischargeDocs();
+//            if (file != null && !file.isEmpty()) {
+//                try {
+//                    List<String> base64List = Arrays.asList(file).stream()
+//                            .filter(f -> !f.isEmpty())
+//                            .map(f -> {
+//                                try {
+//                                    return Base64.getEncoder().encodeToString(f.getBytes());
+//                                } catch (IOException e) {
+//                                    throw new RuntimeException("Error converting file to Base64", e);
+//                                }
+//                            })
+//                            .collect(Collectors.toList());
+//
+//                    String jsonBase64 = mapper.writeValueAsString(base64List);
+//                    entity.setViewDischargeDocs(jsonBase64);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return "Failed to process file: " + file.getOriginalFilename();
+//                }
+//            }
 
             samVisitRepository.save(entity);
         }
