@@ -423,26 +423,26 @@ public class ChildCareServiceImpl implements ChildCareService {
 
     @Override
     public String saveSamDetails(List<SamDTO> samRequest) {
-        for (SamDTO dto : samRequest) {
-            SamVisit entity = new SamVisit();
+        List<SamVisit> vaccinationList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-            entity.setBeneficiaryId(dto.getBeneficiaryId());
-            entity.setVisitDate(dto.getVisitDate());
-            entity.setVisitLabel(dto.getVisitLabel());
-            entity.setMuac(dto.getMuac());
-            entity.setWeightForHeightStatus(dto.getWeightForHeightStatus());
-            entity.setIsChildReferredNrc(dto.getIsChildReferredNrc());
-            entity.setIsChildAdmittedNrc(dto.getIsChildAdmittedNrc());
-            entity.setNrcAdmissionDate(dto.getNrcAdmissionDate());
-            entity.setIsChildDischargedNrc(dto.getIsChildDischargedNrc());
-            entity.setNrcDischargeDate(dto.getNrcDischargeDate());
-            entity.setFollowUpVisitDate(dto.getFollowUpVisitDate());
-            entity.setSamStatus(dto.getSamStatus());
-            entity.setDischargeSummary(dto.getDischargeSummary());
-            entity.setViewDischargeDocs(dto.getViewDischargeDocs());
+        samRequest.forEach(samDTO -> {
+            SamVisit samVisits = new  SamVisit();
+            modelMapper.map(samVisits,samDTO);
+            samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
+            samVisits.setHouseholdId(samDTO.getHouseHoldId());
+            samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
+            samVisits.setUserId(userRepo.getUserIdByName(samDTO.getUserName()));
+            samVisits.setCreatedBy(samDTO.getUserName());
+            vaccinationList.add(samVisits);
+        });
+
+        samVisitRepository.saveAll(vaccinationList);
 
 
-//            // Handle MultipartFile → Base64 JSON
+        return "Saved " + samRequest.size() + " SAM visit records successfully";
+
+        // Handle MultipartFile → Base64 JSON
 //            MultipartFile file = dto.getViewDischargeDocs();
 //            if (file != null && !file.isEmpty()) {
 //                try {
@@ -466,18 +466,14 @@ public class ChildCareServiceImpl implements ChildCareService {
 //                }
 //            }
 
-            samVisitRepository.save(entity);
-        }
-
-        return "Saved " + samRequest.size() + " SAM visit records successfully";
 
 
     }
 
     @Override
-    public List<SamVisitResponseDTO> getSamVisitsByBeneficiary() {
+    public List<SamVisitResponseDTO> getSamVisitsByBeneficiary(GetBenRequestHandler request) {
 
-        List<SamVisit> entities = samVisitRepository.findAll();
+        List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
 
         return entities.stream().map(entity -> {
             SamVisitResponseDTO dto = new SamVisitResponseDTO();

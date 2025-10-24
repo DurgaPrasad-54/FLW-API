@@ -251,12 +251,12 @@ public class ChildCareController {
     }
 
 
-    @RequestMapping(value = {"/sam/getAll"},method = RequestMethod.GET)
-    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(){
+    @RequestMapping(value = {"/sam/getAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(@RequestBody GetBenRequestHandler request){
         Map<String,Object> response = new LinkedHashMap<>();
 
         try {
-            List<SamVisitResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary();
+            List<SamVisitResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary(request);
 
             if(responseObject!=null){
                 if(responseObject!=null){

@@ -13,8 +13,14 @@ public class SamVisit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
     @Column(name = "beneficiary_id")
     private Long beneficiaryId;
+
+    @Column(name = "household_id")
+    private Long householdId;
 
     @Column(name = "visit_date")
     private LocalDate visitDate;
@@ -54,4 +60,13 @@ public class SamVisit {
 
     @Column(name = "view_discharge_docs")
     private String viewDischargeDocs;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private LocalDate createdDate = LocalDate.now();
+
+    @Column(name = "update_date")
+    private LocalDate updateDate = LocalDate.now();
 }

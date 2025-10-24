@@ -17,4 +17,6 @@ public interface SamVisitRepository extends JpaRepository<SamVisit, Long> {
 
     // Optional: Check if a visit exists for a given date
     boolean existsByBeneficiaryIdAndVisitDate(Long beneficiaryId, java.time.LocalDate visitDate);
+
+    List<SamVisit> findByUserId(Integer ashaId);
 }
