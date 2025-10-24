@@ -1,5 +1,6 @@
 package com.iemr.flw.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
@@ -13,12 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ChildCareServiceImpl implements ChildCareService {
@@ -48,11 +53,16 @@ public class ChildCareServiceImpl implements ChildCareService {
     private ChildVaccinationRepo childVaccinationRepo;
 
     @Autowired
+    private SamVisitRepository samVisitRepository;
+
+    @Autowired
     private VaccineRepo vaccineRepo;
 
     ObjectMapper mapper = new ObjectMapper();
 
     ModelMapper modelMapper = new ModelMapper();
+
+
 
     @Override
     public String registerHBYC(List<HbycRequestDTO> hbycDTOs) {
@@ -171,7 +181,6 @@ public class ChildCareServiceImpl implements ChildCareService {
                 addIfValid(fields, "mcp_card_images", hbycChildVisit.getMcp_card_images());
 
 
-
                 // Set fields map in DTO
                 hbycRequestDTO.setFields(fields);
                 result.add(hbycRequestDTO);
@@ -249,11 +258,11 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private Boolean convertBollen(String value) {
-       if(value.equals("Yes")){
-           return  true;
-       }else {
-           return  false;
-       }
+        if (value.equals("Yes")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private String convert(Object value) {
@@ -412,6 +421,94 @@ public class ChildCareServiceImpl implements ChildCareService {
         return null;
     }
 
+    @Override
+    public String saveSamDetails(List<SamDTO> samRequest) {
+        for (SamDTO dto : samRequest) {
+            SamVisit entity = new SamVisit();
+
+            entity.setBeneficiaryId(dto.getBeneficiaryId());
+            entity.setVisitDate(dto.getVisitDate());
+            entity.setVisitLabel(dto.getVisitLabel());
+            entity.setMuac(dto.getMuac());
+            entity.setWeightForHeightStatus(dto.getWeightForHeightStatus());
+            entity.setIsChildReferredNrc(dto.getIsChildReferredNrc());
+            entity.setIsChildAdmittedNrc(dto.getIsChildAdmittedNrc());
+            entity.setNrcAdmissionDate(dto.getNrcAdmissionDate());
+            entity.setIsChildDischargedNrc(dto.getIsChildDischargedNrc());
+            entity.setNrcDischargeDate(dto.getNrcDischargeDate());
+            entity.setFollowUpVisitDate(dto.getFollowUpVisitDate());
+            entity.setSamStatus(dto.getSamStatus());
+            entity.setDischargeSummary(dto.getDischargeSummary());
+
+            // Handle MultipartFile → Base64 JSON
+            MultipartFile file = dto.getViewDischargeDocs();
+            if (file != null && !file.isEmpty()) {
+                try {
+                    List<String> base64List = Arrays.asList(file).stream()
+                            .filter(f -> !f.isEmpty())
+                            .map(f -> {
+                                try {
+                                    return Base64.getEncoder().encodeToString(f.getBytes());
+                                } catch (IOException e) {
+                                    throw new RuntimeException("Error converting file to Base64", e);
+                                }
+                            })
+                            .collect(Collectors.toList());
+
+                    String jsonBase64 = mapper.writeValueAsString(base64List);
+                    entity.setViewDischargeDocs(jsonBase64);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return "Failed to process file: " + file.getOriginalFilename();
+                }
+            }
+
+            samVisitRepository.save(entity);
+        }
+
+        return "Saved " + samRequest.size() + " SAM visit records successfully";
+
+
+    }
+
+    @Override
+    public List<SamVisitResponseDTO> getSamVisitsByBeneficiary() {
+
+        List<SamVisit> entities = samVisitRepository.findAll();
+
+        return entities.stream().map(entity -> {
+            SamVisitResponseDTO dto = new SamVisitResponseDTO();
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setVisitDate(entity.getVisitDate());
+            dto.setVisitLabel(entity.getVisitLabel());
+            dto.setMuac(entity.getMuac());
+            dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
+            dto.setIsChildReferredNrc(entity.getIsChildReferredNrc());
+            dto.setIsChildAdmittedNrc(entity.getIsChildAdmittedNrc());
+            dto.setNrcAdmissionDate(entity.getNrcAdmissionDate());
+            dto.setIsChildDischargedNrc(entity.getIsChildDischargedNrc());
+            dto.setNrcDischargeDate(entity.getNrcDischargeDate());
+            dto.setFollowUpVisitDate(entity.getFollowUpVisitDate());
+            dto.setSamStatus(entity.getSamStatus());
+            dto.setDischargeSummary(entity.getDischargeSummary());
+
+            // Convert Base64 JSON string to List<String>
+            try {
+                if (entity.getViewDischargeDocs() != null) {
+                    List<String> base64List = mapper.readValue(
+                            entity.getViewDischargeDocs(), new TypeReference<List<String>>() {});
+                    dto.setViewDischargeDocs(base64List);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
         hbycList.forEach(hbyc -> {
             IncentiveActivity hbyncVisitActivity =
@@ -456,31 +553,31 @@ public class ChildCareServiceImpl implements ChildCareService {
                     .stream()
                     .allMatch(hbncVisits::contains);
 
-           GroupName.setIsCh(false);
+            GroupName.setIsCh(false);
             Long benId = hbncVisit.getBeneficiaryId();
             if (hbncVisit.getVisit_day().equals("42nd Day")) {
                 IncentiveActivity visitActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.CHILD_HEALTH.getDisplayName());
-                IncentiveActivity visitActivityCH= incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.ACTIVITY.getDisplayName());
+                IncentiveActivity visitActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("HBNC_0_42_DAYS", GroupName.ACTIVITY.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityAM,"HBNC_0_42_DAYS");
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityCH,"HBNC_0_42_DAYS_CH");
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityAM, "HBNC_0_42_DAYS");
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, visitActivityCH, "HBNC_0_42_DAYS_CH");
 
             }
-            logger.info("getDischarged_from_sncu"+hbncVisit.getDischarged_from_sncu());
+            logger.info("getDischarged_from_sncu" + hbncVisit.getDischarged_from_sncu());
 
-            if (hbncVisit.getVisit_day().equals("7th Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight()<2.5) {
+            if (hbncVisit.getVisit_day().equals("7th Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight() < 2.5) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity,"SNCU_LBW_FOLLOWUP");
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, babyDisChargeSNCUAActivity, "SNCU_LBW_FOLLOWUP");
 
             }
-            logger.info("getIs_baby_alive"+hbncVisit.getIs_baby_alive());
+            logger.info("getIs_baby_alive" + hbncVisit.getIs_baby_alive());
             if (!hbncVisit.getIs_baby_alive()) {
                 IncentiveActivity isChildDeathActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("CHILD_DEATH_REPORTING", GroupName.CHILD_HEALTH.getDisplayName());
 
-                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity,"CHILD_DEATH_REPORTING");
+                createIncentiveRecordforHbncVisit(hbncVisit, benId, isChildDeathActivity, "CHILD_DEATH_REPORTING");
             }
 
 
@@ -559,8 +656,8 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
     }
 
-    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity,String activityName) {
-        logger.info("RecordIncentive"+activityName);
+    private void createIncentiveRecordforHbncVisit(HbncVisit hbncVisit, Long benId, IncentiveActivity immunizationActivity, String activityName) {
+        logger.info("RecordIncentive" + activityName);
 
         IncentiveActivityRecord record = recordRepo
                 .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), hbncVisit.getCreatedDate(), benId);
@@ -654,4 +751,5 @@ public class ChildCareServiceImpl implements ChildCareService {
     public void getTomorrowImmunizationReminders(Integer userID) {
 
     }
+
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iemr.flw.domain.iemr.HbncVisit;
+import com.iemr.flw.domain.iemr.SamVisitResponseDTO;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.ChildCareService;
@@ -12,6 +13,7 @@ import com.iemr.flw.utils.response.OutputResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import jakarta.mail.Multipart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,5 +225,54 @@ public class ChildCareController {
             response.setError(5000, "Error in Vaccines get data : " + e);
         }
         return response.toString();
+    }
+    @RequestMapping(value = {"/sam/saveAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestPart("data") List<SamDTO> samRequest){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        try {
+            if(samRequest!=null){
+               String responseObject =   childCareService.saveSamDetails(samRequest);
+               if(responseObject!=null){
+                   response.put("statusCode", HttpStatus.OK.value());
+                   response.put("message", "Data saved successfully");
+               }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+
+        }
+        return  ResponseEntity.ok(response);
+    }
+
+
+    @RequestMapping(value = {"/sam/getAll"},method = RequestMethod.GET)
+    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        try {
+            List<SamVisitResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary();
+
+            if(responseObject!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("data",responseObject);
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+
+        }
+        return  ResponseEntity.ok(response);
     }
 }

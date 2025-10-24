@@ -1,6 +1,6 @@
 package com.iemr.flw.service;
 
-import com.iemr.flw.domain.iemr.HbncVisit;
+import com.iemr.flw.domain.iemr.SamVisitResponseDTO;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 
@@ -21,4 +21,8 @@ public interface ChildCareService {
     String saveChildVaccinationDetails(List<ChildVaccinationDTO> childVaccinationDTOs);
 
     List<VaccineDTO> getAllChildVaccines(String category);
+
+    String saveSamDetails(List<SamDTO> samRequest);
+
+    List<SamVisitResponseDTO> getSamVisitsByBeneficiary();
 }
