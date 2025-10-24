@@ -73,8 +73,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     @Autowired
     IncentiveRecordRepo recordRepo;
 
-    @Value("${fhir-url}")
-    private String fhirUrl;
+
     @Override
     public String getBenData(GetBenRequestHandler request, String authorisation) throws Exception {
         String outputResponse = null;
@@ -470,7 +469,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         try {
             HashMap<String, Object> header = new HashMap<String, Object>();
             header.put("Authorization", authorization);
-            String responseStr = utils.post(fhirUrl + "/"
+            String responseStr = utils.post(ConfigProperties.getPropertyByName("fhir-url") + "/"
                     + ConfigProperties.getPropertyByName("getHealthID"), new Gson().toJson(requestMap), header);
             JsonElement jsnElmnt = jsnParser.parse(responseStr);
             JsonObject jsnOBJ = new JsonObject();
