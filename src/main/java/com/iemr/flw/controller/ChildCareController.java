@@ -230,19 +230,21 @@ public class ChildCareController {
     public  ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<SamDTO> samRequest){
         Map<String,Object> response = new LinkedHashMap<>();
 
+       logger.info("sam request :"+samRequest);
         try {
+            String responseObject =   childCareService.saveSamDetails(samRequest);
+
             if(samRequest!=null){
-               String responseObject =   childCareService.saveSamDetails(samRequest);
                if(responseObject!=null){
                    response.put("statusCode", HttpStatus.OK.value());
-                   response.put("message", "Data saved successfully");
+                   response.put("message", responseObject);
                    return ResponseEntity.ok().body(response);
 
                }
 
             }else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+                response.put("message", responseObject);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
 
             }
