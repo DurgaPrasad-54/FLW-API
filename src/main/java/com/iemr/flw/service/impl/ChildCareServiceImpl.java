@@ -429,7 +429,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             samRequest.forEach(samDTO -> {
                 SamVisit samVisits = new  SamVisit();
-                modelMapper.map(samVisits,samDTO);
+                modelMapper.map(samVisits,samDTO.getFields());
                 samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisits.setHouseholdId(samDTO.getHouseHoldId());
                 samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));

@@ -13,5 +13,5 @@ public class SamDTO {
     private Long houseHoldId;
     private String visitDate;
     private String  userName;
-    private SamListDTO samListDTO;
+    private SamListDTO fields;
 }
