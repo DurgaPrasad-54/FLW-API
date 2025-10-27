@@ -284,4 +284,63 @@ public class ChildCareController {
         }
         return  ResponseEntity.ok(response);
     }
+
+    @RequestMapping(value = {"/ors/distribution/saveAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> saveOrsDistribution(@RequestBody List<OrsDistributionDTO> orsDistributionDTOS){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        logger.info("sam request :"+orsDistributionDTOS);
+        try {
+            String responseObject =   childCareService.saveOrsDistributionDetails(orsDistributionDTOS);
+
+            if(orsDistributionDTOS!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("message", responseObject);
+                    return ResponseEntity.ok().body(response);
+
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", responseObject);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
+
+
+        }
+        return null;
+
+    }
+
+
+    @RequestMapping(value = {"/or/distribution/getAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> getAllOrDistribution(@RequestBody GetBenRequestHandler request){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        try {
+            List<OrsDistributionResponseDTO> responseObject =   childCareService.getOrdDistrubtion(request);
+
+            if(responseObject!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("data",responseObject);
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+
+        }
+        return  ResponseEntity.ok(response);
+    }
 }

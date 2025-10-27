@@ -66,6 +66,9 @@ public class ChildCareServiceImpl implements ChildCareService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private OrsDistributionRepo orsDistributionRepo;
+
 
 
     @Override
@@ -528,8 +531,62 @@ public class ChildCareServiceImpl implements ChildCareService {
         return samResponseListDTO;
     }
 
+    @Override
+    public String saveOrsDistributionDetails(List<OrsDistributionDTO> orsDistributionDTOS) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            List<OrsDistribution> orsDistributionList = new ArrayList<>();
+            orsDistributionDTOS.forEach(orsDistributionDTO -> {
+                OrsDistribution orsDistribution = new OrsDistribution();
+                orsDistribution.setBeneficiaryId(orsDistributionDTO.getBeneficiaryId());
+                orsDistribution.setNumOrsPackets(Integer.parseInt(orsDistributionDTO.getFields().getNum_ors_packets()));
+                orsDistribution.setChildCount(Integer.parseInt(orsDistributionDTO.getFields().getNum_under5_children()));
+                orsDistribution.setMcpCardUpload(orsDistributionDTO.getFields().getMcp_card_upload());
+                orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
+                orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+                orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getVisitDate(),formatter));
+                orsDistribution.setIfaProvisionDate(LocalDate.parse(orsDistributionDTO.getFields().getIfa_provision_date(),formatter));
+                orsDistributionList.add(orsDistribution);
+
+            });
+            if(!orsDistributionList.isEmpty()){
+                orsDistributionRepo.saveAll(orsDistributionList);
+                return "Saved " + orsDistributionList.size() + " ORS visit records successfully";
+
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage());
+
+        }
+
+        return "Fail";
+    }
+
+    @Override
+    public List<OrsDistributionResponseDTO> getOrdDistrubtion(GetBenRequestHandler request) {
+        List<OrsDistribution> entities = orsDistributionRepo.findByUserId(request.getAshaId());
+        List<OrsDistributionResponseDTO> orsDistributionResponseDTOSList = new ArrayList<>();
+
+        for(OrsDistribution orsDistribution: entities){
+            OrsDistributionResponseDTO orsDistributionResponseDTO = new OrsDistributionResponseDTO();
+            orsDistributionResponseDTO.setId(orsDistribution.getId());
+            orsDistributionResponseDTO.setBeneficiaryId(orsDistribution.getBeneficiaryId());
+            orsDistributionResponseDTO.setHouseHoldId(orsDistribution.getHouseholdId());
+            OrsDistributionResponseListDTO orsDistributionResponseListDTO = new OrsDistributionResponseListDTO();
+            orsDistributionResponseListDTO.setNum_ors_packets(orsDistribution.getNumOrsPackets().toString());
+            orsDistributionResponseListDTO.setMcp_card_upload(orsDistribution.getMcpCardUpload());
+            orsDistributionResponseListDTO.setIfa_provision_date(orsDistribution.getIfaProvisionDate().toString());
+            orsDistributionResponseListDTO.setNum_under5_children(orsDistribution.getChildCount().toString());
+            orsDistributionResponseDTO.setFields(orsDistributionResponseListDTO);
+
+            orsDistributionResponseDTOSList.add(orsDistributionResponseDTO);
 
 
+
+        }
+        return  orsDistributionResponseDTOSList;
+
+    }
 
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
         hbycList.forEach(hbyc -> {
