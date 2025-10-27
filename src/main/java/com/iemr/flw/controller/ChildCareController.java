@@ -319,7 +319,7 @@ public class ChildCareController {
     }
 
 
-    @RequestMapping(value = {"/or/getAll"},method = RequestMethod.POST)
+    @RequestMapping(value = {"/ors/getAll"},method = RequestMethod.POST)
     public  ResponseEntity<?> getAllOrDistribution(@RequestBody GetBenRequestHandler request){
         Map<String,Object> response = new LinkedHashMap<>();
 
