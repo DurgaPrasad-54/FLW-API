@@ -285,7 +285,7 @@ public class ChildCareController {
         return  ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = {"/ors/distribution/saveAll"},method = RequestMethod.POST)
+    @RequestMapping(value = {"/ors/saveAll"},method = RequestMethod.POST)
     public  ResponseEntity<?> saveOrsDistribution(@RequestBody List<OrsDistributionDTO> orsDistributionDTOS){
         Map<String,Object> response = new LinkedHashMap<>();
 
@@ -319,7 +319,7 @@ public class ChildCareController {
     }
 
 
-    @RequestMapping(value = {"/or/distribution/getAll"},method = RequestMethod.POST)
+    @RequestMapping(value = {"/or/getAll"},method = RequestMethod.POST)
     public  ResponseEntity<?> getAllOrDistribution(@RequestBody GetBenRequestHandler request){
         Map<String,Object> response = new LinkedHashMap<>();
 
