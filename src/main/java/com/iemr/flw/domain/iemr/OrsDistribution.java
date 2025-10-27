@@ -7,6 +7,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Table(name = "t_ors_distribution",schema = "db_iemr")
+@Entity
 @Data
 public class OrsDistribution {
     @Id
