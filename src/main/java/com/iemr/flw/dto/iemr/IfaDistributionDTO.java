@@ -24,9 +24,9 @@ public class IfaDistributionDTO {
     @Data
     public static class FieldsDTO {
         @SerializedName("ifa_provision_date")
-        private String ifaProvisionDate;
+        private String ifa_provision_date;
 
         @SerializedName("mcp_card_upload")
-        private String mcpCardUpload;
+        private String mcp_card_upload;
     }
 }

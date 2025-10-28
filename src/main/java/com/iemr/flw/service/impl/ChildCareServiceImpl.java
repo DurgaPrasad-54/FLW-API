@@ -618,9 +618,9 @@ public class ChildCareServiceImpl implements ChildCareService {
         IfaDistributionDTO.FieldsDTO fields = new IfaDistributionDTO.FieldsDTO();
 
         if (entity.getIfaProvisionDate() != null) {
-            fields.setIfaProvisionDate(entity.getIfaProvisionDate().format(FORMATTER));
+            fields.setIfa_provision_date(entity.getIfaProvisionDate().format(FORMATTER));
         }
-        fields.setMcpCardUpload(entity.getMcpCardUpload());
+        fields.setIfa_provision_date(entity.getMcpCardUpload());
 
         dto.setFields(fields);
         return dto;
@@ -637,17 +637,17 @@ public class ChildCareServiceImpl implements ChildCareService {
         entity.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
 
         if (dto.getFields() != null) {
-            if (dto.getFields().getIfaProvisionDate() != null) {
+            if (dto.getFields().getIfa_provision_date() != null) {
                 try {
                     entity.setIfaProvisionDate(LocalDate.parse(
-                            dto.getFields().getIfaProvisionDate(),
+                            dto.getFields().getIfa_provision_date(),
                             DateTimeFormatter.ofPattern("dd-MM-yyyy")
                     ));
                 } catch (Exception e) {
                     entity.setIfaProvisionDate(null);
                 }
             }
-            entity.setMcpCardUpload(dto.getFields().getMcpCardUpload());
+            entity.setMcpCardUpload(dto.getFields().getMcp_card_upload());
         }
 
         return entity;
