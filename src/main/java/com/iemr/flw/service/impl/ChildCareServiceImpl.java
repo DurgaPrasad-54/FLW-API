@@ -621,6 +621,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             fields.setIfa_provision_date(entity.getIfaProvisionDate().format(FORMATTER));
         }
         fields.setIfa_provision_date(entity.getMcpCardUpload());
+        fields.setIfa_bottle_count(Double.valueOf(entity.getIfaBottleCount()));
 
         dto.setFields(fields);
         return dto;
@@ -628,6 +629,8 @@ public class ChildCareServiceImpl implements ChildCareService {
 
     // 🔄 Helper method to convert DTO → Entity
     private IfaDistribution mapToEntity(IfaDistributionDTO dto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         IfaDistribution entity = new IfaDistribution();
 
         entity.setBeneficiaryId(dto.getBeneficiaryId());
@@ -647,6 +650,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                     entity.setIfaProvisionDate(null);
                 }
             }
+            entity.setIfaBottleCount(dto.getFields().getIfa_bottle_count().toString());
             entity.setMcpCardUpload(dto.getFields().getMcp_card_upload());
         }
 

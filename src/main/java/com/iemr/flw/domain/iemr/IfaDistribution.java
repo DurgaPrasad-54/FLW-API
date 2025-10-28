@@ -1,5 +1,6 @@
 package com.iemr.flw.domain.iemr;
 
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.checkerframework.checker.units.qual.C;
@@ -35,4 +36,7 @@ public class IfaDistribution {
 
     @Column(name = "mcp_card_upload", columnDefinition = "TEXT")
     private String mcpCardUpload;
+
+    @Column(name = "ifa_bottle_count")
+    private String  ifaBottleCount;
 }

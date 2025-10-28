@@ -28,5 +28,8 @@ public class IfaDistributionDTO {
 
         @SerializedName("mcp_card_upload")
         private String mcp_card_upload;
+
+        @SerializedName("ifa_bottle_count")
+        private Double ifa_bottle_count;
     }
 }
