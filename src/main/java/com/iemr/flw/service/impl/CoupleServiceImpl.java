@@ -331,6 +331,7 @@ public class CoupleServiceImpl implements CoupleService {
 
             List<EligibleCoupleTracking> eligibleCoupleTrackingList =
                     eligibleCoupleTrackingRepo.getECTrackRecords(user, dto.getFromDate(), dto.getToDate());
+
             return eligibleCoupleTrackingList.stream()
                     .map(ect -> mapper.convertValue(ect, EligibleCoupleTrackingDTO.class))
                     .collect(Collectors.toList());

@@ -32,12 +32,6 @@ public class OrsDistribution {
     @Column(name = "num_ors_packets")
     private String numOrsPackets;
 
-    @Column(name = "ifa_provision_date")
-    private LocalDate ifaProvisionDate;
-
-    // Image stored as path or file name
-    @Column(name = "mcp_card_upload")
-    private String mcpCardUpload;
 
     @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private java.sql.Timestamp createdAt;

@@ -14,11 +14,4 @@ public class OrsDistributionResponseListDTO {
     @JsonProperty("num_ors_packets")
     private String num_ors_packets;
 
-    @JsonProperty("ifa_provision_date")
-    private String ifa_provision_date;
-
-    @JsonProperty("mcp_card_upload")
-    private String mcp_card_upload;
-
-
 }
