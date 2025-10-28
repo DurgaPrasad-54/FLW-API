@@ -549,13 +549,14 @@ public class ChildCareServiceImpl implements ChildCareService {
                 orsDistributionList.add(orsDistribution);
 
             });
+            logger.info("orsList"+orsDistributionList.size());
             if(!orsDistributionList.isEmpty()){
                 orsDistributionRepo.saveAll(orsDistributionList);
                 return "Saved " + orsDistributionList.size() + " ORS visit records successfully";
 
             }
         }catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error("ORS Error"+e.getMessage());
 
         }
 
