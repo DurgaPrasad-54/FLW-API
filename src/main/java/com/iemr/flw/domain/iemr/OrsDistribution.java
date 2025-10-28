@@ -27,10 +27,10 @@ public class OrsDistribution {
     private LocalDate visitDate;
 
     @Column(name = "child_count")
-    private Integer childCount;
+    private String  childCount;
 
     @Column(name = "num_ors_packets")
-    private Integer numOrsPackets;
+    private String numOrsPackets;
 
     @Column(name = "ifa_provision_date")
     private LocalDate ifaProvisionDate;
