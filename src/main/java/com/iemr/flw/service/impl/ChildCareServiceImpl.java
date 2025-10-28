@@ -554,7 +554,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             }
         }catch (Exception e){
-            logger.error("ORS Error"+e.getMessage());
+            logger.error("ORS Error"+e.getCause());
 
         }
 
