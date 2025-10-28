@@ -539,8 +539,8 @@ public class ChildCareServiceImpl implements ChildCareService {
             orsDistributionDTOS.forEach(orsDistributionDTO -> {
                 OrsDistribution orsDistribution = new OrsDistribution();
                 orsDistribution.setBeneficiaryId(orsDistributionDTO.getBeneficiaryId());
-                orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets());
-                orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children());
+                orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets().toString());
+                orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
                 orsDistribution.setMcpCardUpload(orsDistributionDTO.getFields().getMcp_card_upload());
                 orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
                 orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));

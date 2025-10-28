@@ -308,6 +308,7 @@ public class ChildCareController {
 
             }
         }catch (Exception e){
+            logger.error("Error:"+e.getMessage());
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
