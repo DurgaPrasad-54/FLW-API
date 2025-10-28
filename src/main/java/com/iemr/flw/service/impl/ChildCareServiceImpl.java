@@ -541,11 +541,9 @@ public class ChildCareServiceImpl implements ChildCareService {
                 orsDistribution.setBeneficiaryId(orsDistributionDTO.getBeneficiaryId());
                 orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets().toString());
                 orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
-                orsDistribution.setMcpCardUpload(orsDistributionDTO.getFields().getMcp_card_upload());
                 orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
                 orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
                 orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getVisitDate(),formatter));
-                orsDistribution.setIfaProvisionDate(LocalDate.parse(orsDistributionDTO.getFields().getIfa_provision_date(),formatter));
                 orsDistributionList.add(orsDistribution);
 
             });
@@ -570,13 +568,11 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         for(OrsDistribution orsDistribution: entities){
             OrsDistributionResponseDTO orsDistributionResponseDTO = new OrsDistributionResponseDTO();
+            OrsDistributionResponseListDTO orsDistributionResponseListDTO = new OrsDistributionResponseListDTO();
             orsDistributionResponseDTO.setId(orsDistribution.getId());
             orsDistributionResponseDTO.setBeneficiaryId(orsDistribution.getBeneficiaryId());
             orsDistributionResponseDTO.setHouseHoldId(orsDistribution.getHouseholdId());
-            OrsDistributionResponseListDTO orsDistributionResponseListDTO = new OrsDistributionResponseListDTO();
             orsDistributionResponseListDTO.setNum_ors_packets(orsDistribution.getNumOrsPackets().toString());
-            orsDistributionResponseListDTO.setMcp_card_upload(orsDistribution.getMcpCardUpload());
-            orsDistributionResponseListDTO.setIfa_provision_date(orsDistribution.getIfaProvisionDate().toString());
             orsDistributionResponseListDTO.setNum_under5_children(orsDistribution.getChildCount().toString());
             orsDistributionResponseDTO.setFields(orsDistributionResponseListDTO);
 
