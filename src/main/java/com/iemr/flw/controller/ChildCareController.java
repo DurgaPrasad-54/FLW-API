@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iemr.flw.domain.iemr.HbncVisit;
+import com.iemr.flw.domain.iemr.IfaDistribution;
 import com.iemr.flw.domain.iemr.SamVisitResponseDTO;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -344,4 +345,64 @@ public class ChildCareController {
         }
         return  ResponseEntity.ok(response);
     }
+
+    @RequestMapping(value = {"/ifa/saveAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> saveIfDistribution(@RequestBody List<IfaDistributionDTO> ifaDistributionDTOS){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        logger.info("sam request :"+ifaDistributionDTOS);
+        try {
+            List<IfaDistribution> responseObject =   childCareService.saveAllIfa(ifaDistributionDTOS);
+
+            if(ifaDistributionDTOS!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("message", "Ifa Save successfully ");
+                    return ResponseEntity.ok().body(response);
+
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", responseObject);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+
+            }
+        }catch (Exception e){
+            logger.error("Error:"+e.getMessage());
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
+
+
+        }
+        return null;
+
+    }
+
+    @RequestMapping(value = {"/ifa/getAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> getIfaDistribution(@RequestBody GetBenRequestHandler request){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        try {
+            List<IfaDistributionDTO> responseObject =   childCareService.getByBeneficiaryId(request);
+
+            if(responseObject!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("data",responseObject);
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+
+        }
+        return  ResponseEntity.ok(response);
+    }
+
 }

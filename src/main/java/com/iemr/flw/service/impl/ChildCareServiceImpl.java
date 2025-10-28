@@ -57,6 +57,9 @@ public class ChildCareServiceImpl implements ChildCareService {
     private SamVisitRepository samVisitRepository;
 
     @Autowired
+    private IfaDistributionRepository ifaDistributionRepository;
+
+    @Autowired
     private VaccineRepo vaccineRepo;
 
     ObjectMapper mapper = new ObjectMapper();
@@ -583,6 +586,71 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
         return  orsDistributionResponseDTOSList;
 
+    }
+
+    @Override
+    public List<IfaDistribution> saveAllIfa(List<IfaDistributionDTO> dtoList) {
+        return dtoList.stream()
+                .map(this::mapToEntity)
+                .map(ifaDistributionRepository::save)
+                .toList();
+    }
+
+
+
+    @Override
+    public List<IfaDistributionDTO> getByBeneficiaryId(GetBenRequestHandler requestHandler) {
+        return ifaDistributionRepository.findByUserId(requestHandler.getAshaId()).stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+    // 🔁 Entity → DTO (date formatted as dd-MM-yyyy)
+    private IfaDistributionDTO mapToDTO(IfaDistribution entity) {
+         final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        IfaDistributionDTO dto = new IfaDistributionDTO();
+
+        dto.setBeneficiaryId(entity.getBeneficiaryId());
+        dto.setHouseHoldId(entity.getHouseHoldId());
+        dto.setFormId(entity.getFormId());
+        dto.setVisitDate(entity.getVisitDate());
+
+        IfaDistributionDTO.FieldsDTO fields = new IfaDistributionDTO.FieldsDTO();
+
+        if (entity.getIfaProvisionDate() != null) {
+            fields.setIfaProvisionDate(entity.getIfaProvisionDate().format(FORMATTER));
+        }
+        fields.setMcpCardUpload(entity.getMcpCardUpload());
+
+        dto.setFields(fields);
+        return dto;
+    }
+
+    // 🔄 Helper method to convert DTO → Entity
+    private IfaDistribution mapToEntity(IfaDistributionDTO dto) {
+        IfaDistribution entity = new IfaDistribution();
+
+        entity.setBeneficiaryId(dto.getBeneficiaryId());
+        entity.setHouseHoldId(dto.getHouseHoldId());
+        entity.setFormId(dto.getFormId());
+        entity.setVisitDate(dto.getVisitDate());
+        entity.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+
+        if (dto.getFields() != null) {
+            if (dto.getFields().getIfaProvisionDate() != null) {
+                try {
+                    entity.setIfaProvisionDate(LocalDate.parse(
+                            dto.getFields().getIfaProvisionDate(),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    ));
+                } catch (Exception e) {
+                    entity.setIfaProvisionDate(null);
+                }
+            }
+            entity.setMcpCardUpload(dto.getFields().getMcpCardUpload());
+        }
+
+        return entity;
     }
 
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
