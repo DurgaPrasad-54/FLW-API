@@ -1,5 +1,6 @@
 package com.iemr.flw.domain.iemr;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class SamVisitResponseDTO {
     @JsonProperty("beneficiary_id")
     private Long beneficiaryId;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("visit_date")
     private LocalDate visitDate;
 
