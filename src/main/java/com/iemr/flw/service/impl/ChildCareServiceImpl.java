@@ -667,11 +667,21 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
     private void  checkAndAddOrdDistributionIncentive(List<OrsDistribution> orsDistributionList){
         orsDistributionList.forEach(orsDistribution -> {
-            IncentiveActivity OrsPacketActivityAM =
+            IncentiveActivity orsPacketActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.CHILD_HEALTH.getDisplayName());
-            if(orsDistribution.getNumOrsPackets()!=null){
-                createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),OrsPacketActivityAM,jwtUtil.getUserNameFromStorage());
+            IncentiveActivity orsPacketActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
+            if(orsPacketActivityAM!=null){
+                if(orsDistribution.getNumOrsPackets()!=null){
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,jwtUtil.getUserNameFromStorage());
+                }
             }
+
+            if(orsPacketActivityCH!=null){
+                if(orsDistribution.getNumOrsPackets()!=null){
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,jwtUtil.getUserNameFromStorage());
+                }
+            }
+
 
         });
 
