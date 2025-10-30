@@ -24,6 +24,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -504,7 +505,6 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
         List<SAMResponseDTO> samResponseListDTO = new ArrayList<>();
-        DateTimeFormatter outFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (SamVisit entity : entities) {
             SAMResponseDTO samResponseDTO = new SAMResponseDTO();
 
@@ -512,11 +512,10 @@ public class ChildCareServiceImpl implements ChildCareService {
             samResponseDTO.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
             samResponseDTO.setHouseHoldId(entity.getHouseholdId());
             samResponseDTO.setId(entity.getId());
-            String formatted = entity.getVisitDate().format(outFormatter);
 
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
-            dto.setVisitDate(LocalDate.parse(formatted));
+            dto.setVisitDate(parseDate(entity.getVisitDate().toString()));
             dto.setVisitLabel(entity.getVisitLabel());
             dto.setMuac(entity.getMuac());
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
@@ -574,10 +573,8 @@ public class ChildCareServiceImpl implements ChildCareService {
     public List<OrsDistributionResponseDTO> getOrdDistrubtion(GetBenRequestHandler request) {
         List<OrsDistribution> entities = orsDistributionRepo.findByUserId(request.getAshaId());
         List<OrsDistributionResponseDTO> orsDistributionResponseDTOSList = new ArrayList<>();
-        DateTimeFormatter outFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         for(OrsDistribution orsDistribution: entities){
-            String formatted = orsDistribution.getVisitDate().format(outFormatter);
 
             OrsDistributionResponseDTO orsDistributionResponseDTO = new OrsDistributionResponseDTO();
             OrsDistributionResponseListDTO orsDistributionResponseListDTO = new OrsDistributionResponseListDTO();
@@ -587,7 +584,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             orsDistributionResponseListDTO.setNum_ors_packets(orsDistribution.getNumOrsPackets().toString());
             orsDistributionResponseListDTO.setNum_under5_children(orsDistribution.getChildCount().toString());
             orsDistributionResponseDTO.setFields(orsDistributionResponseListDTO);
-            orsDistributionResponseDTO.setVisitDate(formatted.toString());
+            orsDistributionResponseDTO.setVisitDate(parseDate(orsDistribution.getVisitDate().toString()).toString());
             orsDistributionResponseDTOSList.add(orsDistributionResponseDTO);
 
 
@@ -597,6 +594,21 @@ public class ChildCareServiceImpl implements ChildCareService {
 
     }
 
+    private LocalDate parseDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        List<DateTimeFormatter> formatters = List.of(
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        );
+
+        for (DateTimeFormatter f : formatters) {
+            try {
+                return LocalDate.parse(dateStr, f);
+            } catch (Exception ignored) {}
+        }
+
+        throw new DateTimeParseException("Invalid date format: " + dateStr, dateStr, 0);
+    }
     @Override
     public List<IfaDistribution> saveAllIfa(List<IfaDistributionDTO> dtoList) {
         return dtoList.stream()
