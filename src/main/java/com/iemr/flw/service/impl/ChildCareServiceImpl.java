@@ -515,8 +515,8 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
-            dto.setVisitDate(parseDate(entity.getVisitDate().toString()));
-            dto.setVisitLabel(entity.getVisitLabel());
+            dto.setVisitDate(entity.getVisitDate());
+            dto.setVisitLabel("Visit-"+entity.getId().toString());
             dto.setMuac(entity.getMuac());
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
             dto.setIsChildReferredNrc(entity.getIsChildReferredNrc());
@@ -568,6 +568,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         return "Fail";
     }
+
 
     @Override
     public List<OrsDistributionResponseDTO> getOrdDistrubtion(GetBenRequestHandler request) {
