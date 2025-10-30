@@ -227,182 +227,179 @@ public class ChildCareController {
         }
         return response.toString();
     }
-    @RequestMapping(value = {"/sam/saveAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<SamDTO> samRequest){
-        Map<String,Object> response = new LinkedHashMap<>();
+    @RequestMapping(value = {"/sam/saveAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<SamDTO> samRequest) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("SAM Request: {}", samRequest);
 
-       logger.info("sam request :"+samRequest);
         try {
-            String responseObject =   childCareService.saveSamDetails(samRequest);
-
-            if(samRequest!=null){
-               if(responseObject!=null){
-                   response.put("statusCode", HttpStatus.OK.value());
-                   response.put("message", responseObject);
-                   return ResponseEntity.ok().body(response);
-
-               }
-
-            }else {
+            if (samRequest == null || samRequest.isEmpty()) {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Request body cannot be empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            String responseObject = childCareService.saveSamDetails(samRequest);
+
+            if (responseObject != null) {
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", responseObject);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
-
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save SAM details");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error saving SAM details:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
-
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return null;
-
     }
 
 
-    @RequestMapping(value = {"/sam/getAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(@RequestBody GetBenRequestHandler request){
-        Map<String,Object> response = new LinkedHashMap<>();
-
+    @RequestMapping(value = {"/sam/getAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> getAllSevereAcuteMalnutrition(@RequestBody GetBenRequestHandler request) {
+        Map<String, Object> response = new LinkedHashMap<>();
         try {
-            List<SAMResponseDTO> responseObject =   childCareService.getSamVisitsByBeneficiary(request);
+            List<SAMResponseDTO> responseObject = childCareService.getSamVisitsByBeneficiary(request);
 
-            if(responseObject!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("data",responseObject);
-                }
-
-            }else {
-                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", responseObject);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No SAM records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error fetching SAM records:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return  ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = {"/ors/saveAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> saveOrsDistribution(@RequestBody List<OrsDistributionDTO> orsDistributionDTOS){
-        Map<String,Object> response = new LinkedHashMap<>();
 
-        logger.info("sam request :"+orsDistributionDTOS);
+    @RequestMapping(value = {"/ors/saveAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> saveOrsDistribution(@RequestBody List<OrsDistributionDTO> orsDistributionDTOS) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("ORS Request: {}", orsDistributionDTOS);
+
         try {
-            String responseObject =   childCareService.saveOrsDistributionDetails(orsDistributionDTOS);
-
-            if(orsDistributionDTOS!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("message", responseObject);
-                    return ResponseEntity.ok().body(response);
-
-                }
-
-            }else {
+            if (orsDistributionDTOS == null || orsDistributionDTOS.isEmpty()) {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Request body cannot be empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            String responseObject = childCareService.saveOrsDistributionDetails(orsDistributionDTOS);
+
+            if (responseObject != null) {
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", responseObject);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
-
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save ORS details");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        }catch (Exception e){
-            logger.error("Error:"+e.getMessage());
+
+        } catch (Exception e) {
+            logger.error("Error saving ORS:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
-
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return null;
-
     }
 
 
-    @RequestMapping(value = {"/ors/getAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> getAllOrDistribution(@RequestBody GetBenRequestHandler request){
-        Map<String,Object> response = new LinkedHashMap<>();
+    @RequestMapping(value = {"/ors/getAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> getAllOrDistribution(@RequestBody GetBenRequestHandler request) {
+        Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<OrsDistributionResponseDTO> responseObject =   childCareService.getOrdDistrubtion(request);
+            List<OrsDistributionResponseDTO> responseObject = childCareService.getOrdDistrubtion(request);
 
-            if(responseObject!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("data",responseObject);
-                }
-
-            }else {
-                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", responseObject);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No ORS records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error fetching ORS records:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return  ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = {"/ifa/saveAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> saveIfDistribution(@RequestBody List<IfaDistributionDTO> ifaDistributionDTOS){
-        Map<String,Object> response = new LinkedHashMap<>();
 
-        logger.info("sam request :"+ifaDistributionDTOS);
+    @RequestMapping(value = {"/ifa/saveAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> saveIfDistribution(@RequestBody List<IfaDistributionDTO> ifaDistributionDTOS) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("IFA Request: {}", ifaDistributionDTOS);
+
         try {
-            List<IfaDistribution> responseObject =   childCareService.saveAllIfa(ifaDistributionDTOS);
-
-            if(ifaDistributionDTOS!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("message", "Ifa Save successfully ");
-                    return ResponseEntity.ok().body(response);
-
-                }
-
-            }else {
+            if (ifaDistributionDTOS == null || ifaDistributionDTOS.isEmpty()) {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", responseObject);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
-
+                response.put("message", "Request body cannot be empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        }catch (Exception e){
-            logger.error("Error:"+e.getMessage());
+
+            List<IfaDistribution> responseObject = childCareService.saveAllIfa(ifaDistributionDTOS);
+
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("message", "IFA saved successfully");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save IFA details");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error saving IFA:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
-
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return null;
-
     }
 
-    @RequestMapping(value = {"/ifa/getAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> getIfaDistribution(@RequestBody GetBenRequestHandler request){
-        Map<String,Object> response = new LinkedHashMap<>();
+
+    @RequestMapping(value = {"/ifa/getAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> getIfaDistribution(@RequestBody GetBenRequestHandler request) {
+        Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<IfaDistributionDTO> responseObject =   childCareService.getByBeneficiaryId(request);
+            List<IfaDistributionDTO> responseObject = childCareService.getByBeneficiaryId(request);
 
-            if(responseObject!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("data",responseObject);
-                }
-
-            }else {
-                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", responseObject);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No IFA records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error fetching IFA records:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return  ResponseEntity.ok(response);
     }
 
 }

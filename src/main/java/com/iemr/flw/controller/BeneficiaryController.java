@@ -59,65 +59,65 @@ public class BeneficiaryController {
         return response.toString();
 
     }
-    @RequestMapping(value = {"/eye_surgery/saveAll"},method = RequestMethod.POST)
-    public ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<EyeCheckupRequestDTO> eyeCheckupRequestDTOS){
-        Map<String,Object> response = new LinkedHashMap<>();
+    @RequestMapping(value = {"/eye_surgery/saveAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> saveEyeSurgery(@RequestBody List<EyeCheckupRequestDTO> eyeCheckupRequestDTOS) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("Eye Checkup Save Request: {}", eyeCheckupRequestDTOS);
 
-        logger.info("sam request :"+eyeCheckupRequestDTOS);
         try {
-            String responseObject =   beneficiaryService.saveEyeCheckupVsit(eyeCheckupRequestDTOS);
-
-            if(eyeCheckupRequestDTOS!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("message", responseObject);
-                    return ResponseEntity.ok().body(response);
-
-                }
-
-            }else {
+            if (eyeCheckupRequestDTOS == null || eyeCheckupRequestDTOS.isEmpty()) {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Request body cannot be empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            String responseObject = beneficiaryService.saveEyeCheckupVsit(eyeCheckupRequestDTOS);
+
+            if (responseObject != null) {
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", responseObject);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
-
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save records");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error saving eye checkup visit:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
-
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return null;
-
     }
 
 
-    @RequestMapping(value = {"/eye_surgery/getAll"},method = RequestMethod.POST)
-    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(@RequestBody GetBenRequestHandler request){
-        Map<String,Object> response = new LinkedHashMap<>();
+
+    @RequestMapping(value = {"/eye_surgery/getAll"}, method = RequestMethod.POST)
+    public ResponseEntity<?> getAllEyeSurgery(@RequestBody GetBenRequestHandler request) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("Eye Checkup Get Request: {}", request);
 
         try {
-            List<EyeCheckupRequestDTO> responseObject =   beneficiaryService.getEyeCheckUpVisit(request);
+            List<EyeCheckupRequestDTO> responseObject = beneficiaryService.getEyeCheckUpVisit(request);
 
-            if(responseObject!=null){
-                if(responseObject!=null){
-                    response.put("statusCode", HttpStatus.OK.value());
-                    response.put("data",responseObject);
-                }
-
-            }else {
-                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", responseObject);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
+            logger.error("Error fetching eye checkup visit:", e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return  ResponseEntity.ok(response);
     }
-
 
 
 }
