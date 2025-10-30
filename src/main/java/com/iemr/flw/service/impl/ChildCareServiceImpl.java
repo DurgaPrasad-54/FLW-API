@@ -502,7 +502,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
         List<SAMResponseDTO> samResponseListDTO = new ArrayList<>();
-
+        DateTimeFormatter outFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (SamVisit entity : entities) {
             SAMResponseDTO samResponseDTO = new SAMResponseDTO();
 
@@ -510,10 +510,11 @@ public class ChildCareServiceImpl implements ChildCareService {
             samResponseDTO.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
             samResponseDTO.setHouseHoldId(entity.getHouseholdId());
             samResponseDTO.setId(entity.getId());
+            String formatted = entity.getVisitDate().format(outFormatter);
 
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
-            dto.setVisitDate(entity.getVisitDate());
+            dto.setVisitDate(LocalDate.parse(formatted));
             dto.setVisitLabel(entity.getVisitLabel());
             dto.setMuac(entity.getMuac());
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
@@ -568,8 +569,11 @@ public class ChildCareServiceImpl implements ChildCareService {
     public List<OrsDistributionResponseDTO> getOrdDistrubtion(GetBenRequestHandler request) {
         List<OrsDistribution> entities = orsDistributionRepo.findByUserId(request.getAshaId());
         List<OrsDistributionResponseDTO> orsDistributionResponseDTOSList = new ArrayList<>();
+        DateTimeFormatter outFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         for(OrsDistribution orsDistribution: entities){
+            String formatted = orsDistribution.getVisitDate().format(outFormatter);
+
             OrsDistributionResponseDTO orsDistributionResponseDTO = new OrsDistributionResponseDTO();
             OrsDistributionResponseListDTO orsDistributionResponseListDTO = new OrsDistributionResponseListDTO();
             orsDistributionResponseDTO.setId(orsDistribution.getId());
@@ -578,7 +582,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             orsDistributionResponseListDTO.setNum_ors_packets(orsDistribution.getNumOrsPackets().toString());
             orsDistributionResponseListDTO.setNum_under5_children(orsDistribution.getChildCount().toString());
             orsDistributionResponseDTO.setFields(orsDistributionResponseListDTO);
-            orsDistributionResponseDTO.setVisitDate(orsDistribution.getVisitDate().toString());
+            orsDistributionResponseDTO.setVisitDate(formatted.toString());
             orsDistributionResponseDTOSList.add(orsDistributionResponseDTO);
 
 
