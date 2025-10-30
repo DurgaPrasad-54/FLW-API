@@ -578,7 +578,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             orsDistributionResponseListDTO.setNum_ors_packets(orsDistribution.getNumOrsPackets().toString());
             orsDistributionResponseListDTO.setNum_under5_children(orsDistribution.getChildCount().toString());
             orsDistributionResponseDTO.setFields(orsDistributionResponseListDTO);
-
+            orsDistributionResponseDTO.setVisitDate(orsDistribution.getVisitDate().toString());
             orsDistributionResponseDTOSList.add(orsDistributionResponseDTO);
 
 
