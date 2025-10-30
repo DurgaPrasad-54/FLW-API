@@ -3,7 +3,9 @@ package com.iemr.flw.service.impl;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.iemr.flw.domain.iemr.EyeCheckupVisit;
 import com.iemr.flw.domain.iemr.IncentiveActivity;
+import com.iemr.flw.dto.iemr.EyeCheckupListDTO;
+import com.iemr.flw.dto.iemr.EyeCheckupRequestDTO;
 import com.iemr.flw.masterEnum.GroupName;
-import com.iemr.flw.repo.iemr.GeneralOpdRepo;
-import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
-import com.iemr.flw.repo.iemr.IncentivesRepo;
+import com.iemr.flw.repo.iemr.*;
+import com.iemr.flw.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +76,18 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
     @Autowired
     IncentiveRecordRepo recordRepo;
+
+    @Autowired
+    private EyeCheckUpVisitRepo eyeCheckUpVisitRepo;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserServiceRoleRepo userRepo;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 
 
     @Override
@@ -494,6 +510,63 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
 //		return result;
 
+    }
+
+
+    @Override
+    public String saveEyeCheckupVsit(List<EyeCheckupRequestDTO> eyeCheckupRequestDTOS) {
+
+        try {
+            for (EyeCheckupRequestDTO dto : eyeCheckupRequestDTOS) {
+                EyeCheckupVisit visit = new EyeCheckupVisit();
+
+                visit.setBeneficiaryId(dto.getBeneficiaryId());
+                visit.setHouseholdId(dto.getHouseHoldId());
+                visit.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())); // cache se lena hai
+                visit.setCreatedBy(dto.getUserName());
+
+                // fields mapping
+                EyeCheckupListDTO f = dto.getFields();
+                visit.setVisitDate(LocalDate.parse(f.getVisitDate(), FORMATTER));
+                visit.setSymptomsObserved(f.getSymptomsObserved());
+                visit.setEyeAffected(f.getEyeAffected());
+                visit.setReferredTo(f.getReferredTo());
+                visit.setFollowUpStatus(f.getFollowUpStatus());
+                visit.setDateOfSurgery(f.getDateOfSurgery());
+
+                // save/update
+                eyeCheckUpVisitRepo.save(visit);
+            }
+            return "Eye checkup data saved successfully.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error while saving Eye Checkup data: " + e.getMessage();
+        }
+    }
+
+    @Override
+    public List<EyeCheckupRequestDTO> getEyeCheckUpVisit(GetBenRequestHandler request) {
+        List<EyeCheckupVisit> visits = eyeCheckUpVisitRepo.findByUserId(request.getUserId());
+
+        return visits.stream().map(v -> {
+            EyeCheckupRequestDTO dto = new EyeCheckupRequestDTO();
+            dto.setId(v.getId());
+            dto.setBeneficiaryId(v.getBeneficiaryId());
+            dto.setHouseHoldId(v.getHouseholdId());
+            dto.setUserName(v.getCreatedBy());
+            dto.setVisitDate(v.getVisitDate().format(FORMATTER));
+
+            EyeCheckupListDTO fields = new EyeCheckupListDTO();
+            fields.setVisitDate(v.getVisitDate().format(FORMATTER));
+            fields.setSymptomsObserved(v.getSymptomsObserved());
+            fields.setEyeAffected(v.getEyeAffected());
+            fields.setReferredTo(v.getReferredTo());
+            fields.setFollowUpStatus(v.getFollowUpStatus());
+            fields.setDateOfSurgery(v.getDateOfSurgery());
+
+            dto.setFields(fields);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 

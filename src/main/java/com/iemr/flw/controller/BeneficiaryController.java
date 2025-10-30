@@ -1,6 +1,9 @@
 package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
+import com.iemr.flw.dto.iemr.EyeCheckupRequestDTO;
+import com.iemr.flw.dto.iemr.SAMResponseDTO;
+import com.iemr.flw.dto.iemr.SamDTO;
 import com.iemr.flw.service.BeneficiaryService;
 import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.response.OutputResponse;
@@ -9,9 +12,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/beneficiary", headers = "Authorization", consumes = "application/json", produces = "application/json")
@@ -21,6 +29,8 @@ public class BeneficiaryController {
 
     @Autowired
     BeneficiaryService beneficiaryService;
+
+
 
 
 
@@ -49,4 +59,65 @@ public class BeneficiaryController {
         return response.toString();
 
     }
+    @RequestMapping(value = {"/eye_surgery/saveAll"},method = RequestMethod.POST)
+    public ResponseEntity<?> saveSevereAcuteMalnutrition(@RequestBody List<EyeCheckupRequestDTO> eyeCheckupRequestDTOS){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        logger.info("sam request :"+eyeCheckupRequestDTOS);
+        try {
+            String responseObject =   beneficiaryService.saveEyeCheckupVsit(eyeCheckupRequestDTOS);
+
+            if(eyeCheckupRequestDTOS!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("message", responseObject);
+                    return ResponseEntity.ok().body(response);
+
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", responseObject);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).body(response);
+
+
+        }
+        return null;
+
+    }
+
+
+    @RequestMapping(value = {"/eye_surgery/getAll"},method = RequestMethod.POST)
+    public  ResponseEntity<?> getAllSevereAcuteMalnutrition(@RequestBody GetBenRequestHandler request){
+        Map<String,Object> response = new LinkedHashMap<>();
+
+        try {
+            List<EyeCheckupRequestDTO> responseObject =   beneficiaryService.getEyeCheckUpVisit(request);
+
+            if(responseObject!=null){
+                if(responseObject!=null){
+                    response.put("statusCode", HttpStatus.OK.value());
+                    response.put("data",responseObject);
+                }
+
+            }else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            }
+        }catch (Exception e){
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+
+        }
+        return  ResponseEntity.ok(response);
+    }
+
+
+
 }
