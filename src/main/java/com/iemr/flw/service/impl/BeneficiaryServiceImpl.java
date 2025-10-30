@@ -546,7 +546,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
     @Override
     public List<EyeCheckupRequestDTO> getEyeCheckUpVisit(GetBenRequestHandler request) {
-        List<EyeCheckupVisit> visits = eyeCheckUpVisitRepo.findByUserId(request.getUserId());
+        List<EyeCheckupVisit> visits = eyeCheckUpVisitRepo.findByUserId(request.getAshaId());
 
         return visits.stream().map(v -> {
             EyeCheckupRequestDTO dto = new EyeCheckupRequestDTO();
