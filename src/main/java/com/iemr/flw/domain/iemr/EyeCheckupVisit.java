@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Data
 @Entity
-@Table(name = "t_eye_check_up",schema = "db_iemr")
+@Table(name = "t_eye_checkup",schema = "db_iemr")
 public class EyeCheckupVisit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

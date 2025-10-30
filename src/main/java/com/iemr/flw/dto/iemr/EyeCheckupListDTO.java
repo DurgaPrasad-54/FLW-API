@@ -6,21 +6,21 @@ import lombok.Data;
 @Data
 public class EyeCheckupListDTO {
     @SerializedName("visit_date")
-    private String visitDate;
+    private String visit_date;
 
     @SerializedName("symptoms_observed")
-    private String symptomsObserved;
+    private String symptoms_observed;
 
     @SerializedName("eye_affected")
-    private String eyeAffected;
+    private String eye_affected;
 
     @SerializedName("referred_to")
-    private String referredTo;
+    private String referred_to;
 
     @SerializedName("follow_up_status")
-    private String followUpStatus;
+    private String follow_up_status;
 
     @SerializedName("date_of_surgery")
-    private String dateOfSurgery;
+    private String date_of_surgery;
 
 }

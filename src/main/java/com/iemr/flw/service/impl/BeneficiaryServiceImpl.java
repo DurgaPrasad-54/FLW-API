@@ -527,12 +527,12 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
                 // fields mapping
                 EyeCheckupListDTO f = dto.getFields();
-                visit.setVisitDate(LocalDate.parse(f.getVisitDate(), FORMATTER));
-                visit.setSymptomsObserved(f.getSymptomsObserved());
-                visit.setEyeAffected(f.getEyeAffected());
-                visit.setReferredTo(f.getReferredTo());
-                visit.setFollowUpStatus(f.getFollowUpStatus());
-                visit.setDateOfSurgery(f.getDateOfSurgery());
+                visit.setVisitDate(LocalDate.parse(f.getVisit_date(), FORMATTER));
+                visit.setSymptomsObserved(f.getSymptoms_observed());
+                visit.setEyeAffected(f.getEye_affected());
+                visit.setReferredTo(f.getReferred_to());
+                visit.setFollowUpStatus(f.getFollow_up_status());
+                visit.setDateOfSurgery(f.getDate_of_surgery());
 
                 // save/update
                 eyeCheckUpVisitRepo.save(visit);
@@ -557,12 +557,12 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
             dto.setVisitDate(v.getVisitDate().format(FORMATTER));
 
             EyeCheckupListDTO fields = new EyeCheckupListDTO();
-            fields.setVisitDate(v.getVisitDate().format(FORMATTER));
-            fields.setSymptomsObserved(v.getSymptomsObserved());
-            fields.setEyeAffected(v.getEyeAffected());
-            fields.setReferredTo(v.getReferredTo());
-            fields.setFollowUpStatus(v.getFollowUpStatus());
-            fields.setDateOfSurgery(v.getDateOfSurgery());
+            fields.setVisit_date(v.getVisitDate().format(FORMATTER));
+            fields.setSymptoms_observed(v.getSymptomsObserved());
+            fields.setEye_affected(v.getEyeAffected());
+            fields.setReferred_to(v.getReferredTo());
+            fields.setFollow_up_status(v.getFollowUpStatus());
+            fields.setDate_of_surgery(v.getDateOfSurgery());
 
             dto.setFields(fields);
             return dto;
