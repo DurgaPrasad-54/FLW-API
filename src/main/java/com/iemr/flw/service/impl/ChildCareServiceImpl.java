@@ -10,6 +10,7 @@ import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.ChildCareService;
 import com.iemr.flw.utils.JwtUtil;
+import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -436,10 +437,11 @@ public class ChildCareServiceImpl implements ChildCareService {
         try {
             List<SamVisit> vaccinationList = new ArrayList<>();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
             samRequest.forEach(samDTO -> {
+
                 logger.info(samDTO.getFields().getMuac());
                 SamVisit samVisits = new  SamVisit();
+                samVisits.setId(samDTO.getId());
                 samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisits.setHouseholdId(samDTO.getHouseHoldId());
                 samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
@@ -542,6 +544,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             List<OrsDistribution> orsDistributionList = new ArrayList<>();
             orsDistributionDTOS.forEach(orsDistributionDTO -> {
                 OrsDistribution orsDistribution = new OrsDistribution();
+                orsDistribution.setId(orsDistributionDTO.getId());
                 orsDistribution.setBeneficiaryId(orsDistributionDTO.getBeneficiaryId());
                 orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets().toString());
                 orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
@@ -554,6 +557,8 @@ public class ChildCareServiceImpl implements ChildCareService {
             logger.info("orsList"+orsDistributionList.size());
             if(!orsDistributionList.isEmpty()){
                 orsDistributionRepo.saveAll(orsDistributionList);
+                checkAndAddOrdDistributionIncentive(orsDistributionList);
+
                 return "Saved " + orsDistributionList.size() + " ORS visit records successfully";
 
             }
@@ -660,14 +665,23 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         return entity;
     }
+    private void  checkAndAddOrdDistributionIncentive(List<OrsDistribution> orsDistributionList){
+        orsDistributionList.forEach(orsDistribution -> {
+            IncentiveActivity OrsPacketActivityAM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.CHILD_HEALTH.getDisplayName());
+            if(orsDistribution.getNumOrsPackets()!=null){
+                createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),OrsPacketActivityAM,jwtUtil.getUserNameFromStorage());
+            }
+
+        });
+
+    }
 
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
         hbycList.forEach(hbyc -> {
             IncentiveActivity hbyncVisitActivity =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("HBYC_QUARTERLY_VISITS", GroupName.CHILD_HEALTH.getDisplayName());
 
-            IncentiveActivity hbyncOrsPacketActivityAM =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.CHILD_HEALTH.getDisplayName());
 
             IncentiveActivity hbyncOrsPacketActivityCH =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
@@ -678,13 +692,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 }
 
             }
-            if (hbyncOrsPacketActivityAM != null) {
-                if (hbyc.getOrs_given()) {
-                    createIncentiveRecordforHbyncOrsDistribution(hbyc, hbyc.getBeneficiaryId(), hbyncOrsPacketActivityAM, hbyc.getCreated_by());
 
-                }
-
-            }
 
             if (hbyncOrsPacketActivityCH != null) {
                 if (hbyc.getOrs_given()) {
@@ -737,6 +745,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
 
     }
+
 
     private void checkAndAddIncentives(List<ChildVaccination> vaccinationList) {
 
@@ -894,6 +903,32 @@ public class ChildCareServiceImpl implements ChildCareService {
             recordRepo.save(record);
         }
     }
+
+    private void createIncentiveRecordforOrsDistribution(OrsDistribution data, Long benId, IncentiveActivity immunizationActivity, String createdBy) {
+
+        // Convert to LocalDate
+        Timestamp visitDate = Timestamp.valueOf(data.getVisitDate().atStartOfDay());
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), visitDate, benId);
+
+
+        if (record == null) {
+
+            record = new IncentiveActivityRecord();
+            record.setActivityId(immunizationActivity.getId());
+            record.setCreatedDate(visitDate);
+            record.setCreatedBy(createdBy);
+            record.setStartDate(visitDate);
+            record.setEndDate(visitDate);
+            record.setUpdatedDate(visitDate);
+            record.setUpdatedBy(createdBy);
+            record.setBenId(benId);
+            record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
+            record.setAmount(Long.valueOf(immunizationActivity.getRate()*Long.parseLong(data.getNumOrsPackets())));
+            recordRepo.save(record);
+        }
+    }
+
 
     private Integer getImmunizationServiceIdForVaccine(Short vaccineId) {
         return vaccineRepo.getImmunizationServiceIdByVaccineId(vaccineId);
