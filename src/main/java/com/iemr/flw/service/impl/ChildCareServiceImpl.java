@@ -620,7 +620,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         if (entity.getIfaProvisionDate() != null) {
             fields.setIfa_provision_date(entity.getIfaProvisionDate().format(FORMATTER));
         }
-        fields.setIfa_provision_date(entity.getMcpCardUpload());
+        fields.setMcp_card_upload(entity.getMcpCardUpload());
         fields.setIfa_bottle_count(Double.valueOf(entity.getIfaBottleCount()));
 
         dto.setFields(fields);
