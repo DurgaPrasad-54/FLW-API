@@ -496,8 +496,6 @@ public class ChildCareServiceImpl implements ChildCareService {
 //                }
 //            }
 
-
-
     }
 
     @Override
@@ -549,7 +547,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
                 orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
                 orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
-                orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getVisitDate(),formatter));
+                orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getFields().getVisit_date(),formatter));
                 orsDistributionList.add(orsDistribution);
 
             });
