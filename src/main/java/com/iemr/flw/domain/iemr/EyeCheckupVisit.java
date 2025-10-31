@@ -43,6 +43,9 @@ public class EyeCheckupVisit {
     @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "discharge_summary_upload")
+    private String dischargeSummaryUpload;
+
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
 

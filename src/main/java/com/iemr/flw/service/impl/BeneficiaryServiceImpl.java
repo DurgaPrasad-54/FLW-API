@@ -531,6 +531,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                 visit.setSymptomsObserved(f.getSymptoms_observed());
                 visit.setEyeAffected(f.getEye_affected());
                 visit.setReferredTo(f.getReferred_to());
+                visit.setDischargeSummaryUpload(f.getDischarge_summary_upload());
                 visit.setFollowUpStatus(f.getFollow_up_status());
                 visit.setDateOfSurgery(f.getDate_of_surgery());
 
