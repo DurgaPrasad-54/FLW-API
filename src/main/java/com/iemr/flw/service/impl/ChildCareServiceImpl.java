@@ -560,7 +560,7 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             }
         }catch (Exception e){
-            logger.error("ORS Error"+e.getCause());
+            logger.error("ORS Error"+e);
 
         }
 
