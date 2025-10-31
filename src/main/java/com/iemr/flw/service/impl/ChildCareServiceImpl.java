@@ -926,28 +926,34 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void createIncentiveRecordforOrsDistribution(OrsDistribution data, Long benId, IncentiveActivity immunizationActivity, String createdBy) {
+         try {
+             // Convert to LocalDate
+             Timestamp visitDate = Timestamp.valueOf(data.getVisitDate().atStartOfDay());
+             IncentiveActivityRecord record = recordRepo
+                     .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), visitDate, benId);
+             double packets = Double.parseDouble(data.getNumOrsPackets());
+             double rate = immunizationActivity.getRate();
 
-        // Convert to LocalDate
-        Timestamp visitDate = Timestamp.valueOf(data.getVisitDate().atStartOfDay());
-        IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(immunizationActivity.getId(), visitDate, benId);
+             if (record == null) {
 
+                 record = new IncentiveActivityRecord();
+                 record.setActivityId(immunizationActivity.getId());
+                 record.setCreatedDate(visitDate);
+                 record.setCreatedBy(createdBy);
+                 record.setStartDate(visitDate);
+                 record.setEndDate(visitDate);
+                 record.setUpdatedDate(visitDate);
+                 record.setUpdatedBy(createdBy);
+                 record.setBenId(benId);
+                 record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
+                 record.setAmount((long) (rate * packets));
+                 recordRepo.save(record);
+             }
+         }catch (Exception e){
+             logger.error("Exp"+e.getMessage());
 
-        if (record == null) {
+         }
 
-            record = new IncentiveActivityRecord();
-            record.setActivityId(immunizationActivity.getId());
-            record.setCreatedDate(visitDate);
-            record.setCreatedBy(createdBy);
-            record.setStartDate(visitDate);
-            record.setEndDate(visitDate);
-            record.setUpdatedDate(visitDate);
-            record.setUpdatedBy(createdBy);
-            record.setBenId(benId);
-            record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
-            record.setAmount(Long.valueOf(immunizationActivity.getRate()*Long.parseLong(data.getNumOrsPackets())));
-            recordRepo.save(record);
-        }
     }
 
 
