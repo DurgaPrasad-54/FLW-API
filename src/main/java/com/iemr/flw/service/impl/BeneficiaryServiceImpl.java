@@ -564,7 +564,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
             fields.setReferred_to(v.getReferredTo());
             fields.setFollow_up_status(v.getFollowUpStatus());
             fields.setDate_of_surgery(v.getDateOfSurgery());
-
+           fields.setDischarge_summary_upload(v.getDischargeSummaryUpload());
 
             dto.setFields(fields);
             return dto;
