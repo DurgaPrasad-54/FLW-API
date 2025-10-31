@@ -545,8 +545,9 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
             return "Eye checkup data saved successfully.";
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error while saving Eye Checkup data: " + e.getMessage();
+
         }
+        return null ;
     }
 
     @Override
