@@ -468,9 +468,9 @@ public class ChildCareServiceImpl implements ChildCareService {
             return "Saved " + samRequest.size() + " SAM visit records successfully";
         }catch (Exception e){
             logger.error(e.getMessage());
-        }
 
-        return "Fail";
+        }
+        return null ;
 
         // Handle MultipartFile → Base64 JSON
 //            MultipartFile file = dto.getViewDischargeDocs();
@@ -562,9 +562,10 @@ public class ChildCareServiceImpl implements ChildCareService {
         }catch (Exception e){
             logger.error("ORS Error"+e);
 
+
         }
 
-        return "Fail";
+        return null ;
     }
 
 

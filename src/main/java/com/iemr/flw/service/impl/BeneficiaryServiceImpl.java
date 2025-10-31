@@ -524,14 +524,18 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                 visit.setHouseholdId(dto.getHouseHoldId());
                 visit.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())); // cache se lena hai
                 visit.setCreatedBy(dto.getUserName());
+                StringBuilder sb = new StringBuilder();
+
 
                 // fields mapping
                 EyeCheckupListDTO f = dto.getFields();
+                sb.append(f.getDischarge_summary_upload());
+                String longText = sb.toString();
                 visit.setVisitDate(LocalDate.parse(f.getVisit_date(), FORMATTER));
                 visit.setSymptomsObserved(f.getSymptoms_observed());
                 visit.setEyeAffected(f.getEye_affected());
                 visit.setReferredTo(f.getReferred_to());
-                visit.setDischargeSummaryUpload(f.getDischarge_summary_upload());
+                visit.setDischargeSummaryUpload(longText);
                 visit.setFollowUpStatus(f.getFollow_up_status());
                 visit.setDateOfSurgery(f.getDate_of_surgery());
 
@@ -564,7 +568,8 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
             fields.setReferred_to(v.getReferredTo());
             fields.setFollow_up_status(v.getFollowUpStatus());
             fields.setDate_of_surgery(v.getDateOfSurgery());
-           fields.setDischarge_summary_upload(v.getDischargeSummaryUpload());
+            fields.setDischarge_summary_upload(v.getDischargeSummaryUpload());
+
 
             dto.setFields(fields);
             return dto;
