@@ -23,4 +23,7 @@ public class EyeCheckupListDTO {
     @SerializedName("date_of_surgery")
     private String date_of_surgery;
 
+    @SerializedName("discharge_summary_upload")
+    private String discharge_summary_upload;
+
 }
