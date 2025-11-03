@@ -389,9 +389,9 @@ public class ChildCareController {
                 response.put("data", responseObject);
                 return ResponseEntity.ok(response);
             } else {
-                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", "No IFA records found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
 
         } catch (Exception e) {
