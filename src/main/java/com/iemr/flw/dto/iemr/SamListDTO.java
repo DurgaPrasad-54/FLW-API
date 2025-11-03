@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Data
 public class SamListDTO {
@@ -34,7 +35,7 @@ public class SamListDTO {
     private String nrc_discharge_date;
 
     @SerializedName("follow_up_visit_date")
-    private String follow_up_visit_date;
+    private ArrayList<String> follow_up_visit_date;
 
     @SerializedName("sam_status")
     private String sam_status;

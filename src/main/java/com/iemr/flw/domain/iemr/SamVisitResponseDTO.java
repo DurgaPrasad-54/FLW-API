@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -42,7 +43,7 @@ public class SamVisitResponseDTO {
     private String nrcDischargeDate;
 
     @JsonProperty("follow_up_visit_date")
-    private String followUpVisitDate;
+    private List<String> followUpVisitDate;
 
     @JsonProperty("sam_status")
     private String samStatus;

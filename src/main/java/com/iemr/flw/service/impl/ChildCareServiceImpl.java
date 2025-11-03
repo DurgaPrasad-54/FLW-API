@@ -1,5 +1,6 @@
 package com.iemr.flw.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.*;
@@ -456,7 +457,13 @@ public class ChildCareServiceImpl implements ChildCareService {
                 samVisits.setNrcAdmissionDate(samDTO.getFields().getNrc_admission_date());
                 samVisits.setIsChildDischargedNrc(samDTO.getFields().getIs_child_discharged_nrc());
                 samVisits.setNrcDischargeDate(samDTO.getFields().getNrc_discharge_date());
-                samVisits.setFollowUpVisitDate(samDTO.getFields().getFollow_up_visit_date());
+                String followUpDatesJson = null;
+                try {
+                    followUpDatesJson = mapper.writeValueAsString(samDTO.getFields().getFollow_up_visit_date());
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                samVisits.setFollowUpVisitDate(followUpDatesJson);
                 samVisits.setDischargeSummary(samDTO.getFields().getDischarge_summary());
                 samVisits.setViewDischargeDocs(samDTO.getFields().getView_discharge_docs());
                 vaccinationList.add(samVisits);
@@ -522,7 +529,19 @@ public class ChildCareServiceImpl implements ChildCareService {
             dto.setNrcAdmissionDate(entity.getNrcAdmissionDate());
             dto.setIsChildDischargedNrc(entity.getIsChildDischargedNrc());
             dto.setNrcDischargeDate(entity.getNrcDischargeDate());
-            dto.setFollowUpVisitDate(entity.getFollowUpVisitDate());
+
+            if (entity.getFollowUpVisitDate() != null) {
+                List<String> followUpDates = null;
+                try {
+                    followUpDates = mapper.readValue(entity.getFollowUpVisitDate(),
+                            new TypeReference<List<String>>() {});
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                dto.setFollowUpVisitDate(followUpDates);
+            }
+
+
             dto.setSamStatus(entity.getSamStatus());
             dto.setDischargeSummary(entity.getDischargeSummary());
 
