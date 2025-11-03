@@ -438,15 +438,17 @@ public class ChildCareServiceImpl implements ChildCareService {
     public String saveSamDetails(List<SamDTO> samRequest) {
         try {
             List<SamVisit> vaccinationList = new ArrayList<>();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            samRequest.forEach(samDTO -> {
 
+            samRequest.forEach(samDTO -> {
                 logger.info(samDTO.getFields().getMuac());
-                SamVisit samVisits = new  SamVisit();
+                SamVisit samVisits = new SamVisit();
                 samVisits.setId(samDTO.getId());
                 samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisits.setHouseholdId(samDTO.getHouseHoldId());
-                samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate(),formatter));
+
+                // ✅ Direct ISO format parsing (yyyy-MM-dd)
+                samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate()));
+
                 samVisits.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
                 samVisits.setCreatedBy(jwtUtil.getUserNameFromStorage());
                 samVisits.setMuac(samDTO.getFields().getMuac());
@@ -457,12 +459,14 @@ public class ChildCareServiceImpl implements ChildCareService {
                 samVisits.setNrcAdmissionDate(samDTO.getFields().getNrc_admission_date());
                 samVisits.setIsChildDischargedNrc(samDTO.getFields().getIs_child_discharged_nrc());
                 samVisits.setNrcDischargeDate(samDTO.getFields().getNrc_discharge_date());
+
                 String followUpDatesJson = null;
                 try {
                     followUpDatesJson = mapper.writeValueAsString(samDTO.getFields().getFollow_up_visit_date());
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
+
                 samVisits.setFollowUpVisitDate(followUpDatesJson);
                 samVisits.setDischargeSummary(samDTO.getFields().getDischarge_summary());
                 samVisits.setViewDischargeDocs(samDTO.getFields().getView_discharge_docs());
@@ -470,14 +474,13 @@ public class ChildCareServiceImpl implements ChildCareService {
             });
 
             samVisitRepository.saveAll(vaccinationList);
-
-
+            checkAndAddSamVisitNRCReferalIncentive(vaccinationList);
             return "Saved " + samRequest.size() + " SAM visit records successfully";
-        }catch (Exception e){
-            logger.error(e.getMessage());
 
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
-        return null ;
+        return null;
 
         // Handle MultipartFile → Base64 JSON
 //            MultipartFile file = dto.getViewDischargeDocs();
@@ -695,6 +698,28 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
 
         return entity;
+    }
+
+    private void  checkAndAddSamVisitNRCReferalIncentive(List<SamVisit> samVisits){
+        samVisits.forEach(samVisit -> {
+            IncentiveActivity samreferralnrcActivityAm =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("SAM_REFERRAL_NRC", GroupName.CHILD_HEALTH.getDisplayName());
+            IncentiveActivity samreferralnrcActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("SAM_REFERRAL_NRC", GroupName.ACTIVITY.getDisplayName());
+            if(samreferralnrcActivityAm!=null){
+                if(samVisit.getIsChildReferredNrc().equals("yes")){
+                    createIncentiveRecordforSamReferalToNrc(samVisit,samVisit.getBeneficiaryId(),samreferralnrcActivityAm,jwtUtil.getUserNameFromStorage());
+                }
+            }
+
+            if(samreferralnrcActivityCH!=null){
+                if(samVisit.getIsChildReferredNrc().equals("yes")){
+                    createIncentiveRecordforSamReferalToNrc(samVisit,samVisit.getBeneficiaryId(),samreferralnrcActivityCH,jwtUtil.getUserNameFromStorage());
+                }
+            }
+
+
+        });
+
     }
     private void  checkAndAddOrdDistributionIncentive(List<OrsDistribution> orsDistributionList){
         orsDistributionList.forEach(orsDistribution -> {
@@ -973,6 +998,36 @@ public class ChildCareServiceImpl implements ChildCareService {
              logger.error("Exp"+e.getMessage());
 
          }
+
+    }
+
+    private void createIncentiveRecordforSamReferalToNrc(SamVisit data, Long benId, IncentiveActivity incentiveActivity, String createdBy) {
+        try {
+            // Convert to LocalDate
+            Timestamp visitDate = Timestamp.valueOf(data.getVisitDate().atStartOfDay());
+            IncentiveActivityRecord record = recordRepo
+                    .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), visitDate, benId);
+
+
+            if (record == null) {
+
+                record = new IncentiveActivityRecord();
+                record.setActivityId(incentiveActivity.getId());
+                record.setCreatedDate(visitDate);
+                record.setCreatedBy(createdBy);
+                record.setStartDate(visitDate);
+                record.setEndDate(visitDate);
+                record.setUpdatedDate(visitDate);
+                record.setUpdatedBy(createdBy);
+                record.setBenId(benId);
+                record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
+                record.setAmount((long) incentiveActivity.getRate());
+                recordRepo.save(record);
+            }
+        }catch (Exception e){
+            logger.error("Exp"+e.getMessage());
+
+        }
 
     }
 
