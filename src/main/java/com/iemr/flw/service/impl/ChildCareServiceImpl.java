@@ -440,72 +440,64 @@ public class ChildCareServiceImpl implements ChildCareService {
             List<SamVisit> vaccinationList = new ArrayList<>();
 
             samRequest.forEach(samDTO -> {
-                logger.info(samDTO.getFields().getMuac());
-                SamVisit samVisits = new SamVisit();
-                samVisits.setId(samDTO.getId());
-                samVisits.setBeneficiaryId(samDTO.getBeneficiaryId());
-                samVisits.setHouseholdId(samDTO.getHouseHoldId());
+                logger.info("Processing SAM record for Beneficiary: {}", samDTO.getBeneficiaryId());
 
-                // ✅ Direct ISO format parsing (yyyy-MM-dd)
-                samVisits.setVisitDate(LocalDate.parse(samDTO.getVisitDate()));
+                LocalDate visitDate = LocalDate.parse(samDTO.getVisitDate());
 
-                samVisits.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
-                samVisits.setCreatedBy(jwtUtil.getUserNameFromStorage());
-                samVisits.setMuac(samDTO.getFields().getMuac());
-                samVisits.setSamStatus(samDTO.getFields().getSam_status());
-                samVisits.setVisitLabel(samDTO.getFields().getVisit_label());
-                samVisits.setWeightForHeightStatus(samDTO.getFields().getWeight_for_height_status());
-                samVisits.setIsChildReferredNrc(samDTO.getFields().getIs_child_referred_nrc());
-                samVisits.setNrcAdmissionDate(samDTO.getFields().getNrc_admission_date());
-                samVisits.setIsChildDischargedNrc(samDTO.getFields().getIs_child_discharged_nrc());
-                samVisits.setNrcDischargeDate(samDTO.getFields().getNrc_discharge_date());
+                // 🔍 Check if this beneficiary already has a record for this visit date
+                SamVisit samVisit = samVisitRepository
+                        .findByBeneficiaryIdAndVisitDate(samDTO.getBeneficiaryId(), visitDate)
+                        .orElse(new SamVisit()); // 🧠 If exists → update, else create new
 
-                String followUpDatesJson = null;
-                try {
-                    followUpDatesJson = mapper.writeValueAsString(samDTO.getFields().getFollow_up_visit_date());
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                samVisit.setId(samDTO.getId());
+                samVisit.setBeneficiaryId(samDTO.getBeneficiaryId());
+                samVisit.setHouseholdId(samDTO.getHouseHoldId());
+
+                // ✅ Visit date parsing
+                samVisit.setVisitDate(LocalDate.parse(samDTO.getVisitDate()));
+
+                // ✅ Common user details
+                samVisit.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+                samVisit.setCreatedBy(jwtUtil.getUserNameFromStorage());
+                if (samVisit.getCreatedBy() == null) {
+                    samVisit.setCreatedBy(jwtUtil.getUserNameFromStorage());
                 }
 
-                samVisits.setFollowUpVisitDate(followUpDatesJson);
-                samVisits.setDischargeSummary(samDTO.getFields().getDischarge_summary());
-                samVisits.setViewDischargeDocs(samDTO.getFields().getView_discharge_docs());
-                vaccinationList.add(samVisits);
+                // ✅ Field mapping
+                samVisit.setMuac(samDTO.getFields().getMuac());
+                samVisit.setSamStatus(samDTO.getFields().getSam_status());
+                samVisit.setVisitLabel(samDTO.getFields().getVisit_label());
+                samVisit.setWeightForHeightStatus(samDTO.getFields().getWeight_for_height_status());
+                samVisit.setIsChildReferredNrc(samDTO.getFields().getIs_child_referred_nrc());
+                samVisit.setNrcAdmissionDate(samDTO.getFields().getNrc_admission_date());
+                samVisit.setIsChildDischargedNrc(samDTO.getFields().getIs_child_discharged_nrc());
+                samVisit.setNrcDischargeDate(samDTO.getFields().getNrc_discharge_date());
+
+                // ✅ Convert follow-up visit dates to JSON
+                try {
+                    String followUpDatesJson = mapper.writeValueAsString(samDTO.getFields().getFollow_up_visit_date());
+                    samVisit.setFollowUpVisitDate(followUpDatesJson);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error parsing follow-up visit dates", e);
+                }
+
+                samVisit.setDischargeSummary(samDTO.getFields().getDischarge_summary());
+                samVisit.setViewDischargeDocs(samDTO.getFields().getView_discharge_docs());
+
+                vaccinationList.add(samVisit);
             });
 
+            // ✅ Save or update all
             samVisitRepository.saveAll(vaccinationList);
+
+            // ✅ Handle incentive logic
             checkAndAddSamVisitNRCReferalIncentive(vaccinationList);
-            return "Saved " + samRequest.size() + " SAM visit records successfully";
 
+            return "Saved/Updated " + samRequest.size() + " SAM visit records successfully";
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error("Error saving SAM visit details: {}", e.getMessage(), e);
+            return "Failed to save SAM visit details: " + e.getMessage();
         }
-        return null;
-
-        // Handle MultipartFile → Base64 JSON
-//            MultipartFile file = dto.getViewDischargeDocs();
-//            if (file != null && !file.isEmpty()) {
-//                try {
-//                    List<String> base64List = Arrays.asList(file).stream()
-//                            .filter(f -> !f.isEmpty())
-//                            .map(f -> {
-//                                try {
-//                                    return Base64.getEncoder().encodeToString(f.getBytes());
-//                                } catch (IOException e) {
-//                                    throw new RuntimeException("Error converting file to Base64", e);
-//                                }
-//                            })
-//                            .collect(Collectors.toList());
-//
-//                    String jsonBase64 = mapper.writeValueAsString(base64List);
-//                    entity.setViewDischargeDocs(jsonBase64);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return "Failed to process file: " + file.getOriginalFilename();
-//                }
-//            }
-
     }
 
     @Override
@@ -513,7 +505,8 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
         List<SAMResponseDTO> samResponseListDTO = new ArrayList<>();
-        for (SamVisit entity : entities) {
+        for (int i = 0; i < entities.size(); i++) {
+            SamVisit entity = entities.get(i);
             SAMResponseDTO samResponseDTO = new SAMResponseDTO();
 
             samResponseDTO.setBeneficiaryId(entity.getBeneficiaryId());
@@ -524,7 +517,10 @@ public class ChildCareServiceImpl implements ChildCareService {
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
             dto.setVisitDate(entity.getVisitDate());
-            dto.setVisitLabel("Visit-"+entity.getId().toString());
+
+            // ✅ Use loop index for Visit Label
+            dto.setVisitLabel("Visit-" + (i + 1));
+
             dto.setMuac(entity.getMuac());
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
             dto.setIsChildReferredNrc(entity.getIsChildReferredNrc());
@@ -534,24 +530,21 @@ public class ChildCareServiceImpl implements ChildCareService {
             dto.setNrcDischargeDate(entity.getNrcDischargeDate());
 
             if (entity.getFollowUpVisitDate() != null) {
-                List<String> followUpDates = null;
                 try {
-                    followUpDates = mapper.readValue(entity.getFollowUpVisitDate(),
+                    List<String> followUpDates = mapper.readValue(entity.getFollowUpVisitDate(),
                             new TypeReference<List<String>>() {});
+                    dto.setFollowUpVisitDate(followUpDates);
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
-                dto.setFollowUpVisitDate(followUpDates);
             }
-
 
             dto.setSamStatus(entity.getSamStatus());
             dto.setDischargeSummary(entity.getDischargeSummary());
-
             samResponseDTO.setFields(dto);
-
             samResponseListDTO.add(samResponseDTO);
         }
+
 
         return samResponseListDTO;
     }
