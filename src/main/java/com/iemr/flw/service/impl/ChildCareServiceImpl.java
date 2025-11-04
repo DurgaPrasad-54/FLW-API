@@ -505,21 +505,32 @@ public class ChildCareServiceImpl implements ChildCareService {
 
         List<SamVisit> entities = samVisitRepository.findByUserId(request.getAshaId());
         List<SAMResponseDTO> samResponseListDTO = new ArrayList<>();
-        for (int i = 0; i < entities.size(); i++) {
-            SamVisit entity = entities.get(i);
-            SAMResponseDTO samResponseDTO = new SAMResponseDTO();
+        int visitCounter = 1;
+        Map<LocalDate, Integer> visitMap = new HashMap<>();
 
+        for (SamVisit entity : entities) {
+
+            LocalDate vDate = entity.getVisitDate();
+
+            // ✅ Assign visit number based on unique date
+            if (!visitMap.containsKey(vDate)) {
+                visitMap.put(vDate, visitCounter++);
+            }
+
+            int visitNo = visitMap.get(vDate);
+
+            SAMResponseDTO samResponseDTO = new SAMResponseDTO();
             samResponseDTO.setBeneficiaryId(entity.getBeneficiaryId());
-            samResponseDTO.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
+            samResponseDTO.setVisitDate(vDate != null ? vDate.toString() : null);
             samResponseDTO.setHouseHoldId(entity.getHouseholdId());
             samResponseDTO.setId(entity.getId());
 
             SamVisitResponseDTO dto = new SamVisitResponseDTO();
             dto.setBeneficiaryId(entity.getBeneficiaryId());
-            dto.setVisitDate(entity.getVisitDate());
+            dto.setVisitDate(vDate);
 
-            // ✅ Use loop index for Visit Label
-            dto.setVisitLabel("Visit-" + (i + 1));
+            // ✅ Final Visit Label
+            dto.setVisitLabel("Visit-" + visitNo);
 
             dto.setMuac(entity.getMuac());
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
@@ -531,7 +542,8 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             if (entity.getFollowUpVisitDate() != null) {
                 try {
-                    List<String> followUpDates = mapper.readValue(entity.getFollowUpVisitDate(),
+                    List<String> followUpDates = mapper.readValue(
+                            entity.getFollowUpVisitDate(),
                             new TypeReference<List<String>>() {});
                     dto.setFollowUpVisitDate(followUpDates);
                 } catch (JsonProcessingException e) {
@@ -541,9 +553,11 @@ public class ChildCareServiceImpl implements ChildCareService {
 
             dto.setSamStatus(entity.getSamStatus());
             dto.setDischargeSummary(entity.getDischargeSummary());
+
             samResponseDTO.setFields(dto);
             samResponseListDTO.add(samResponseDTO);
         }
+
 
 
         return samResponseListDTO;
