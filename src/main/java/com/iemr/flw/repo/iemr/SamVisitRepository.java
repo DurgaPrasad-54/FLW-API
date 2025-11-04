@@ -4,7 +4,9 @@ import com.iemr.flw.domain.iemr.SamVisit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SamVisitRepository extends JpaRepository<SamVisit, Long> {
@@ -19,4 +21,6 @@ public interface SamVisitRepository extends JpaRepository<SamVisit, Long> {
     boolean existsByBeneficiaryIdAndVisitDate(Long beneficiaryId, java.time.LocalDate visitDate);
 
     List<SamVisit> findByUserId(Integer ashaId);
+
+    Optional<SamVisit> findByBeneficiaryIdAndVisitDate(Long beneficiaryId, LocalDate visitDate);
 }
