@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Builder
-@Table(name = "t_ifa_distribution",schema = "db_iemr")
+@Table(name = "t_ifa_distribution_data",schema = "db_iemr")
 
 
  public  class IFAFormSubmissionData {
@@ -36,10 +36,10 @@ import java.time.LocalDateTime;
     @Column(name = "fields_json", columnDefinition = "JSON")
     private String fieldsJson;
 
-    @Column(name = "created_date", updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "created_date")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist
