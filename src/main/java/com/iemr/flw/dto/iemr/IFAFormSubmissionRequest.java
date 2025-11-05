@@ -13,5 +13,6 @@ public class IFAFormSubmissionRequest {
     private String userName;
     private String visitDate;
     private IFAFormFieldsDTO fields;
+
 }
 
