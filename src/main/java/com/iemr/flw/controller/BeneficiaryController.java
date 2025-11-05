@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/beneficiary", headers = "Authorization", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/beneficiary", consumes = "application/json")
 public class BeneficiaryController {
 
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(BeneficiaryController.class);
@@ -124,7 +124,7 @@ public class BeneficiaryController {
     }
 
     @RequestMapping(value = "/ifa/saveAll",method = RequestMethod.POST)
-    public ResponseEntity<?> saveFormData(@PathVariable String formId, @RequestBody List<IFAFormSubmissionRequest> requests) {
+    public ResponseEntity<?> saveFormData(@RequestBody List<IFAFormSubmissionRequest> requests) {
         String message = ifaFormSubmissionService.saveFormData(requests);
         return ResponseEntity.ok(Map.of("success", true, "message", message));
     }
