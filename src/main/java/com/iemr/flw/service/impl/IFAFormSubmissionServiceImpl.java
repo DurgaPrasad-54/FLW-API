@@ -72,7 +72,6 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
                         .build();
 
                 responses.add(IFAFormSubmissionResponse.builder()
-                        .formId(entity.getUserId()) // using userId as form identifier (no formId column)
                         .beneficiaryId(entity.getBeneficiaryId())
                         .visitDate(entity.getVisitDate())
                         .createdBy(entity.getUserName())

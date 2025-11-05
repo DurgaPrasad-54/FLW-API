@@ -9,7 +9,6 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class IFAFormSubmissionResponse {
-    private Integer formId;
     private Long beneficiaryId;
     private String visitDate;
     private String createdBy;
