@@ -11,5 +11,6 @@ public class IFAFormSubmissionRequest {
     private Long houseHoldId;
     private String userName;
     private String visitDate;
-    private Map<String, Object> fields;
+    private IFAFormFieldsDTO fields;
 }
+

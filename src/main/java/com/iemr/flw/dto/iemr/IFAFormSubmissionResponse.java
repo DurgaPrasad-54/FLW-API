@@ -14,5 +14,5 @@ public class IFAFormSubmissionResponse {
     private String visitDate;
     private String createdBy;
     private String createdAt;
-    private Map<String, Object> fields;
+    private IFAFormFieldsDTO fields;
 }

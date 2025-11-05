@@ -3,6 +3,7 @@ package com.iemr.flw.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.IFAFormSubmissionData;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
+import com.iemr.flw.dto.iemr.IFAFormFieldsDTO;
 import com.iemr.flw.dto.iemr.IFAFormSubmissionRequest;
 import com.iemr.flw.dto.iemr.IFAFormSubmissionResponse;
 import com.iemr.flw.repo.iemr.IFAFormSubmissionRepository;
@@ -41,7 +42,8 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
                         .houseHoldId(req.getHouseHoldId())
                         .userName(req.getUserName())
                         .visitDate(req.getVisitDate())
-                        .fieldsJson(mapper.writeValueAsString(req.getFields()))
+                        .ifaProvided(req.getFields().getIfa_provided())
+                        .ifaQuantity(req.getFields().getIfa_quantity().toString())
                         .build();
                 entities.add(data);
             }
@@ -57,21 +59,32 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
     public List<IFAFormSubmissionResponse> getFormData(GetBenRequestHandler getBenRequestHandler) {
         List<IFAFormSubmissionData> records = repository.findByUserId(getBenRequestHandler.getAshaId());
         List<IFAFormSubmissionResponse> responses = new ArrayList<>();
-        records.forEach(entity -> {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        for (IFAFormSubmissionData entity : records) {
             try {
-                Map<String, Object> fields = mapper.readValue(entity.getFieldsJson(), Map.class);
+                // Map domain entity to response DTO
+                IFAFormFieldsDTO fieldsDTO = IFAFormFieldsDTO.builder()
+                        .visit_date(entity.getVisitDate())
+                        .ifa_provided(entity.getIfaProvided())
+                        .ifa_quantity(Double.parseDouble(entity.getIfaQuantity()))
+                        .build();
+
                 responses.add(IFAFormSubmissionResponse.builder()
-                        .formId(entity.getUserId())
+                        .formId(entity.getUserId()) // using userId as form identifier (no formId column)
                         .beneficiaryId(entity.getBeneficiaryId())
                         .visitDate(entity.getVisitDate())
                         .createdBy(entity.getUserName())
-                        .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                        .fields(fields)
+                        .createdAt(entity.getCreatedAt() != null ? entity.getCreatedAt().format(formatter) : null)
+                        .fields(fieldsDTO)
                         .build());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }
+
         return responses;
     }
+
 }

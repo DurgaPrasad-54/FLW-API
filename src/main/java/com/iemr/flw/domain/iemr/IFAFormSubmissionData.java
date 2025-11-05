@@ -33,8 +33,12 @@ import java.time.LocalDateTime;
     @Column(name = "visit_date")
     private String visitDate;
 
-    @Column(name = "fields_json", columnDefinition = "JSON")
-    private String fieldsJson;
+
+    @Column(name = "ifa_provided")
+    private String  ifaProvided;
+
+    @Column(name = "ifa_quantity")
+    private String ifaQuantity;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
