@@ -12,6 +12,7 @@ public class IFAFormSubmissionResponse {
     private Long beneficiaryId;
     private String visitDate;
     private String createdBy;
+    private String formId;
     private String createdAt;
     private IFAFormFieldsDTO fields;
 }

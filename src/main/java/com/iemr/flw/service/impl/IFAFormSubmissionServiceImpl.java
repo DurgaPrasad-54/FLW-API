@@ -39,6 +39,7 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
                 IFAFormSubmissionData data = IFAFormSubmissionData.builder()
                         .userId(userServiceRoleRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()))
                         .beneficiaryId(req.getBeneficiaryId())
+                        .formId(req.getFormId())
                         .houseHoldId(req.getHouseHoldId())
                         .userName(req.getUserName())
                         .visitDate(req.getVisitDate())
@@ -72,6 +73,7 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
                         .build();
 
                 responses.add(IFAFormSubmissionResponse.builder()
+                                .formId(entity.getFormId())
                         .beneficiaryId(entity.getBeneficiaryId())
                         .visitDate(entity.getVisitDate())
                         .createdBy(entity.getUserName())

@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
     @Column(name = "visit_date")
     private String visitDate;
 
+   @Column(name = "form_id")
+   private String formId;
 
     @Column(name = "ifa_provided")
     private String  ifaProvided;
