@@ -2,9 +2,11 @@ package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.EyeCheckupRequestDTO;
+import com.iemr.flw.dto.iemr.IFAFormSubmissionRequest;
 import com.iemr.flw.dto.iemr.SAMResponseDTO;
 import com.iemr.flw.dto.iemr.SamDTO;
 import com.iemr.flw.service.BeneficiaryService;
+import com.iemr.flw.service.IFAFormSubmissionService;
 import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.response.OutputResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +32,8 @@ public class BeneficiaryController {
     @Autowired
     BeneficiaryService beneficiaryService;
 
+    @Autowired
+    private IFAFormSubmissionService ifaFormSubmissionService;
 
 
 
@@ -119,5 +123,16 @@ public class BeneficiaryController {
         }
     }
 
+    @RequestMapping(value = "/ifa/saveAll",method = RequestMethod.POST)
+    public ResponseEntity<?> saveFormData(@PathVariable String formId, @RequestBody List<IFAFormSubmissionRequest> requests) {
+        String message = ifaFormSubmissionService.saveFormData(requests);
+        return ResponseEntity.ok(Map.of("success", true, "message", message));
+    }
+
+    @RequestMapping(value = "ifa/getAll",method = RequestMethod.POST)
+    public ResponseEntity<?> getFormData(@RequestBody GetBenRequestHandler getBenRequestHandler) {
+        var data = ifaFormSubmissionService.getFormData(getBenRequestHandler);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Data fetched successfully", "data", data));
+    }
 
 }
