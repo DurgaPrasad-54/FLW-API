@@ -167,6 +167,7 @@ public class IncentiveServiceImpl implements IncentiveService {
             }
 
             dtos.add(modelMapper.map(entry, IncentiveRecordDTO.class));
+
         });
 
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
