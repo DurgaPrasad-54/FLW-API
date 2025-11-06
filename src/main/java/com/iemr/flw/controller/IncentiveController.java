@@ -91,6 +91,7 @@ public class IncentiveController {
                 logger.info("request object with timestamp : " + new Timestamp(System.currentTimeMillis()) + " "
                         + requestDTO);
                 String s = incentiveService.getAllIncentivesByUserId(requestDTO);
+                logger.info("User Incentive:"+s);
                 if (s != null)
                     response.setResponse(s);
                 else
