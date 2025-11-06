@@ -751,20 +751,33 @@ public class ChildCareServiceImpl implements ChildCareService {
     }
 
     private void checkAndAddHbyncIncentives(List<HbycChildVisit> hbycList) {
+        IncentiveActivity hbync15MonethVisitActivityCH =
+                incentivesRepo.findIncentiveMasterByNameAndGroup("HBYC_QUARTERLY_VISITS", GroupName.ACTIVITY.getDisplayName());
+        IncentiveActivity hbyncVisitActivity =
+                incentivesRepo.findIncentiveMasterByNameAndGroup("HBYC_QUARTERLY_VISITS", GroupName.CHILD_HEALTH.getDisplayName());
+
+
+        IncentiveActivity hbyncOrsPacketActivityCH =
+                incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
+
         hbycList.forEach(hbyc -> {
-            IncentiveActivity hbyncVisitActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("HBYC_QUARTERLY_VISITS", GroupName.CHILD_HEALTH.getDisplayName());
 
-
-            IncentiveActivity hbyncOrsPacketActivityCH =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if (hbyncVisitActivity != null) {
-                if (hbyc.getVisit_date() != null) {
+                if (hbyc.getVisit_day().equals("15 Months")) {
                     createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
 
                 }
 
             }
+
+            if (hbync15MonethVisitActivityCH != null) {
+                if (hbyc.getVisit_day().equals("15 Months")) {
+                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
+
+                }
+
+            }
+
 
 
             if (hbyncOrsPacketActivityCH != null) {

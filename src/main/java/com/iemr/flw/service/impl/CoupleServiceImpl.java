@@ -10,6 +10,7 @@ import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.EligibleCoupleDTO;
 import com.iemr.flw.dto.iemr.EligibleCoupleTrackingDTO;
+import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.CoupleService;
@@ -89,11 +90,11 @@ public class CoupleServiceImpl implements CoupleService {
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
                     if(existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 3) {
                         IncentiveActivity activity1 =
-                                incentivesRepo.findIncentiveMasterByNameAndGroup("FP_DELAY_2Y", "FAMILY PLANNING");
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("FP_DELAY_2Y", GroupName.FAMILY_PLANNING.getDisplayName());
                         createIncentiveRecord(recordList, it, activity1);
                     } else if (existingECR.getNumLiveChildren() == 1 && it.getNumLiveChildren() >= 2 && null != it.getMarriageFirstChildGap() && it.getMarriageFirstChildGap() >= 2) {
                         IncentiveActivity activity2 =
-                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", "FAMILY PLANNING");
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", GroupName.FAMILY_PLANNING.getDisplayName());
                         createIncentiveRecord(recordList, it, activity2);
                     }
                     Long id = existingECR.getId();
@@ -106,9 +107,20 @@ public class CoupleServiceImpl implements CoupleService {
                     existingECR.setId(null);
                 }
                 if(existingECR.getIsKitHandedOver() && (!existingECR.getKitPhoto1().isEmpty() || !existingECR.getKitPhoto2().isEmpty())){
-                    IncentiveActivity handoverKitActivity =
-                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", "FAMILY PLANNING");
-                    createIncentiveRecord(recordList, it, handoverKitActivity);
+                    IncentiveActivity handoverKitActivityAM =
+                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.FAMILY_PLANNING.getDisplayName());
+                    if(handoverKitActivityAM!=null){
+                        createIncentiveRecord(recordList, it, handoverKitActivityAM);
+
+                    }
+
+
+                    IncentiveActivity handoverKitActivityCH =
+                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.ACTIVITY.getDisplayName());
+                    if(handoverKitActivityCH!=null){
+                        createIncentiveRecord(recordList, it, handoverKitActivityCH);
+
+                    }
                 }
                 ecrList.add(existingECR);
             });
