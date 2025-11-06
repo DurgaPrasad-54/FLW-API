@@ -73,7 +73,8 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
                         .build();
 
                 responses.add(IFAFormSubmissionResponse.builder()
-                                .formId(entity.getFormId())
+                        .formId(entity.getFormId())
+                        .houseHoldId(entity.getHouseHoldId())
                         .beneficiaryId(entity.getBeneficiaryId())
                         .visitDate(entity.getVisitDate())
                         .createdBy(entity.getUserName())

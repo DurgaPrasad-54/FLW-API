@@ -85,7 +85,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         try {
 
 
-            List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> !incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
+            List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
             List<IncentiveActivityDTO> dtos = incs.stream().map(inc -> {
                 IncentiveActivityDTO dto = modelMapper.map(inc, IncentiveActivityDTO.class);

@@ -11,6 +11,7 @@ import java.util.Map;
 public class IFAFormSubmissionResponse {
     private Long beneficiaryId;
     private String visitDate;
+    private Long houseHoldId;
     private String createdBy;
     private String formId;
     private String createdAt;
