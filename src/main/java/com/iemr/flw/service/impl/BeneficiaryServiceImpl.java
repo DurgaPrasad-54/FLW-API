@@ -385,8 +385,6 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("abhaHealthDetails", healthDetails);
                     resultMap.put("houseoldId", benDetailsRMNCH_OBJ.getHouseoldId());
                     resultMap.put("benficieryid", benDetailsRMNCH_OBJ.getBenficieryid());
-                    RMNCHBeneficiaryDetailsRmnch finalBenDetailsRMNCH_OBJ = benDetailsRMNCH_OBJ;
-                    resultMap.put("generalOpdData", generalOpdRepo.findAll().stream().filter(generalOpdData -> generalOpdData.getBeneficiaryRegID().equals(finalBenDetailsRMNCH_OBJ.getBenficieryid())).collect(Collectors.toList()));
                     resultMap.put("isDeath", benDetailsRMNCH_OBJ.getIsDeath());
                     resultMap.put("isDeathValue", benDetailsRMNCH_OBJ.getIsDeathValue());
                     resultMap.put("dateOfDeath",benDetailsRMNCH_OBJ.getDateOfDeath());
