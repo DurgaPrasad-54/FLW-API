@@ -782,6 +782,7 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     public List<MosquitoNetDTO> getAllMosquitoMobilizationNet(Integer userId) {
 
         List<MosquitoNetEntity> entityList = mosquitoNetRepository.findByUserId(userId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         return entityList.stream().map(entity -> {
             MosquitoNetDTO dto = new MosquitoNetDTO();
@@ -790,16 +791,15 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             dto.setHouseHoldId(entity.getHouseHoldId());
 
             if (entity.getVisitDate() != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 dto.setVisitDate(entity.getVisitDate().format(formatter));
             }
 
             dto.setUserName(entity.getUserName());
+            MosquitoNetListDTO mosquitoNetListDTO = new MosquitoNetListDTO();
+            mosquitoNetListDTO.setIs_net_distributed(entity.getIsNetDistributed());
+            mosquitoNetListDTO.setVisit_date(entity.getVisitDate().format(formatter));
 
-            // Fields fill if needed
-            if (dto.getFields() != null) {
-                dto.getFields().setIs_net_distributed(entity.getIsNetDistributed());
-            }
+             dto.setFields(mosquitoNetListDTO);
 
             return dto;
         }).collect(Collectors.toList());
