@@ -3,6 +3,7 @@ package com.iemr.flw.dto.iemr;
 import lombok.Data;
 
 import java.io.File;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -49,7 +50,7 @@ public class ANCVisitDTO {
     private Integer methodOfTerminationId;
     private String terminationDoneBy;
     private Integer terminationDoneById;
-    private Boolean isPaiucdId;
+    private Integer isPaiucdId;
     private String isPaiucd;
     private String remarks;
     private String abortionImg1;
@@ -59,6 +60,7 @@ public class ANCVisitDTO {
     private String otherPlaceOfDeath;
     private  Timestamp lmpDate;
     private Timestamp visitDate;
+    private Date dateSterilisation;
 
 }
 

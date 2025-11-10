@@ -25,16 +25,13 @@
 package com.iemr.flw.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iemr.flw.dto.iemr.AesJeDTO;
-import com.iemr.flw.dto.iemr.FilariaDTO;
-import com.iemr.flw.dto.iemr.KalaAzarDTO;
-import com.iemr.flw.dto.iemr.MalariaDTO;
-import com.iemr.flw.dto.iemr.LeprosyDTO;
-import com.iemr.flw.dto.iemr.GetDiseaseRequestHandler;
+import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.DiseaseControlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -178,6 +177,34 @@ public class DiseaseControlController {
             response.put("statusCode", 500);
         }
         return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "mobilizationMosquitoNet/saveAll",method = RequestMethod.POST)
+    public  ResponseEntity<Map<String, Object>> saveMobilizationMosquitoNet(@RequestBody List<MosquitoNetDTO> mosquitoNetDTOS){
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        logger.info("Eye Checkup Get Request: {}", mosquitoNetDTOS);
+
+        try {
+            List<MosquitoNetDTO> responseObject = diseaseControlService.saveMosquitoMobilizationNet(mosquitoNetDTOS);
+
+            if (responseObject != null && !responseObject.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", responseObject);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error mobilizationMosquitoNet :", e);
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
     }
 
 

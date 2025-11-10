@@ -26,6 +26,8 @@ package com.iemr.flw.service;
 
 import com.iemr.flw.dto.iemr.*;
 
+import java.util.List;
+
 public interface DiseaseControlService {
     public String saveMalaria(MalariaDTO diseaseControlDTO);
     public String saveKalaAzar(KalaAzarDTO kalaAzarDTO);
@@ -33,5 +35,7 @@ public interface DiseaseControlService {
     public String saveFilaria(FilariaDTO filariaDTO);
     public String saveLeprosy(LeprosyDTO leprosyDTO);
     public Object getAllScreeningData(GetDiseaseRequestHandler getDiseaseRequestHandler);
+
+    public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList);
 
 }

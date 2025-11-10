@@ -68,5 +68,9 @@ public class DiseaseMalariaDTO {
     private boolean diarrhea;
     private String referToName;
     private Integer caseStatusId;
+    private  String  malariaTestType;
+    private String malariaSlideTestType;
+    private Long visitId;
+    private Date visitDate;
 
 }

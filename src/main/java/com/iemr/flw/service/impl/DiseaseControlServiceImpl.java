@@ -704,6 +704,10 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         }
     }
 
+    @Override
+    public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList) {
+        return null;
+    }
 
     private void checkAndAddIncentives(ScreeningMalaria diseaseScreening) {
         IncentiveActivity diseaseScreeningActivity;
@@ -753,4 +757,5 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             }
         }
     }
+
 }
