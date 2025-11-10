@@ -215,7 +215,7 @@ public class DiseaseControlController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<MosquitoNetDTO> responseObject = diseaseControlService.getAllMosquitoMobilizationNet(getBenRequestHandler.getUserName());
+            List<MosquitoNetDTO> responseObject = diseaseControlService.getAllMosquitoMobilizationNet(getBenRequestHandler.getAshaId());
 
             response.put("statusCode", HttpStatus.OK.value());
             response.put("data", responseObject);

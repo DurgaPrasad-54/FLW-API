@@ -38,5 +38,5 @@ public interface DiseaseControlService {
 
     public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList);
 
-    List<MosquitoNetDTO> getAllMosquitoMobilizationNet(String userName);
+    List<MosquitoNetDTO> getAllMosquitoMobilizationNet(Integer userId);
 }

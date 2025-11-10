@@ -23,6 +23,10 @@ public class MosquitoNetEntity {
     @Column(name = "user_name")
     private String userName;
 
+
+    @Column(name = "user_id")
+    private Integer userId;
+
     @Column(name = "is_net_distributed")
     private String isNetDistributed;
 

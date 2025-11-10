@@ -732,6 +732,7 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
 
             entity.setUserName(dto.getUserName());
+            entity.setUserId(userRepo.getUserIdByName(dto.getUserName()));
 
             // ✅ Safe null handling for fields
             if (dto.getFields() != null) {
@@ -778,9 +779,9 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     }
 
     @Override
-    public List<MosquitoNetDTO> getAllMosquitoMobilizationNet(String userName) {
+    public List<MosquitoNetDTO> getAllMosquitoMobilizationNet(Integer userId) {
 
-        List<MosquitoNetEntity> entityList = mosquitoNetRepository.findByUserName(userName);
+        List<MosquitoNetEntity> entityList = mosquitoNetRepository.findByUserId(userId);
 
         return entityList.stream().map(entity -> {
             MosquitoNetDTO dto = new MosquitoNetDTO();

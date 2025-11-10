@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MosquitoNetRepository extends JpaRepository<MosquitoNetEntity, Long> {
-    List<MosquitoNetEntity> findByUserName(String userName);
+    List<MosquitoNetEntity> findByUserId(Integer userId);
 }
