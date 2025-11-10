@@ -1,5 +1,8 @@
 package com.iemr.flw.dto.iemr;
 
+import lombok.Data;
+
+@Data
 public class MosquitoNetDTO {
     private Long beneficiaryId;
     private Long houseHoldId;

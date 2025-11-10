@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,6 +65,11 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
     @Autowired
     private IncentivesRepo incentivesRepo;
+
+    @Autowired
+    private MosquitoNetRepository mosquitoNetRepository;
+
+
 
     private final Logger logger = LoggerFactory.getLogger(CoupleController.class);
 
@@ -706,8 +712,66 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
     @Override
     public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList) {
-        return null;
+
+        // DTO → Entity
+        List<MosquitoNetEntity> entityList = mosquitoNetDTOList.stream().map(dto -> {
+
+            MosquitoNetEntity entity = new MosquitoNetEntity();
+
+            entity.setBeneficiaryId(dto.getBeneficiaryId());
+            entity.setHouseHoldId(dto.getHouseHoldId());
+
+            // ✅ String → LocalDate conversion
+            if (dto.getVisitDate() != null && !dto.getVisitDate().isEmpty()) {
+                entity.setVisitDate(LocalDate.parse(dto.getVisitDate()));
+            }
+
+            entity.setUserName(dto.getUserName());
+
+            // ✅ Safe null handling for fields
+            if (dto.getFields() != null) {
+                entity.setIsNetDistributed(dto.getFields().getIs_net_distributed());
+            } else {
+                entity.setIsNetDistributed(null);
+            }
+
+            return entity;
+
+        }).collect(Collectors.toList());
+
+
+
+        // ✅ Save all
+        List<MosquitoNetEntity> savedEntities = mosquitoNetRepository.saveAll(entityList);
+
+
+
+        // ✅ Entity → DTO return
+        return savedEntities.stream().map(entity -> {
+
+            MosquitoNetDTO dto = new MosquitoNetDTO();
+
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setHouseHoldId(entity.getHouseHoldId());
+
+            // ✅ LocalDate → String (to avoid type mismatch)
+            if (entity.getVisitDate() != null) {
+                dto.setVisitDate(entity.getVisitDate().toString());
+            }
+
+            dto.setUserName(entity.getUserName());
+
+            // ✅ Return is_net_distributed inside dto.fields (if needed)
+            if (dto.getFields() != null) {
+                dto.getFields().setIs_net_distributed(entity.getIsNetDistributed());
+            }
+
+            return dto;
+
+        }).collect(Collectors.toList());
     }
+
+
 
     private void checkAndAddIncentives(ScreeningMalaria diseaseScreening) {
         IncentiveActivity diseaseScreeningActivity;
