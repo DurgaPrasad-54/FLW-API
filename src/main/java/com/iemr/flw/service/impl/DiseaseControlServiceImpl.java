@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -723,8 +724,10 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
             // ✅ String → LocalDate conversion
             if (dto.getVisitDate() != null && !dto.getVisitDate().isEmpty()) {
-                entity.setVisitDate(LocalDate.parse(dto.getVisitDate()));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                entity.setVisitDate(LocalDate.parse(dto.getVisitDate(), formatter));
             }
+
 
             entity.setUserName(dto.getUserName());
 
@@ -755,10 +758,11 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             dto.setHouseHoldId(entity.getHouseHoldId());
 
             // ✅ LocalDate → String (to avoid type mismatch)
-            if (entity.getVisitDate() != null) {
-                dto.setVisitDate(entity.getVisitDate().toString());
-            }
 
+            if (entity.getVisitDate() != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                dto.setVisitDate(entity.getVisitDate().format(formatter));
+            }
             dto.setUserName(entity.getUserName());
 
             // ✅ Return is_net_distributed inside dto.fields (if needed)
