@@ -72,6 +72,8 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
 
 
+
+
     private final Logger logger = LoggerFactory.getLogger(CoupleController.class);
 
     @Override
@@ -774,6 +776,34 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public List<MosquitoNetDTO> getAllMosquitoMobilizationNet(String userName) {
+
+        List<MosquitoNetEntity> entityList = mosquitoNetRepository.findByUserName(userName);
+
+        return entityList.stream().map(entity -> {
+            MosquitoNetDTO dto = new MosquitoNetDTO();
+
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setHouseHoldId(entity.getHouseHoldId());
+
+            if (entity.getVisitDate() != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                dto.setVisitDate(entity.getVisitDate().format(formatter));
+            }
+
+            dto.setUserName(entity.getUserName());
+
+            // Fields fill if needed
+            if (dto.getFields() != null) {
+                dto.getFields().setIs_net_distributed(entity.getIsNetDistributed());
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 
 
 

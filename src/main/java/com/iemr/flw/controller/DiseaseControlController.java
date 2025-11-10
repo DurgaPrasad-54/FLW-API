@@ -25,6 +25,7 @@
 package com.iemr.flw.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.DiseaseControlService;
 import org.slf4j.Logger;
@@ -207,5 +208,25 @@ public class DiseaseControlController {
 
     }
 
+
+    @RequestMapping(value = "mobilizationMosquitoNet/getAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getAllMobilizationMosquitoNet(@RequestBody GetBenRequestHandler getBenRequestHandler) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        try {
+            List<MosquitoNetDTO> responseObject = diseaseControlService.getAllMosquitoMobilizationNet(getBenRequestHandler.getUserName());
+
+            response.put("statusCode", HttpStatus.OK.value());
+            response.put("data", responseObject);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error getAllMobilizationMosquitoNet :", e);
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
 }
