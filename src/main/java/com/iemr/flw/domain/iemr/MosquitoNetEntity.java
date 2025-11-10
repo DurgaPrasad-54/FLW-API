@@ -1,4 +1,4 @@
-package com.iemr.flw.dto.iemr;
+package com.iemr.flw.domain.iemr;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name = "i_mobilization_mosquito_net")
+@Table(name = "i_mobilization_mosquito_net",schema = "db_iemr")
 public class MosquitoNetEntity {
 
     @Id
