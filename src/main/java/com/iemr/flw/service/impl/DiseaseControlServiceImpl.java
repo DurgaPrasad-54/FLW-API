@@ -786,7 +786,7 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
         return entityList.stream().map(entity -> {
             MosquitoNetDTO dto = new MosquitoNetDTO();
-
+            dto.setId(entity.getId());
             dto.setBeneficiaryId(entity.getBeneficiaryId());
             dto.setHouseHoldId(entity.getHouseHoldId());
 

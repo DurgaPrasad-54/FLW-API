@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class MosquitoNetDTO {
+    private Long id;
     private Long beneficiaryId;
     private Long houseHoldId;
     private String visitDate;
