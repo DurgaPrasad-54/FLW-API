@@ -19,9 +19,11 @@ public interface ChildVaccinationRepo extends JpaRepository<ChildVaccination, Lo
     ChildVaccination findChildVaccinationByBeneficiaryRegIdAndCreatedDateAndVaccineName(Long benRegId, Timestamp createdDate, String vaccine);
 
     @Query(value = "select count(*) from db_iemr.t_childvaccinedetail1 cv left outer join db_iemr.m_immunizationservicevaccination v on " +
-            "cv.VaccineName = v.VaccineName where cv.beneficiaryRegId = :benRegId and v.Currentimmunizationserviceid in (1,2,3,4,5) and " +
+            "cv.VaccineName = v.VaccineName where cv.beneficiaryRegId = :benRegId and v.Currentimmunizationserviceid in (1,2,3,4,5,6,7,8) and " +
             "v.category = 'CHILD'", nativeQuery = true)
     Integer getFirstYearVaccineCountForBenId(@Param("benRegId") Long benRegId);
+
+
 
     @Query(value = "select count(*) from db_iemr.m_immunizationservicevaccination v where v.Currentimmunizationserviceid in (1,2,3,4,5) " +
             "and v.category = 'CHILD'", nativeQuery = true)

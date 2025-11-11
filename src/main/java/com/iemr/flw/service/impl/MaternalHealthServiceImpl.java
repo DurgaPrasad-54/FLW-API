@@ -389,7 +389,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity ancFullActivityCH =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.ACTIVITY.getDisplayName());
 
         IncentiveActivity comprehensiveAbortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
 
@@ -429,7 +429,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                             .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
 
                     IncentiveActivityRecord recordCH = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
 
                     ANCVisit visit1 = ancVisitRepo
                             .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 1, true);
