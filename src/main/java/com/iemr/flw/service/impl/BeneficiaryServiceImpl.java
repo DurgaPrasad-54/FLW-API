@@ -63,6 +63,12 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     private final Logger logger = LoggerFactory.getLogger(BeneficiaryServiceImpl.class);
     @Value("${door-to-door-page-size}")
     private String door_to_door_page_size;
+
+    @Value("${fhir-url}")
+    private String fhirUrl;
+
+    @Value("${getHealthID}")
+    private String getHealthID;
     @Autowired
     private BeneficiaryRepo beneficiaryRepo;
 
@@ -483,8 +489,8 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         try {
             HashMap<String, Object> header = new HashMap<String, Object>();
             header.put("Authorization", authorization);
-            String responseStr = utils.post(ConfigProperties.getPropertyByName("fhir-url") + "/"
-                    + ConfigProperties.getPropertyByName("getHealthID"), new Gson().toJson(requestMap), header);
+            String responseStr = utils.post(fhirUrl + "/"
+                    + getHealthID, new Gson().toJson(requestMap), header);
             JsonElement jsnElmnt = jsnParser.parse(responseStr);
             JsonObject jsnOBJ = new JsonObject();
             jsnOBJ = jsnElmnt.getAsJsonObject();
