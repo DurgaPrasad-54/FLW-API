@@ -25,9 +25,44 @@
 package com.iemr.flw.repo.iemr;
 
 import com.iemr.flw.domain.iemr.GeneralOpdData;
+import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 
 @Repository
 public interface GeneralOpdRepo extends JpaRepository<GeneralOpdData,Long> {
+
+    @Query(value = """
+    SELECT ibfo.* 
+    FROM db_iemr.i_ben_flow_outreach ibfo
+    JOIN db_identity.m_beneficiaryregidmapping mbrm
+      ON ibfo.beneficiary_reg_id = mbrm.BenRegId
+    WHERE ibfo.visit_category = 'General OPD'
+      AND ibfo.beneficiary_visit_code <> 0
+      AND ibfo.villageID = :villageID
+      AND ibfo.created_by =:userName
+      AND (ibfo.deleted IS NULL OR ibfo.deleted = 0)
+      AND (mbrm.Deleted IS NULL OR mbrm.Deleted = 0)
+    ORDER BY ibfo.created_date DESC
+    """,
+            countQuery = """
+    SELECT COUNT(*) 
+    FROM db_iemr.i_ben_flow_outreach ibfo
+    JOIN db_identity.m_beneficiaryregidmapping mbrm
+      ON ibfo.beneficiary_reg_id = mbrm.BenRegId
+    WHERE ibfo.visit_category = 'General OPD'
+      AND ibfo.beneficiary_visit_code <> 0
+      AND ibfo.villageID = :villageID
+      AND (ibfo.deleted IS NULL OR ibfo.deleted = 0)
+      AND (mbrm.Deleted IS NULL OR mbrm.Deleted = 0)
+    """,
+            nativeQuery = true)
+    Page<GeneralOpdData> findFilteredOutreachData(
+            @Param("villageID") Integer villageID,
+            Pageable pageable,@Param("userName") String  userName);
+
 }

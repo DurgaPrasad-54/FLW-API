@@ -212,5 +212,13 @@ public class GeneralOpdData {
 	@Column(name = "vanID")
 	private Integer vanID;
 
+	@Expose
+	@Column(name = "beneficiary_id")
+	private Long beneficiaryId;
+
+	@Expose
+	@Column(name = "village")
+	private String  village;
+
 
 }

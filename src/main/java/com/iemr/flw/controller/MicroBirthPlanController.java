@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,17 +56,16 @@ public class MicroBirthPlanController {
 
 
     @RequestMapping(value = "getAll", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getAllMicroBirthPlans(@RequestHeader(value = "Authorization") String authorization) {
+    public ResponseEntity<Map<String, Object>> getAllMicroBirthPlans(@RequestParam("userId") Integer userId) {
 
         Map<String, Object> response = new HashMap<>();
 
 
         Map<String, Object> data = new HashMap<>();
         try {
-            Integer userID = jwtUtil.extractUserId(authorization);
-            if (userID != null) {
-                data.put("userId", userID);
-                data.put("entries", service.getAllMicroBirthPlans(userID));
+            if (userId != null) {
+                data.put("userId", userId);
+                data.put("entries", service.getAllMicroBirthPlans(userId));
                 response.put("data", data);
                 response.put("statusCode", 200);
                 response.put("status", "Success");

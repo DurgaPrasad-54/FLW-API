@@ -43,7 +43,7 @@ public class MalariaFollowUpController {
     @Autowired
     private MalariaFollowUpService followUpService;
 
-    @RequestMapping(value = "save", method = RequestMethod.POST, headers = "Authorization")
+    @RequestMapping(value = "save", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> save(@RequestBody MalariaFollowUpDTO dto) {
         Map<String, Object> response = new HashMap<>();
 
@@ -64,7 +64,7 @@ public class MalariaFollowUpController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = "get", method = RequestMethod.POST, headers = "Authorization")
+    @RequestMapping(value = "get", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> getFollowUpsByUserId(@RequestBody GetDiseaseRequestHandler getDiseaseRequestHandler) {
         Map<String, Object> response = new HashMap<>();
         
