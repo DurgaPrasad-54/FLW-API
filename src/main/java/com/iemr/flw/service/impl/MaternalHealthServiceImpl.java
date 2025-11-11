@@ -394,7 +394,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         IncentiveActivity comprehensiveAbortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity identifiedHrpActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
-        IncentiveActivity identifiedHrpActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
+        IncentiveActivity identifiedHrpActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.ACTIVITY.getDisplayName());
 
 
 
@@ -539,8 +539,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
-                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName() + " " + rmnchBeneficiaryDetailsRmnch.getLastName();
                 if (ancVisit.getIsHrpConfirmed() != null) {
                     if (ancVisit.getIsHrpConfirmed()) {
                         if (record == null) {
@@ -549,7 +547,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                             record.setCreatedDate(ancVisit.getCreatedDate());
                             record.setCreatedBy(ancVisit.getCreatedBy());
                             record.setUpdatedDate(ancVisit.getCreatedDate());
-                            record.setName(beneName);
                             record.setUpdatedBy(ancVisit.getCreatedBy());
                             record.setStartDate(ancVisit.getCreatedDate());
                             record.setEndDate(ancVisit.getCreatedDate());
