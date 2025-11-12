@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MdaFormFieldsDTO {
-    private Timestamp mda_distribution_date;
+    private String mda_distribution_date;
     private String is_medicine_distributed;
 }

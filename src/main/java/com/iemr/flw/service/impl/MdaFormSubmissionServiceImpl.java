@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,15 +26,22 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
     @Override
     public String saveFormData(List<MdaFormSubmissionRequest> requests) {
         try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
             List<MdaDistributionData> entities = new ArrayList<>();
             for (MdaFormSubmissionRequest req : requests) {
+                LocalDate visitLocalDate = LocalDate.parse(req.getVisitDate(), formatter);
+                Timestamp visitDate = Timestamp.valueOf(visitLocalDate.atStartOfDay());
+
+                LocalDate getMdaDistributionDateLocalDate = LocalDate.parse(req.getFields().getMda_distribution_date(), formatter);
+                Timestamp getMdaDistributionDate = Timestamp.valueOf(getMdaDistributionDateLocalDate.atStartOfDay());
                 MdaDistributionData data = MdaDistributionData.builder()
                         .beneficiaryId(req.getBeneficiaryId())
                         .formId(req.getFormId())
                         .houseHoldId(req.getHouseHoldId())
                         .userName(req.getUserName())
-                        .visitDate(req.getVisitDate())
-                        .mdaDistributionDate(req.getFields().getMda_distribution_date())
+                        .visitDate(visitDate)
+                        .mdaDistributionDate(getMdaDistributionDate)
                         .isMedicineDistributed(req.getFields().getIs_medicine_distributed())
                         .createdBy(req.getUserName())
                         .modifiedBy(req.getUserName())
@@ -55,7 +65,7 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
         for (MdaDistributionData entity : records) {
             try {
                 MdaFormFieldsDTO fieldsDTO = MdaFormFieldsDTO.builder()
-                        .mda_distribution_date(entity.getMdaDistributionDate())
+                        .mda_distribution_date(entity.getMdaDistributionDate().toString())
                         .is_medicine_distributed(entity.getIsMedicineDistributed())
                         .build();
 
