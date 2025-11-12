@@ -161,6 +161,9 @@ public class ANCVisit {
     @Column(name = "lmp_date")
     private Timestamp lmpDate;
 
+    @Column(name = "is_YesOrNo")
+    private Boolean isYesOrNo;
+
 
 
 

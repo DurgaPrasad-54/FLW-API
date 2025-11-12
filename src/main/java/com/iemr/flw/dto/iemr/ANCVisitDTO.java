@@ -1,5 +1,6 @@
 package com.iemr.flw.dto.iemr;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.io.File;
@@ -61,6 +62,7 @@ public class ANCVisitDTO {
     private  Timestamp lmpDate;
     private Timestamp visitDate;
     private Date dateSterilisation;
+    private Boolean isYesOrNo;
 
 }
 
