@@ -51,8 +51,6 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Autowired
     private JwtUtil jwtUtil;
 
-
-
     @Autowired
     private UserServiceRoleRepo userRepo;
    private Integer  sateId =0;
@@ -78,7 +76,7 @@ public class IncentiveServiceImpl implements IncentiveService {
             activityDTOS.forEach(dto -> saved.concat(dto.getGroup() + ": " + dto.getName()));
             return "saved master data for " + saved ;
         } catch (Exception e) {
-            
+
         }
         return null;
     }
@@ -179,7 +177,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                     entry.setName(beneName);
 
                 }else{
-                  entry.setName("");
+                    entry.setName("");
 
                 }
 
