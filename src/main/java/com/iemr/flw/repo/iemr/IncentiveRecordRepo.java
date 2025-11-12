@@ -16,12 +16,12 @@ public interface IncentiveRecordRepo extends JpaRepository<IncentiveActivityReco
     @Query("select record from IncentiveActivityRecord record where record.activityId = :id and record.createdDate = :createdDate and record.benId = :benId")
     IncentiveActivityRecord findRecordByActivityIdCreatedDateBenId(@Param("id") Long id, @Param("createdDate") Timestamp createdDate, @Param("benId") Long benId);
 
+
     @Query("SELECT record FROM IncentiveActivityRecord record " +
             "WHERE record.activityId = :id " +
             "AND record.createdDate BETWEEN :startDate AND :endDate " +
-            "AND record.benId = :benId" +
+            "AND record.benId = :benId " +   // ← space added here
             "AND record.ashaId = :ashaId")
-
     IncentiveActivityRecord findRecordByActivityIdCreatedDateBenId(
             @Param("id") Long id,
             @Param("startDate") Timestamp startDate,
@@ -29,6 +29,7 @@ public interface IncentiveRecordRepo extends JpaRepository<IncentiveActivityReco
             @Param("benId") Long benId,
             @Param("ashaId") Integer ashaId
     );
+
     @Query("select record from IncentiveActivityRecord record where record.ashaId = :ashaId and record.startDate >= :fromDate and record.startDate <= :toDate and record.endDate >= :fromDate and record.endDate <= :toDate ")
     List<IncentiveActivityRecord> findRecordsByAsha(@Param("ashaId") Integer ashaId, @Param("fromDate") Timestamp fromDate,@Param("toDate") Timestamp toDate);
 
