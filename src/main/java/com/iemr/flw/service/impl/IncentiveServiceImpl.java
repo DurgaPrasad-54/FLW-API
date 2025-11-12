@@ -83,7 +83,7 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
 
         try {
-           logger.info("StateId:"+incentiveRequestDTO.getState());
+           logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
 
             List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
