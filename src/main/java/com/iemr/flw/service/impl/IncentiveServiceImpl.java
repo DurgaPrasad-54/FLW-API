@@ -83,7 +83,7 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
 
         try {
-
+           logger.info("StateId:"+incentiveRequestDTO.getState());
 
             List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
