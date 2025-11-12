@@ -164,6 +164,9 @@ public class ANCVisit {
     @Column(name = "is_YesOrNo")
     private Boolean isYesOrNo;
 
+    @Column(name = "date_of_sterilisation")
+    private Timestamp  dateSterilisation;
+
 
 
 

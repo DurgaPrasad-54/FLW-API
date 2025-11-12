@@ -61,7 +61,7 @@ public class ANCVisitDTO {
     private String otherPlaceOfDeath;
     private  Timestamp lmpDate;
     private Timestamp visitDate;
-    private Date dateSterilisation;
+    private Timestamp dateSterilisation;
     private Boolean isYesOrNo;
 
 }
