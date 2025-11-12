@@ -19,12 +19,15 @@ public interface IncentiveRecordRepo extends JpaRepository<IncentiveActivityReco
     @Query("SELECT record FROM IncentiveActivityRecord record " +
             "WHERE record.activityId = :id " +
             "AND record.createdDate BETWEEN :startDate AND :endDate " +
-            "AND record.benId = :benId")
+            "AND record.benId = :benId" +
+            "AND record.ashaId = :ashaId")
+
     IncentiveActivityRecord findRecordByActivityIdCreatedDateBenId(
             @Param("id") Long id,
             @Param("startDate") Timestamp startDate,
             @Param("endDate") Timestamp endDate,
-            @Param("benId") Long benId
+            @Param("benId") Long benId,
+            @Param("ashaId") Integer ashaId
     );
     @Query("select record from IncentiveActivityRecord record where record.ashaId = :ashaId and record.startDate >= :fromDate and record.startDate <= :toDate and record.endDate >= :fromDate and record.endDate <= :toDate ")
     List<IncentiveActivityRecord> findRecordsByAsha(@Param("ashaId") Integer ashaId, @Param("fromDate") Timestamp fromDate,@Param("toDate") Timestamp toDate);
