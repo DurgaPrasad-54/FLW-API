@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -30,8 +32,6 @@ public class MdaDistributionData {
     @Column(name = "FormId")
     private String formId;
 
-    @Column(name = "AshaId", nullable = false)
-    private Integer ashaId;
 
     @Column(name = "VisitDate")
     private Timestamp visitDate;
@@ -49,6 +49,7 @@ public class MdaDistributionData {
     private String createdBy;
 
     @Column(name = "CreatedDate")
+    @CreatedDate
     private Timestamp createdDate;
 
     @Column(name = "ModifiedBy")

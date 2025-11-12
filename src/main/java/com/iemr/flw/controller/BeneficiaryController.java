@@ -147,8 +147,8 @@ public class BeneficiaryController {
     @RequestMapping(value = "/mda/getAll", method = RequestMethod.POST)
     public ResponseEntity<?> getFormDataByCreatedBy(@RequestBody Map<String, String> request,
             @RequestHeader(value = "Authorization") String authorization) {
-        Integer ashaID = request.get("ashaId") != null ? Integer.parseInt(request.get("ashaId")) : null;
-        var data = mdaFormSubmissionService.getFormDataByAshaId(ashaID);
+        String userName = request.get("userName") ;
+        var data = mdaFormSubmissionService.getFormDataByUserName(userName);
         return ResponseEntity.ok(Map.of("success", true, "message", "Data fetched successfully", "data", data));
     }
 

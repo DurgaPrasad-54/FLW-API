@@ -8,5 +8,5 @@ import com.iemr.flw.dto.iemr.MdaFormSubmissionResponse;
 public interface MdaFormSubmissionService {
     String saveFormData(List<MdaFormSubmissionRequest> requests);
 
-    List<MdaFormSubmissionResponse> getFormDataByAshaId(Integer ashaId); 
+    List<MdaFormSubmissionResponse> getFormDataByUserName(String  userName);
 }

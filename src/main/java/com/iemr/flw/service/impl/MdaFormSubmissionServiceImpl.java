@@ -31,11 +31,10 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
                         .houseHoldId(req.getHouseHoldId())
                         .userName(req.getUserName())
                         .visitDate(req.getVisitDate())
-                        .ashaId(req.getAshaId())
                         .mdaDistributionDate(req.getFields().getMda_distribution_date())
                         .isMedicineDistributed(req.getFields().getIs_medicine_distributed())
-                        .createdBy(req.getCreatedBy())
-                        .createdDate(req.getCreatedDate())
+                        .createdBy(req.getUserName())
+                        .modifiedBy(req.getUserName())
                         .build();
                 entities.add(data);
             }
@@ -48,8 +47,8 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
     }
 
     @Override
-    public List<MdaFormSubmissionResponse> getFormDataByAshaId(Integer ashaId) {
-        List<MdaDistributionData> records = repository.findByAshaId(ashaId);
+    public List<MdaFormSubmissionResponse> getFormDataByUserName(String userName) {
+        List<MdaDistributionData> records = repository.findByUserName(userName);
 
         List<MdaFormSubmissionResponse> responses = new ArrayList<>();
 
@@ -64,7 +63,6 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
                         .formId(entity.getFormId())
                         .houseHoldId(entity.getHouseHoldId())
                         .beneficiaryId(entity.getBeneficiaryId())
-                        .ashaId(entity.getAshaId()) // ✅ Include ashaId in response
                         .visitDate(entity.getVisitDate())
                         .createdBy(entity.getCreatedBy())
                         .createdAt(entity.getCreatedDate())

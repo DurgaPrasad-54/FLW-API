@@ -12,6 +12,6 @@ import java.util.List;
 public interface MdaFormSubmissionRepository extends JpaRepository<MdaDistributionData, Long> {
     List<MdaDistributionData> findByCreatedBy(String createdBy);
 
-    List<MdaDistributionData> findByAshaId(Integer ashaId);
+    List<MdaDistributionData> findByUserName(String userName);
 
 }

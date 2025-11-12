@@ -10,9 +10,7 @@ public class MdaFormSubmissionRequest {
     private String formId;
     private Long houseHoldId;
     private String userName;
-    private Integer ashaId; 
     private Timestamp visitDate;
     private MdaFormFieldsDTO fields;
-    private String createdBy;
     private Timestamp createdDate;
 }
