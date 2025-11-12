@@ -218,7 +218,8 @@ public class IncentiveServiceImpl implements IncentiveService {
                 incentiveActivity.getId(),
                 startOfMonth,
                 endOfMonth,
-                0L
+                0L,
+                userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())
         );
 
 
