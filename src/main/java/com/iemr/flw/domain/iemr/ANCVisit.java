@@ -132,7 +132,7 @@ public class ANCVisit {
     private Integer terminationDoneById;
 
     @Column(name = "is_paiucd_id")
-    private Boolean isPaiucdId;
+    private Integer isPaiucdId;
 
     @Column(name = "is_paiucd")
     private String isPaiucd;
