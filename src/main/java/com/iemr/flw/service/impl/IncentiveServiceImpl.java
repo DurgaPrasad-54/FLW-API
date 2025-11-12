@@ -53,6 +53,8 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Autowired
     private UserServiceRoleRepo userRepo;
+   private Integer  sateId =0;
+
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
         try {
@@ -84,9 +86,18 @@ public class IncentiveServiceImpl implements IncentiveService {
 
         try {
            logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
+            UserServiceRoleDTO userServiceRoleDTO=   userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0);
+           if(userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId()!=null){
+               sateId = userServiceRoleDTO.getStateId();
+           }
+            List<IncentiveActivity> incs = new ArrayList<>();
+            if(sateId==8){
+                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
-            List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
+            }else {
+                incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> !incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
+            }
             List<IncentiveActivityDTO> dtos = incs.stream().map(inc -> {
                 IncentiveActivityDTO dto = modelMapper.map(inc, IncentiveActivityDTO.class);
 
@@ -148,7 +159,13 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId())!=null).collect(Collectors.toList());
+        if(sateId==8){
+            entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),true)!=null).collect(Collectors.toList());
+
+        }else {
+            entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),false)!=null).collect(Collectors.toList());
+
+        }
         entities.forEach(entry -> {
             if(entry.getName()==null){
                 if(entry.getBenId()!=0){
