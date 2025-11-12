@@ -51,8 +51,6 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Autowired
     private JwtUtil jwtUtil;
 
-
-
     @Autowired
     private UserServiceRoleRepo userRepo;
    private Integer  sateId =0;
