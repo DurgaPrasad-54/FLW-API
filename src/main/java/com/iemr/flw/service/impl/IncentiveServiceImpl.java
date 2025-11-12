@@ -51,6 +51,8 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Autowired
     private JwtUtil jwtUtil;
 
+
+
     @Autowired
     private UserServiceRoleRepo userRepo;
     @Override
@@ -83,9 +85,15 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
 
         try {
+            List<IncentiveActivity> incs = new ArrayList<>();
 
+            if(incentiveRequestDTO.getState()==8){
+                incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
-            List<IncentiveActivity> incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
+            }else {
+                incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> !incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
+
+            }
 
             List<IncentiveActivityDTO> dtos = incs.stream().map(inc -> {
                 IncentiveActivityDTO dto = modelMapper.map(inc, IncentiveActivityDTO.class);
