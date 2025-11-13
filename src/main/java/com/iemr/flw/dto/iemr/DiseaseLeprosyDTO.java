@@ -26,6 +26,7 @@ package com.iemr.flw.dto.iemr;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 @Data
 public class DiseaseLeprosyDTO {
@@ -52,5 +53,22 @@ public class DiseaseLeprosyDTO {
     private String reasonForDeath;
     private String otherReasonForDeath;
 
-    // Getters and Setters
+    private String leprosySymptoms;
+    private Integer leprosySymptomsPosition;
+    private Integer lerosyStatusPosition;
+    private Integer currentVisitNumber;
+    private String visitLabel;
+    private Integer visitNumber;
+    private Boolean isConfirmed;
+    private String leprosyState;
+    private Date treatmentStartDate;
+    private Integer totalFollowUpMonthsRequired;
+    private Date treatmentEndDate;
+    private String mdtBlisterPackRecived;
+    private String treatmentStatus;
+
+    private String createdBy;
+    private Timestamp createdDate;
+    private String modifiedBy;
+    private Timestamp lastModDate;
 }

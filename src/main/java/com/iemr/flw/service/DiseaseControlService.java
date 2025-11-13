@@ -39,4 +39,5 @@ public interface DiseaseControlService {
     public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList);
 
     List<MosquitoNetDTO> getAllMosquitoMobilizationNet(Integer userId);
+     List<DiseaseLeprosyDTO> getAllLeprosyData(String createdBy);  
 }

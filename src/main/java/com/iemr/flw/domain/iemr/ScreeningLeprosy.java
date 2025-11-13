@@ -27,6 +27,7 @@ package com.iemr.flw.domain.iemr;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -100,4 +101,57 @@ public class ScreeningLeprosy {
 
     @Column(name = "other_reason_for_death", columnDefinition = "TEXT")
     private String otherReasonForDeath;
+
+    @Column(name = "leprosy_symptoms", length = 255)
+    private String leprosySymptoms;
+
+    @Column(name = "leprosy_symptoms_position")
+    private Integer leprosySymptomsPosition;
+
+    @Column(name = "leprosy_status_position")
+    private Integer lerosyStatusPosition;
+
+    @Column(name = "current_visit_number")
+    private Integer currentVisitNumber;
+
+    @Column(name = "visit_label", length = 50)
+    private String visitLabel;
+
+    @Column(name = "visit_number")
+    private Integer visitNumber;
+
+    @Column(name = "is_confirmed")
+    private Boolean isConfirmed;
+
+    @Column(name = "leprosy_state", length = 50)
+    private String leprosyState;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "treatment_start_date")
+    private Date treatmentStartDate;
+
+    @Column(name = "total_followup_months_required")
+    private Integer totalFollowUpMonthsRequired;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "treatment_end_date")
+    private Date treatmentEndDate;
+
+    @Column(name = "mdt_blister_pack_recived", length = 100)
+    private String mdtBlisterPackRecived;
+
+    @Column(name = "treatment_status", length = 100)
+    private String treatmentStatus;
+
+    @Column(name = "CreatedBy", length = 100)
+    private String createdBy;
+
+    @Column(name = "CreatedDate")
+    private Timestamp createdDate;
+
+    @Column(name = "ModifiedBy", length = 100)
+    private String modifiedBy;
+
+    @Column(name = "LastModDate")
+    private Timestamp lastModDate;
 }
