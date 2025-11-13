@@ -166,21 +166,23 @@ public class DiseaseControlController {
 
     }
 
-        @RequestMapping(value = "leprosy/followUp/saveAll", method = RequestMethod.POST, consumes = "application/json", produces = "application/json",headers = "Authorization")
-    public ResponseEntity<Map<String, Object>> saveLeprosyFollowUP(@RequestBody LeprosyFollowUpDTO leprosyDTO) {
+    @RequestMapping(value = "leprosy/followUp/saveAll", method = RequestMethod.POST, consumes = "application/json", produces = "application/json", headers = "Authorization")
+    public ResponseEntity<Map<String, Object>> saveLeprosyFollowUP(@RequestBody List<LeprosyFollowUpDTO> followUps) {
         Map<String, Object> response = new HashMap<>();
         try {
-            if(leprosyDTO!=null){
+            if (followUps != null && !followUps.isEmpty()) {
+                for (LeprosyFollowUpDTO dto : followUps) {
+                    diseaseControlService.saveLeprosyFollowUp(dto);
+                }
                 response.put("status", "Success");
                 response.put("statusCode", 200);
-                response.put("data", diseaseControlService.saveLeprosyFollowUp(leprosyDTO));
-            }else {
-                response.put("message", "Invalid request");
+                response.put("message", "All follow-ups saved successfully");
+            } else {
+                response.put("message", "Invalid request - no follow-up data");
                 response.put("statusCode", 400);
             }
-
         } catch (Exception e) {
-            response.put("status", "Error" + e.getMessage());
+            response.put("status", "Error: " + e.getMessage());
             response.put("statusCode", 500);
         }
         return ResponseEntity.ok(response);
