@@ -143,7 +143,6 @@ public class IncentiveServiceImpl implements IncentiveService {
 
                 return dto;
             }).collect(Collectors.toList());
-            checkMonthlyAshaIncentive();
 
             Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
 
@@ -157,6 +156,8 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
+
+        checkMonthlyAshaIncentive(request.getUserName(),request.getAshaId());
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
         if(sateId==8){
@@ -168,7 +169,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         }
         entities.forEach(entry -> {
             if(entry.getName()==null){
-                if(entry.getBenId()!=0){
+                if(entry.getBenId()!=0 & entry.getBenId()>0){
                     Long regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
                     logger.info("rmnchBeneficiaryDetailsRmnch"+regId);
                     BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(BigInteger.valueOf(regId)).getBenDetailsId();
@@ -190,25 +191,25 @@ public class IncentiveServiceImpl implements IncentiveService {
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(dtos);
     }
-    private void checkMonthlyAshaIncentive(){
+    private void checkMonthlyAshaIncentive(String userName,Integer ashaId){
         IncentiveActivity MOBILEBILLREIMB_ACTIVITY = incentivesRepo.findIncentiveMasterByNameAndGroup("MOBILE_BILL_REIMB", GroupName.OTHER_INCENTIVES.getDisplayName());
         IncentiveActivity ADDITIONAL_ASHA_INCENTIVE = incentivesRepo.findIncentiveMasterByNameAndGroup("ADDITIONAL_ASHA_INCENTIVE", GroupName.ADDITIONAL_INCENTIVE.getDisplayName());
         IncentiveActivity ASHA_MONTHLY_ROUTINE = incentivesRepo.findIncentiveMasterByNameAndGroup("ASHA_MONTHLY_ROUTINE", GroupName.ASHA_MONTHLY_ROUTINE.getDisplayName());
         if(MOBILEBILLREIMB_ACTIVITY!=null){
-            addMonthlyAshaIncentiveRecord(MOBILEBILLREIMB_ACTIVITY);
+            addMonthlyAshaIncentiveRecord(MOBILEBILLREIMB_ACTIVITY,userName,ashaId);
         }
         if(ADDITIONAL_ASHA_INCENTIVE!=null){
-            addMonthlyAshaIncentiveRecord(ADDITIONAL_ASHA_INCENTIVE);
+            addMonthlyAshaIncentiveRecord(ADDITIONAL_ASHA_INCENTIVE,userName,ashaId);
 
         }
 
         if(ASHA_MONTHLY_ROUTINE!=null){
-            addMonthlyAshaIncentiveRecord(ASHA_MONTHLY_ROUTINE);
+            addMonthlyAshaIncentiveRecord(ASHA_MONTHLY_ROUTINE,userName,ashaId);
 
         }
     }
 
-    private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity){
+    private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity,String userName,Integer ashaId){
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
 
         Timestamp startOfMonth = Timestamp.valueOf(LocalDate.now().withDayOfMonth(1).atStartOfDay());
@@ -219,7 +220,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                 startOfMonth,
                 endOfMonth,
                 0L,
-                userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())
+                ashaId
         );
 
 
@@ -227,13 +228,13 @@ public class IncentiveServiceImpl implements IncentiveService {
             record = new IncentiveActivityRecord();
             record.setActivityId(incentiveActivity.getId());
             record.setCreatedDate(timestamp);
-            record.setCreatedBy(jwtUtil.getUserNameFromStorage());
+            record.setCreatedBy(userName);
             record.setStartDate(timestamp);
             record.setEndDate(timestamp);
             record.setUpdatedDate(timestamp);
-            record.setUpdatedBy(jwtUtil.getUserNameFromStorage());
+            record.setUpdatedBy(userName);
             record.setBenId(0L);
-            record.setAshaId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+            record.setAshaId(ashaId);
             record.setAmount(Long.valueOf(incentiveActivity.getRate()));
             recordRepo.save(record);
         }

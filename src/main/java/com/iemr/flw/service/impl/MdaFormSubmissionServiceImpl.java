@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -64,8 +65,11 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
 
         for (MdaDistributionData entity : records) {
             try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                String formattedDate = sdf.format(entity.getMdaDistributionDate());
+
                 MdaFormFieldsDTO fieldsDTO = MdaFormFieldsDTO.builder()
-                        .mda_distribution_date(entity.getMdaDistributionDate().toString())
+                        .mda_distribution_date(formattedDate)
                         .is_medicine_distributed(entity.getIsMedicineDistributed())
                         .build();
 
