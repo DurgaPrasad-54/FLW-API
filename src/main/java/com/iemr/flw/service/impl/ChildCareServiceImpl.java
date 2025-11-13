@@ -712,13 +712,13 @@ public class ChildCareServiceImpl implements ChildCareService {
                     incentivesRepo.findIncentiveMasterByNameAndGroup("SAM_REFERRAL_NRC", GroupName.CHILD_HEALTH.getDisplayName());
             IncentiveActivity samreferralnrcActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("SAM_REFERRAL_NRC", GroupName.ACTIVITY.getDisplayName());
             if(samreferralnrcActivityAm!=null){
-                if(samVisit.getIsChildReferredNrc().equals("yes")){
+                if(samVisit.getIsChildReferredNrc().equals("Yes")){
                     createIncentiveRecordforSamReferalToNrc(samVisit,samVisit.getBeneficiaryId(),samreferralnrcActivityAm,jwtUtil.getUserNameFromStorage());
                 }
             }
 
             if(samreferralnrcActivityCH!=null){
-                if(samVisit.getIsChildReferredNrc().equals("yes")){
+                if(samVisit.getIsChildReferredNrc().equals("Yes")){
                     createIncentiveRecordforSamReferalToNrc(samVisit,samVisit.getBeneficiaryId(),samreferralnrcActivityCH,jwtUtil.getUserNameFromStorage());
                 }
             }
