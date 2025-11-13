@@ -532,7 +532,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             // ✅ Final Visit Label
             dto.setVisitLabel("Visit-" + visitNo);
 
-            dto.setMuac(entity.getMuac());
+            dto.setMuac(Double.parseDouble(entity.getMuac()));
             dto.setWeightForHeightStatus(entity.getWeightForHeightStatus());
             dto.setIsChildReferredNrc(entity.getIsChildReferredNrc());
             dto.setIsChildAdmittedNrc(entity.getIsChildAdmittedNrc());
