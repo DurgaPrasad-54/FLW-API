@@ -53,7 +53,7 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Autowired
     private UserServiceRoleRepo userRepo;
-   private Integer  sateId =0;
+    private Integer  sateId =0;
 
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
@@ -76,7 +76,7 @@ public class IncentiveServiceImpl implements IncentiveService {
             activityDTOS.forEach(dto -> saved.concat(dto.getGroup() + ": " + dto.getName()));
             return "saved master data for " + saved ;
         } catch (Exception e) {
-            
+
         }
         return null;
     }
@@ -85,14 +85,14 @@ public class IncentiveServiceImpl implements IncentiveService {
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
 
         try {
-           logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
+            logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
             UserServiceRoleDTO userServiceRoleDTO=   userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0);
-           if(userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId()!=null){
-               sateId = userServiceRoleDTO.getStateId();
-           }
+            if(userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId()!=null){
+                sateId = userServiceRoleDTO.getStateId();
+            }
             List<IncentiveActivity> incs = new ArrayList<>();
             if(sateId==8){
-                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
+                incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
             }else {
                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> !incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
@@ -111,7 +111,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                     dto.setName(mapping.getName());
                     dto.setGroupName(mapping.getGroup());
                     if(Objects.equals(incentiveRequestDTO.getLangCode(), "en")){
-                        dto.setDescription(mapping.getDescription());
+                        dto.setDescription(inc.getDescription());
 
 
 
@@ -177,7 +177,7 @@ public class IncentiveServiceImpl implements IncentiveService {
                     entry.setName(beneName);
 
                 }else{
-                  entry.setName("");
+                    entry.setName("");
 
                 }
 
@@ -218,7 +218,8 @@ public class IncentiveServiceImpl implements IncentiveService {
                 incentiveActivity.getId(),
                 startOfMonth,
                 endOfMonth,
-                0L
+                0L,
+                userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())
         );
 
 

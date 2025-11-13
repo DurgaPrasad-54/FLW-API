@@ -22,7 +22,8 @@ public interface IncentivesRepo extends JpaRepository<IncentiveActivity, Long> {
             "((:isActivity = true AND a.group = 'ACTIVITY') OR (:isActivity = false AND a.group <> 'ACTIVITY'))")
     IncentiveActivity findIncentiveMasterById(
             @Param("activityId") Long activityId,
-            @Param("isActivity") boolean isActivity);
+            @Param("isActivity") boolean isActivity
+    );
 
 
     @Query("select record from IncentiveActivityRecord record where record.activityId = :id and record.createdDate = :createdDate and record.benId = :benId")
