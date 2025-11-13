@@ -349,16 +349,10 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     public String saveLeprosyFollowUp(LeprosyFollowUpDTO dto) {
         if (dto == null)
             return "Invalid data";
-
-        Optional<LeprosyFollowUp> existing = leprosyFollowUpRepository.findByBenId(dto.getBenId());
-
-        if (existing.isPresent()) {
-            return updateLeprosyFollowUpData(dto, existing.get());
-        } else {
             LeprosyFollowUp entity = saveLeprosyFollowUpData(dto);
             leprosyFollowUpRepository.save(entity);
             return "Follow-up data added successfully";
-        }
+        
     }
 
     @Override
