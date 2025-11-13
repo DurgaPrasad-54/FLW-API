@@ -63,6 +63,9 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     private DiseaseLeprosyRepository diseaseLeprosyRepository;
 
     @Autowired
+    private LeprosyFollowUpRepository leprosyFollowUpRepository;
+
+    @Autowired
     private IncentiveRecordRepo recordRepo;
     @Autowired
     private UserServiceRoleRepo userRepo;
@@ -281,6 +284,83 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         return "Fail";
     }
 
+    private LeprosyFollowUp saveLeprosyFollowUpData(LeprosyFollowUpDTO data) {
+        LeprosyFollowUp entity = new LeprosyFollowUp();
+
+        entity.setBenId(data.getBenId());
+        entity.setVisitNumber(data.getVisitNumber());
+        entity.setFollowUpDate(data.getFollowUpDate());
+        entity.setTreatmentStatus(data.getTreatmentStatus());
+        entity.setMdtBlisterPackReceived(data.getMdtBlisterPackReceived());
+        entity.setTreatmentCompleteDate(data.getTreatmentCompleteDate());
+        entity.setRemarks(data.getRemarks());
+        entity.setHomeVisitDate(data.getHomeVisitDate());
+        entity.setLeprosySymptoms(data.getLeprosySymptoms());
+        entity.setTypeOfLeprosy(data.getTypeOfLeprosy());
+        entity.setLeprosySymptomsPosition(data.getLeprosySymptomsPosition());
+        entity.setVisitLabel(data.getVisitLabel());
+        entity.setLeprosyStatus(data.getLeprosyStatus());
+        entity.setReferredTo(data.getReferredTo());
+        entity.setReferToName(data.getReferToName());
+        entity.setTreatmentEndDate(data.getTreatmentEndDate());
+        entity.setMdtBlisterPackRecived(data.getMdtBlisterPackRecived());
+        entity.setTreatmentStartDate(data.getTreatmentStartDate());
+
+        // Audit fields
+        entity.setCreatedBy(data.getCreatedBy());
+        entity.setCreatedDate(
+                data.getCreatedDate() != null ? data.getCreatedDate() : new Timestamp(System.currentTimeMillis()));
+        entity.setModifiedBy(data.getModifiedBy());
+        entity.setLastModDate(
+                data.getLastModDate() != null ? data.getLastModDate() : new Timestamp(System.currentTimeMillis()));
+
+        return entity;
+    }
+
+    private String updateLeprosyFollowUpData(LeprosyFollowUpDTO data, LeprosyFollowUp entity) {
+        entity.setVisitNumber(data.getVisitNumber());
+        entity.setFollowUpDate(data.getFollowUpDate());
+        entity.setTreatmentStatus(data.getTreatmentStatus());
+        entity.setMdtBlisterPackReceived(data.getMdtBlisterPackReceived());
+        entity.setTreatmentCompleteDate(data.getTreatmentCompleteDate());
+        entity.setRemarks(data.getRemarks());
+        entity.setHomeVisitDate(data.getHomeVisitDate());
+        entity.setLeprosySymptoms(data.getLeprosySymptoms());
+        entity.setTypeOfLeprosy(data.getTypeOfLeprosy());
+        entity.setLeprosySymptomsPosition(data.getLeprosySymptomsPosition());
+        entity.setVisitLabel(data.getVisitLabel());
+        entity.setLeprosyStatus(data.getLeprosyStatus());
+        entity.setReferredTo(data.getReferredTo());
+        entity.setReferToName(data.getReferToName());
+        entity.setTreatmentEndDate(data.getTreatmentEndDate());
+        entity.setMdtBlisterPackRecived(data.getMdtBlisterPackRecived());
+        entity.setTreatmentStartDate(data.getTreatmentStartDate());
+
+        // Update audit info
+        entity.setModifiedBy(data.getModifiedBy());
+        entity.setLastModDate(
+                data.getLastModDate() != null ? data.getLastModDate() : new Timestamp(System.currentTimeMillis()));
+
+        leprosyFollowUpRepository.save(entity);
+        return "Follow-up data updated successfully";
+    }
+
+    @Override
+    public String saveLeprosyFollowUp(LeprosyFollowUpDTO dto) {
+        if (dto == null)
+            return "Invalid data";
+
+        Optional<LeprosyFollowUp> existing = leprosyFollowUpRepository.findByBenId(dto.getBenId());
+
+        if (existing.isPresent()) {
+            return updateLeprosyFollowUpData(dto, existing.get());
+        } else {
+            LeprosyFollowUp entity = saveLeprosyFollowUpData(dto);
+            leprosyFollowUpRepository.save(entity);
+            return "Follow-up data added successfully";
+        }
+    }
+
     @Override
     public List<DiseaseLeprosyDTO> getAllLeprosyData(String createdBy) {
         logger.info("Fetching leprosy data for createdBy: " + createdBy);
@@ -291,6 +371,21 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         List<DiseaseLeprosyDTO> dtos = new ArrayList<>();
         leprosyList.forEach(leprosy -> {
             dtos.add(modelMapper.map(leprosy, DiseaseLeprosyDTO.class));
+        });
+
+        return dtos;
+    }
+
+    @Override
+    public List<LeprosyFollowUpDTO> getAllLeprosyFollowUpData(String createdBy) {
+        logger.info("Fetching leprosy data for createdBy: " + createdBy);
+
+        List<LeprosyFollowUp> leprosyList = leprosyFollowUpRepository.getByCreatedBy(createdBy);
+        logger.info("Found " + leprosyList.size() + " leprosy records");
+
+        List<LeprosyFollowUpDTO> dtos = new ArrayList<>();
+        leprosyList.forEach(leprosy -> {
+            dtos.add(modelMapper.map(leprosy, LeprosyFollowUpDTO.class));
         });
 
         return dtos;
