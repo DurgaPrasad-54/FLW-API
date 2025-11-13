@@ -449,7 +449,6 @@ public class ChildCareServiceImpl implements ChildCareService {
                         .findByBeneficiaryIdAndVisitDate(samDTO.getBeneficiaryId(), visitDate)
                         .orElse(new SamVisit()); // 🧠 If exists → update, else create new
 
-                samVisit.setId(samDTO.getId());
                 samVisit.setBeneficiaryId(samDTO.getBeneficiaryId());
                 samVisit.setHouseholdId(samDTO.getHouseHoldId());
 
