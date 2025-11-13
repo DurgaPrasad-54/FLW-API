@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -165,8 +166,39 @@ public class DiseaseControlController {
 
     }
 
-    @RequestMapping(value = "getAllDisease", method = RequestMethod.POST, produces = "application/json",headers = "Authorization")
-    public ResponseEntity<Map<String, Object>> getAllData(@RequestBody GetDiseaseRequestHandler getDiseaseRequestHandler) {
+    @RequestMapping(value = "leprosy/getAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getAllLeprosy(
+            @RequestBody Map<String, String> request,
+            @RequestHeader(value = "Authorization") String authorization) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String userName = request.get("userName");
+            if (userName != null) {
+                List<DiseaseLeprosyDTO> result = diseaseControlService.getAllLeprosyData(userName);
+
+                if (result != null && !result.isEmpty()) {
+                    response.put("status", "Success");
+                    response.put("statusCode", 200);
+                    response.put("data", result); // ← Put list directly, no gson.toJson()
+                } else {
+                    response.put("message", "No record found");
+                    response.put("statusCode", 404);
+                }
+            } else {
+                response.put("message", "Invalid request - createdBy required");
+                response.put("statusCode", 400);
+            }
+        } catch (Exception e) {
+            response.put("status", "Error: " + e.getMessage());
+            response.put("statusCode", 500);
+        }
+        return ResponseEntity.ok(response); // ← Spring serializes the whole map
+    }
+
+    @RequestMapping(value = "getAllDisease", method = RequestMethod.POST, produces = "application/json", headers = "Authorization")
+    public ResponseEntity<Map<String, Object>> getAllData(
+            @RequestBody GetDiseaseRequestHandler getDiseaseRequestHandler) {
         Map<String, Object> response = new HashMap<>();
         try {
             response.put("status", "Success");
