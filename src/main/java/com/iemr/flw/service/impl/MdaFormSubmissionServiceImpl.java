@@ -66,10 +66,11 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
         for (MdaDistributionData entity : records) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                String formattedDate = sdf.format(entity.getMdaDistributionDate());
+                String mdaformattedDate = sdf.format(entity.getMdaDistributionDate());
+                String visitformattedDate = sdf.format(entity.getVisitDate());
 
                 MdaFormFieldsDTO fieldsDTO = MdaFormFieldsDTO.builder()
-                        .mda_distribution_date(formattedDate)
+                        .mda_distribution_date(mdaformattedDate)
                         .is_medicine_distributed(entity.getIsMedicineDistributed())
                         .build();
 
@@ -77,7 +78,7 @@ public class MdaFormSubmissionServiceImpl implements MdaFormSubmissionService {
                         .formId(entity.getFormId())
                         .houseHoldId(entity.getHouseHoldId())
                         .beneficiaryId(entity.getBeneficiaryId())
-                        .visitDate(entity.getVisitDate())
+                        .visitDate(visitformattedDate)
                         .createdBy(entity.getCreatedBy())
                         .createdAt(entity.getCreatedDate())
                         .fields(fieldsDTO)

@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class MdaFormSubmissionResponse {
     private Long beneficiaryId;
-    private Timestamp visitDate;
+    private String visitDate;
     private Long houseHoldId;
     private Integer ashaId; 
     private String createdBy;
