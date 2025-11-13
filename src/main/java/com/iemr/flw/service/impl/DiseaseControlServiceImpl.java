@@ -42,12 +42,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 
 @Service
 public class DiseaseControlServiceImpl implements DiseaseControlService {
 
     @Autowired
     private DiseaseMalariaRepository diseaseMalariaRepository;
+
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private DiseaseAESJERepository diseaseAESJERepository;
@@ -276,6 +279,21 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             }
         }
         return "Fail";
+    }
+
+    @Override
+    public List<DiseaseLeprosyDTO> getAllLeprosyData(String createdBy) {
+        logger.info("Fetching leprosy data for createdBy: " + createdBy);
+
+        List<ScreeningLeprosy> leprosyList = diseaseLeprosyRepository.getByCreatedBy(createdBy);
+        logger.info("Found " + leprosyList.size() + " leprosy records");
+
+        List<DiseaseLeprosyDTO> dtos = new ArrayList<>();
+        leprosyList.forEach(leprosy -> {
+            dtos.add(modelMapper.map(leprosy, DiseaseLeprosyDTO.class));
+        });
+
+        return dtos;
     }
 
     public Object getAllMalaria(GetDiseaseRequestHandler getDiseaseRequestHandler) {
@@ -592,6 +610,23 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         diseaseLeprosy.setRemark(diseaseControlData.getRemark());
         diseaseLeprosy.setUserId(diseaseControlData.getUserId());
 
+        diseaseLeprosy.setLeprosySymptoms(diseaseControlData.getLeprosySymptoms());
+        diseaseLeprosy.setLeprosySymptomsPosition(diseaseControlData.getLeprosySymptomsPosition());
+        diseaseLeprosy.setLerosyStatusPosition(diseaseControlData.getLerosyStatusPosition());
+        diseaseLeprosy.setCurrentVisitNumber(diseaseControlData.getCurrentVisitNumber());
+        diseaseLeprosy.setVisitLabel(diseaseControlData.getVisitLabel());
+        diseaseLeprosy.setVisitNumber(diseaseControlData.getVisitNumber());
+        diseaseLeprosy.setIsConfirmed(diseaseControlData.getIsConfirmed());
+        diseaseLeprosy.setLeprosyState(diseaseControlData.getLeprosyState());
+        diseaseLeprosy.setTreatmentStartDate(diseaseControlData.getTreatmentStartDate());
+        diseaseLeprosy.setTotalFollowUpMonthsRequired(diseaseControlData.getTotalFollowUpMonthsRequired());
+        diseaseLeprosy.setTreatmentEndDate(diseaseControlData.getTreatmentEndDate());
+        diseaseLeprosy.setMdtBlisterPackRecived(diseaseControlData.getMdtBlisterPackRecived());
+        diseaseLeprosy.setTreatmentStatus(diseaseControlData.getTreatmentStatus());
+        diseaseLeprosy.setCreatedBy(diseaseControlData.getCreatedBy());
+        diseaseLeprosy.setCreatedDate(diseaseControlData.getCreatedDate());
+        diseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
+        diseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
 
         return diseaseLeprosy;
     }
@@ -619,6 +654,23 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         existingDiseaseLeprosy.setOtherPlaceOfDeath(diseaseControlData.getOtherPlaceOfDeath());
         existingDiseaseLeprosy.setOtherReasonForDeath(diseaseControlData.getOtherReasonForDeath());
         existingDiseaseLeprosy.setRemark(diseaseControlData.getRemark());
+
+        existingDiseaseLeprosy.setLeprosySymptoms(diseaseControlData.getLeprosySymptoms());
+        existingDiseaseLeprosy.setLeprosySymptomsPosition(diseaseControlData.getLeprosySymptomsPosition());
+        existingDiseaseLeprosy.setLerosyStatusPosition(diseaseControlData.getLerosyStatusPosition());
+        existingDiseaseLeprosy.setCurrentVisitNumber(diseaseControlData.getCurrentVisitNumber());
+        existingDiseaseLeprosy.setVisitLabel(diseaseControlData.getVisitLabel());
+        existingDiseaseLeprosy.setVisitNumber(diseaseControlData.getVisitNumber());
+        existingDiseaseLeprosy.setIsConfirmed(diseaseControlData.getIsConfirmed());
+        existingDiseaseLeprosy.setLeprosyState(diseaseControlData.getLeprosyState());
+        existingDiseaseLeprosy.setTreatmentStartDate(diseaseControlData.getTreatmentStartDate());
+        existingDiseaseLeprosy.setTotalFollowUpMonthsRequired(diseaseControlData.getTotalFollowUpMonthsRequired());
+        existingDiseaseLeprosy.setTreatmentEndDate(diseaseControlData.getTreatmentEndDate());
+        existingDiseaseLeprosy.setMdtBlisterPackRecived(diseaseControlData.getMdtBlisterPackRecived());
+        existingDiseaseLeprosy.setTreatmentStatus(diseaseControlData.getTreatmentStatus());
+
+        existingDiseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
+        existingDiseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
 
         diseaseLeprosyRepository.save(existingDiseaseLeprosy);
         // Return the updated entity
