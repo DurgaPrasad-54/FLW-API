@@ -22,7 +22,7 @@ public class SamVisitResponseDTO {
     private String visitLabel;
 
     @JsonProperty("muac")
-    private String muac;
+    private Double muac;
 
     @JsonProperty("weight_for_height_status")
     private String weightForHeightStatus;
