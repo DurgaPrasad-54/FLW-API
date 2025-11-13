@@ -228,11 +228,11 @@ public class IncentiveServiceImpl implements IncentiveService {
             record = new IncentiveActivityRecord();
             record.setActivityId(incentiveActivity.getId());
             record.setCreatedDate(timestamp);
-            record.setCreatedBy(userName);
+            record.setCreatedBy(jwtUtil.getUserNameFromStorage());
             record.setStartDate(timestamp);
             record.setEndDate(timestamp);
             record.setUpdatedDate(timestamp);
-            record.setUpdatedBy(userName);
+            record.setUpdatedBy(jwtUtil.getUserNameFromStorage());
             record.setBenId(0L);
             record.setAshaId(ashaId);
             record.setAmount(Long.valueOf(incentiveActivity.getRate()));
