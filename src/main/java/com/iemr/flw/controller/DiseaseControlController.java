@@ -210,7 +210,7 @@ public class DiseaseControlController {
                     response.put("statusCode", 404);
                 }
             } else {
-                response.put("message", "Invalid request - createdBy required");
+                response.put("message", "Invalid request - userName required");
                 response.put("statusCode", 400);
             }
         } catch (Exception e) {
@@ -240,7 +240,7 @@ public class DiseaseControlController {
                     response.put("statusCode", 404);
                 }
             } else {
-                response.put("message", "Invalid request - createdBy required");
+                response.put("message", "Invalid request - userName required");
                 response.put("statusCode", 400);
             }
         } catch (Exception e) {
