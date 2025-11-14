@@ -199,7 +199,7 @@ public class DiseaseControlController {
         try {
             String userName = request.get("userName");
             if (userName != null) {
-                List<DiseaseLeprosyDTO> result = diseaseControlService.getAllLeprosyData(userName);
+                List<DiseaseGetLeprosyDTO> result = diseaseControlService.getAllLeprosyData(userName);
 
                 if (result != null && !result.isEmpty()) {
                     response.put("status", "Success");
@@ -229,7 +229,7 @@ public class DiseaseControlController {
         try {
             String userName = request.get("userName");
             if (userName != null) {
-                List<LeprosyFollowUpDTO> result = diseaseControlService.getAllLeprosyFollowUpData(userName);
+                List<LeprosyGetFollowUpDTO> result = diseaseControlService.getAllLeprosyFollowUpData(userName);
 
                 if (result != null && !result.isEmpty()) {
                     response.put("status", "Success");

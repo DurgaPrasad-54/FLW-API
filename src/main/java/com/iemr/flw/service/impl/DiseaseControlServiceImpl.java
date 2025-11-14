@@ -356,30 +356,30 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     }
 
     @Override
-    public List<DiseaseLeprosyDTO> getAllLeprosyData(String createdBy) {
+    public List<DiseaseGetLeprosyDTO> getAllLeprosyData(String createdBy) {
         logger.info("Fetching leprosy data for createdBy: " + createdBy);
 
         List<ScreeningLeprosy> leprosyList = diseaseLeprosyRepository.getByCreatedBy(createdBy);
         logger.info("Found " + leprosyList.size() + " leprosy records");
 
-        List<DiseaseLeprosyDTO> dtos = new ArrayList<>();
+        List<DiseaseGetLeprosyDTO> dtos = new ArrayList<>();
         leprosyList.forEach(leprosy -> {
-            dtos.add(modelMapper.map(leprosy, DiseaseLeprosyDTO.class));
+            dtos.add(modelMapper.map(leprosy, DiseaseGetLeprosyDTO.class));
         });
 
         return dtos;
     }
 
     @Override
-    public List<LeprosyFollowUpDTO> getAllLeprosyFollowUpData(String createdBy) {
+    public List<LeprosyGetFollowUpDTO> getAllLeprosyFollowUpData(String createdBy) {
         logger.info("Fetching leprosy data for createdBy: " + createdBy);
 
         List<LeprosyFollowUp> leprosyList = leprosyFollowUpRepository.getByCreatedBy(createdBy);
         logger.info("Found " + leprosyList.size() + " leprosy records");
 
-        List<LeprosyFollowUpDTO> dtos = new ArrayList<>();
+        List<LeprosyGetFollowUpDTO> dtos = new ArrayList<>();
         leprosyList.forEach(leprosy -> {
-            dtos.add(modelMapper.map(leprosy, LeprosyFollowUpDTO.class));
+            dtos.add(modelMapper.map(leprosy, LeprosyGetFollowUpDTO.class));
         });
 
         return dtos;
