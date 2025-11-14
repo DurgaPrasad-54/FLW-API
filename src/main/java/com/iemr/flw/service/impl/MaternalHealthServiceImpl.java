@@ -390,7 +390,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity ancFullActivityCH =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.ACTIVITY.getDisplayName());
 
         IncentiveActivity comprehensiveAbortionActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
 
