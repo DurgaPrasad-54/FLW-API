@@ -234,6 +234,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             });
             pmsmaRepo.saveAll(pmsmaList);
             logger.info("PMSMA details saved");
+
             return "No. of PMSMA records saved: " + pmsmaList.size();
         } catch (Exception e) {
             logger.info("Saving PMSMA details failed with error : " + e.getMessage());
@@ -480,8 +481,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+                logger.info("ancVisit.getIsAborted()"+ancVisit.getIsAborted());
 
-                if (Objects.equals(ancVisit.getIsAborted(), "true")) {
+                if (ancVisit.getIsAborted()) {
 
                     if (record == null) {
                         logger.info("record:"+record.getName());
@@ -508,8 +510,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             ancList.forEach((ancVisit -> {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                RMNCHBeneficiaryDetailsRmnch rmnchBeneficiaryDetailsRmnch = beneficiaryRepo.getDetailsByRegID(beneficiaryRepo.getRegIDFromBenId(ancVisit.getBenId()));
-                String beneName = rmnchBeneficiaryDetailsRmnch.getFirstName() + " " + rmnchBeneficiaryDetailsRmnch.getLastName();
                 if (ancVisit.getIsHrpConfirmed() != null) {
                     if (ancVisit.getIsHrpConfirmed()) {
                         if (record == null) {
@@ -518,7 +518,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                             record.setCreatedDate(ancVisit.getCreatedDate());
                             record.setCreatedBy(ancVisit.getCreatedBy());
                             record.setUpdatedDate(ancVisit.getCreatedDate());
-                            record.setName(beneName);
                             record.setUpdatedBy(ancVisit.getCreatedBy());
                             record.setStartDate(ancVisit.getCreatedDate());
                             record.setEndDate(ancVisit.getCreatedDate());
