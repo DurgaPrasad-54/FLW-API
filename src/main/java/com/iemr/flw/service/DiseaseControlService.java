@@ -42,6 +42,6 @@ public interface DiseaseControlService {
     List<DiseaseLeprosyDTO> getAllLeprosyData(String createdBy);
 
      public String saveLeprosyFollowUp(LeprosyFollowUpDTO leprosyDTO);
-     List<LeprosyFollowUpDTO> getAllLeprosyFollowUpData(String createdBy);
+     List<LeprosyGetFollowUpDTO> getAllLeprosyFollowUpData(String createdBy);
 
 }
