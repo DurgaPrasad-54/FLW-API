@@ -166,6 +166,30 @@ public class DiseaseControlController {
 
     }
 
+    @RequestMapping(value = "leprosy/followUp/saveAll", method = RequestMethod.POST, consumes = "application/json", produces = "application/json", headers = "Authorization")
+    public ResponseEntity<Map<String, Object>> saveLeprosyFollowUP(@RequestBody List<LeprosyFollowUpDTO> followUps) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            if (followUps != null && !followUps.isEmpty()) {
+                for (LeprosyFollowUpDTO dto : followUps) {
+                    diseaseControlService.saveLeprosyFollowUp(dto);
+                }
+                response.put("status", "Success");
+                response.put("statusCode", 200);
+                response.put("message", "All follow-ups saved successfully");
+            } else {
+                response.put("message", "Invalid request - no follow-up data");
+                response.put("statusCode", 400);
+            }
+        } catch (Exception e) {
+            response.put("status", "Error: " + e.getMessage());
+            response.put("statusCode", 500);
+        }
+        return ResponseEntity.ok(response);
+
+    }
+
+
     @RequestMapping(value = "leprosy/getAll", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> getAllLeprosy(
             @RequestBody Map<String, String> request,
@@ -186,7 +210,37 @@ public class DiseaseControlController {
                     response.put("statusCode", 404);
                 }
             } else {
-                response.put("message", "Invalid request - createdBy required");
+                response.put("message", "Invalid request - userName required");
+                response.put("statusCode", 400);
+            }
+        } catch (Exception e) {
+            response.put("status", "Error: " + e.getMessage());
+            response.put("statusCode", 500);
+        }
+        return ResponseEntity.ok(response); // ← Spring serializes the whole map
+    }
+
+        @RequestMapping(value = "leprosy/followUp/getAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getAllLeprosyFollowUp(
+            @RequestBody Map<String, String> request,
+            @RequestHeader(value = "Authorization") String authorization) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String userName = request.get("userName");
+            if (userName != null) {
+                List<LeprosyFollowUpDTO> result = diseaseControlService.getAllLeprosyFollowUpData(userName);
+
+                if (result != null && !result.isEmpty()) {
+                    response.put("status", "Success");
+                    response.put("statusCode", 200);
+                    response.put("data", result); // ← Put list directly, no gson.toJson()
+                } else {
+                    response.put("message", "No record found");
+                    response.put("statusCode", 404);
+                }
+            } else {
+                response.put("message", "Invalid request - userName required");
                 response.put("statusCode", 400);
             }
         } catch (Exception e) {
