@@ -154,7 +154,7 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
-        checkMonthlyAshaIncentive(request.getUserName(),request.getAshaId());
+        checkMonthlyAshaIncentive(request.getAshaId());
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
@@ -189,25 +189,25 @@ public class IncentiveServiceImpl implements IncentiveService {
         Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         return gson.toJson(dtos);
     }
-    private void checkMonthlyAshaIncentive(String userName, Integer ashaId){
+    private void checkMonthlyAshaIncentive(Integer ashaId){
         IncentiveActivity MOBILEBILLREIMB_ACTIVITY = incentivesRepo.findIncentiveMasterByNameAndGroup("MOBILE_BILL_REIMB", GroupName.OTHER_INCENTIVES.getDisplayName());
         IncentiveActivity ADDITIONAL_ASHA_INCENTIVE = incentivesRepo.findIncentiveMasterByNameAndGroup("ADDITIONAL_ASHA_INCENTIVE", GroupName.ADDITIONAL_INCENTIVE.getDisplayName());
         IncentiveActivity ASHA_MONTHLY_ROUTINE = incentivesRepo.findIncentiveMasterByNameAndGroup("ASHA_MONTHLY_ROUTINE", GroupName.ASHA_MONTHLY_ROUTINE.getDisplayName());
         if(MOBILEBILLREIMB_ACTIVITY!=null){
-            addMonthlyAshaIncentiveRecord(MOBILEBILLREIMB_ACTIVITY,userName,ashaId);
+            addMonthlyAshaIncentiveRecord(MOBILEBILLREIMB_ACTIVITY,ashaId);
         }
         if(ADDITIONAL_ASHA_INCENTIVE!=null){
-            addMonthlyAshaIncentiveRecord(ADDITIONAL_ASHA_INCENTIVE,userName,ashaId);
+            addMonthlyAshaIncentiveRecord(ADDITIONAL_ASHA_INCENTIVE,ashaId);
 
         }
 
         if(ASHA_MONTHLY_ROUTINE!=null){
-            addMonthlyAshaIncentiveRecord(ASHA_MONTHLY_ROUTINE,userName,ashaId);
+            addMonthlyAshaIncentiveRecord(ASHA_MONTHLY_ROUTINE,ashaId);
 
         }
     }
 
-    private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity, String userName, Integer ashaId){
+    private void addMonthlyAshaIncentiveRecord(IncentiveActivity incentiveActivity, Integer ashaId){
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
 
         Timestamp startOfMonth = Timestamp.valueOf(LocalDate.now().withDayOfMonth(1).atStartOfDay());
@@ -226,11 +226,11 @@ public class IncentiveServiceImpl implements IncentiveService {
             record = new IncentiveActivityRecord();
             record.setActivityId(incentiveActivity.getId());
             record.setCreatedDate(timestamp);
-            record.setCreatedBy(userName);
+            record.setCreatedBy(userRepo.getUserNamedByUserId(ashaId));
             record.setStartDate(timestamp);
             record.setEndDate(timestamp);
             record.setUpdatedDate(timestamp);
-            record.setUpdatedBy(userName);
+            record.setUpdatedBy(userRepo.getUserNamedByUserId(ashaId));
             record.setBenId(0L);
             record.setAshaId(ashaId);
             record.setAmount(Long.valueOf(incentiveActivity.getRate()));
