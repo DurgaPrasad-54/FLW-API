@@ -28,26 +28,41 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 public class DiseaseLeprosyDTO {
 
     private Long id;
     private Long benId;
     private Long houseHoldDetailsId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date homeVisitDate;
+
     private String leprosyStatus;
     private String referredTo;
     private String otherReferredTo;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date leprosyStatusDate;
+
     private String typeOfLeprosy;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date followUpDate;
+
     private String beneficiaryStatus;
     private String remark;
     private Integer userId;
     private Integer diseaseTypeId;
     private String referToName;
     private Integer beneficiaryStatusId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date dateOfDeath;
+
     private String placeOfDeath;
     private String otherPlaceOfDeath;
     private String reasonForDeath;
@@ -61,14 +76,24 @@ public class DiseaseLeprosyDTO {
     private Integer visitNumber;
     private Boolean isConfirmed;
     private String leprosyState;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date treatmentStartDate;
+
     private Integer totalFollowUpMonthsRequired;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date treatmentEndDate;
+
     private String mdtBlisterPackRecived;
     private String treatmentStatus;
-
     private String createdBy;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Timestamp createdDate;
+
     private String modifiedBy;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Timestamp lastModDate;
 }
