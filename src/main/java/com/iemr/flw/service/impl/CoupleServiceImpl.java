@@ -106,7 +106,7 @@ public class CoupleServiceImpl implements CoupleService {
                     modelMapper.map(it, existingECR);
                     existingECR.setId(null);
                 }
-                if(existingECR.getIsKitHandedOver() && (kitPhoto1!=null || kitPhoto2!=null)){
+                if(existingECR.getIsKitHandedOver() && (!existingECR.getKitPhoto1().isEmpty() || !existingECR.getKitPhoto2().isEmpty())){
                     IncentiveActivity handoverKitActivityAM =
                             incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.FAMILY_PLANNING.getDisplayName());
                     if(handoverKitActivityAM!=null){
@@ -158,6 +158,23 @@ public class CoupleServiceImpl implements CoupleService {
                     existingECR = new EligibleCoupleRegister();
                     modelMapper.map(it, existingECR);
                     existingECR.setId(null);
+                }
+
+                if(existingECR.getIsKitHandedOver()){
+                    IncentiveActivity handoverKitActivityAM =
+                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.FAMILY_PLANNING.getDisplayName());
+                    if(handoverKitActivityAM!=null){
+                        createIncentiveRecord(recordList, it, handoverKitActivityAM);
+
+                    }
+
+
+                    IncentiveActivity handoverKitActivityCH =
+                            incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.ACTIVITY.getDisplayName());
+                    if(handoverKitActivityCH!=null){
+                        createIncentiveRecord(recordList, it, handoverKitActivityCH);
+
+                    }
                 }
                 ecrList.add(existingECR);
             });
