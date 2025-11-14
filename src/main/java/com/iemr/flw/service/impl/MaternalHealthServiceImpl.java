@@ -1,8 +1,6 @@
 package com.iemr.flw.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iemr.flw.domain.identity.RMNCHBeneficiaryDetailsRmnch;
-import com.iemr.flw.domain.identity.RMNCHMBeneficiarydetail;
 import com.iemr.flw.domain.iemr.*;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -234,12 +231,48 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             });
             pmsmaRepo.saveAll(pmsmaList);
             logger.info("PMSMA details saved");
+             checkAndAddHighRisk(pmsmaList);
 
             return "No. of PMSMA records saved: " + pmsmaList.size();
         } catch (Exception e) {
             logger.info("Saving PMSMA details failed with error : " + e.getMessage());
         }
         return null;
+    }
+
+    private void checkAndAddHighRisk(List<PMSMA> pmsmaList) {
+        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_HR_POSTNATAL",GroupName.MATERNAL_HEALTH.getDisplayName());
+        if(incentiveActivity!=null){
+            pmsmaList.forEach(pmsma -> {
+                if(pmsma.getHighRiskPregnant()){
+                    addIncentiveForHighRisk(incentiveActivity,pmsma);
+
+                }
+
+            });
+        }
+
+    }
+
+    private void addIncentiveForHighRisk(IncentiveActivity incentiveActivity, PMSMA pmsma) {
+        IncentiveActivityRecord record = recordRepo
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), pmsma.getCreatedDate(), pmsma.getBenId());
+        // get bene details
+
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(incentiveActivity.getId());
+            record.setCreatedDate(pmsma.getVisitDate());
+            record.setCreatedBy(pmsma.getCreatedBy());
+            record.setStartDate(pmsma.getVisitDate());
+            record.setEndDate(pmsma.getVisitDate());
+            record.setUpdatedDate(pmsma.getVisitDate());
+            record.setUpdatedBy(pmsma.getCreatedBy());
+            record.setBenId(pmsma.getBenId());
+            record.setAshaId(userRepo.getUserIdByName(pmsma.getCreatedBy()));
+            record.setAmount(Long.valueOf(incentiveActivity.getRate()));
+            recordRepo.save(record);
+        }
     }
 
     @Override
