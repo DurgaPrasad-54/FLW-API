@@ -265,12 +265,13 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityAM.getId());
                 record.setCreatedDate(timestamp);
-                record.setCreatedBy(createdBY);
+                record.setCreatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setStartDate(timestamp);
                 record.setEndDate(timestamp);
                 record.setUpdatedDate(timestamp);
-                record.setUpdatedBy(createdBY);
+                record.setUpdatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setAshaId(userID);
+                record.setBenId(0L);
                 record.setAmount(Long.valueOf(villageFormEntryActivityAM.getRate()));
                 recordRepo.save(record);
 
@@ -284,11 +285,12 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityCH.getId());
                 record.setCreatedDate(timestamp);
-                record.setCreatedBy(createdBY);
+                record.setCreatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setStartDate(timestamp);
                 record.setEndDate(timestamp);
+                record.setBenId(0L);
                 record.setUpdatedDate(timestamp);
-                record.setUpdatedBy(createdBY);
+                record.setUpdatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setAshaId(userID);
                 record.setAmount(Long.valueOf(villageFormEntryActivityCH.getRate()));
                 recordRepo.save(record);

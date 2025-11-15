@@ -241,11 +241,22 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     }
 
     private void checkAndAddHighRisk(List<PMSMA> pmsmaList) {
-        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_HR_POSTNATAL",GroupName.MATERNAL_HEALTH.getDisplayName());
-        if(incentiveActivity!=null){
+        IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED",GroupName.MATERNAL_HEALTH.getDisplayName());
+        IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED",GroupName.ACTIVITY.getDisplayName());
+        if(incentiveActivityAM!=null){
             pmsmaList.forEach(pmsma -> {
                 if(pmsma.getHighRiskPregnant()){
-                    addIncentiveForHighRisk(incentiveActivity,pmsma);
+                    addIncentiveForHighRisk(incentiveActivityAM,pmsma);
+
+                }
+
+            });
+        }
+
+        if(incentiveActivityCH!=null){
+            pmsmaList.forEach(pmsma -> {
+                if(pmsma.getHighRiskPregnant()){
+                    addIncentiveForHighRisk(incentiveActivityCH,pmsma);
 
                 }
 

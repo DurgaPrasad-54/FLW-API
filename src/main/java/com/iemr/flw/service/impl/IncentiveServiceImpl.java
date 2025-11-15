@@ -154,7 +154,9 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
-        checkMonthlyAshaIncentive(request.getAshaId());
+        if(sateId!=8){
+            checkMonthlyAshaIncentive(request.getAshaId());
+        }
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
