@@ -393,12 +393,19 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             if (comdomActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, comdomActivity);
             }
-        } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("Copper T (IUCD)")) {
+        } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().contains("PPIUCD")) {
 
-            IncentiveActivity copperTActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", GroupName.FAMILY_PLANNING.getDisplayName());
-            if (copperTActivity != null) {
-                addIncenticeRecord(recordList, ect, userId, copperTActivity);
+            IncentiveActivity copperTActivityAM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPIUCD", GroupName.FAMILY_PLANNING.getDisplayName());
+
+            IncentiveActivity copperTActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPIUCD", GroupName.ACTIVITY.getDisplayName());
+            if (copperTActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, copperTActivityAM);
+            }
+
+            if (copperTActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, copperTActivityCH);
             }
         }
     }
@@ -441,7 +448,66 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         IncentiveActivity identifiedHrpActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
         IncentiveActivity identifiedHrpActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.ACTIVITY.getDisplayName());
 
+        IncentiveActivity paiucdActivityAM =
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PAIUCD", GroupName.FAMILY_PLANNING.getDisplayName());
 
+        IncentiveActivity paiucdActivityCH =
+                incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PAIUCD", GroupName.ACTIVITY.getDisplayName());
+        if (paiucdActivityAM != null) {
+            ancList.forEach((ancVisit -> {
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+                if (ancVisit.getIsPaiucdId()) {
+
+                    if (record == null) {
+                        logger.info("record:"+record.getName());
+                        logger.info("condition:"+ancVisit.getIsAborted());
+                        record = new IncentiveActivityRecord();
+                        record.setActivityId(paiucdActivityAM.getId());
+                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedBy(ancVisit.getCreatedBy());
+                        record.setStartDate(ancVisit.getCreatedDate());
+                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setBenId(ancVisit.getBenId());
+                        record.setAshaId(userId);
+                        record.setAmount(Long.valueOf(paiucdActivityAM.getRate()));
+                        recordRepo.save(record);
+                    }
+
+                }
+            }));
+        }
+
+        if (paiucdActivityCH != null) {
+            ancList.forEach((ancVisit -> {
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+                if (ancVisit.getIsPaiucdId()) {
+
+                    if (record == null) {
+                        logger.info("record:"+record.getName());
+                        logger.info("condition:"+ancVisit.getIsAborted());
+                        record = new IncentiveActivityRecord();
+                        record.setActivityId(paiucdActivityCH.getId());
+                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedBy(ancVisit.getCreatedBy());
+                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedBy(ancVisit.getCreatedBy());
+                        record.setStartDate(ancVisit.getCreatedDate());
+                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setBenId(ancVisit.getBenId());
+                        record.setAshaId(userId);
+                        record.setAmount(Long.valueOf(paiucdActivityCH.getRate()));
+                        recordRepo.save(record);
+                    }
+
+                }
+            }));
+        }
 
 
         if (anc1Activity != null) {
