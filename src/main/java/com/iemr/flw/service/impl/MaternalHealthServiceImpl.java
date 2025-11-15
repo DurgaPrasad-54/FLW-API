@@ -367,17 +367,31 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         logger.info("ContraceptionMethod:" + ect.getContraceptionMethod());
         if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MALE STERILIZATION")) {
 
-            IncentiveActivity maleSterilizationActivity =
+            IncentiveActivity maleSterilizationActivityAM=
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
-            if (maleSterilizationActivity != null) {
-                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivity);
+
+            IncentiveActivity maleSterilizationActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", GroupName.ACTIVITY.getDisplayName());
+            if (maleSterilizationActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivityAM);
             }
+            if (maleSterilizationActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivityCH);
+            }
+
         } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("FEMALE STERILIZATION")) {
 
-            IncentiveActivity femaleSterilizationActivity =
+            IncentiveActivity femaleSterilizationActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
-            if (femaleSterilizationActivity != null) {
-                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivity);
+
+            IncentiveActivity femaleSterilizationActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", GroupName.ACTIVITY.getDisplayName());
+            if (femaleSterilizationActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivityAM);
+            }
+
+            if (femaleSterilizationActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivityCH);
             }
         } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MiniLap")) {
 
@@ -393,19 +407,33 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             if (comdomActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, comdomActivity);
             }
-        } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().contains("PPIUCD")) {
+        } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("POST PARTUM IUCD (PPIUCD) WITHIN 48 HRS OF DELIVERY")) {
 
-            IncentiveActivity copperTActivityAM =
+            IncentiveActivity PPIUCDActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPIUCD", GroupName.FAMILY_PLANNING.getDisplayName());
 
-            IncentiveActivity copperTActivityCH =
+            IncentiveActivity PPIUCDActivityCH =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPIUCD", GroupName.ACTIVITY.getDisplayName());
-            if (copperTActivityAM != null) {
-                addIncenticeRecord(recordList, ect, userId, copperTActivityAM);
+            if (PPIUCDActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, PPIUCDActivityAM);
             }
 
-            if (copperTActivityCH != null) {
-                addIncenticeRecord(recordList, ect, userId, copperTActivityCH);
+            if (PPIUCDActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, PPIUCDActivityCH);
+            }
+        }else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)")) {
+
+            IncentiveActivity ppsActivityAM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPS", GroupName.FAMILY_PLANNING.getDisplayName());
+
+            IncentiveActivity ppsActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPS", GroupName.ACTIVITY.getDisplayName());
+            if (ppsActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, ppsActivityAM);
+            }
+
+            if (ppsActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, ppsActivityCH);
             }
         }
     }

@@ -293,17 +293,31 @@ public class CoupleServiceImpl implements CoupleService {
             }
         } else if (ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("MALE STERILIZATION")) {
 
-            IncentiveActivity maleSterilizationActivity =
+            IncentiveActivity maleSterilizationActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", "FAMILY PLANNING");
-            if (maleSterilizationActivity != null) {
-                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivity);
+
+            IncentiveActivity maleSterilizationActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", GroupName.ACTIVITY.getDisplayName());
+            if (maleSterilizationActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivityAM);
+            }
+
+            if (maleSterilizationActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, maleSterilizationActivityCH);
             }
         } else if (ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("FEMALE STERILIZATION")) {
 
-            IncentiveActivity femaleSterilizationActivity =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", "FAMILY PLANNING");
-            if (femaleSterilizationActivity != null) {
-                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivity);
+            IncentiveActivity femaleSterilizationActivityAM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
+
+            IncentiveActivity femaleSterilizationActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_FEMALE_STER", GroupName.ACTIVITY.getDisplayName());
+            if (femaleSterilizationActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivityAM);
+            }
+
+            if (femaleSterilizationActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, femaleSterilizationActivityCH);
             }
         } else if (ect.getMethodOfContraception() != null && ect.getMethodOfContraception().equals("MiniLap")) {
 
