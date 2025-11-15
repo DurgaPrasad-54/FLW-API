@@ -458,11 +458,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
-                if (ancVisit.getIsPaiucdId()) {
+                if (ancVisit.getIsPaiucd().equals("Yes")) {
 
                     if (record == null) {
-                        logger.info("record:"+record.getName());
-                        logger.info("condition:"+ancVisit.getIsAborted());
                         record = new IncentiveActivityRecord();
                         record.setActivityId(paiucdActivityAM.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
@@ -486,11 +484,10 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
-                if (ancVisit.getIsPaiucdId()) {
+                if (ancVisit.getIsPaiucd().equals("Yes")) {
 
                     if (record == null) {
                         logger.info("record:"+record.getName());
-                        logger.info("condition:"+ancVisit.getIsAborted());
                         record = new IncentiveActivityRecord();
                         record.setActivityId(paiucdActivityCH.getId());
                         record.setCreatedDate(ancVisit.getCreatedDate());
