@@ -243,6 +243,12 @@ public class CoupleServiceImpl implements CoupleService {
            logger.info("Antra"+ect.getMethodOfContraception());
            logger.info("Antra"+ect.getAntraDose());
         if(ect.getMethodOfContraception() != null && ect.getMethodOfContraception().contains("ANTRA Injection")) {
+            // for CG incentive
+            IncentiveActivity antaraActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA1", GroupName.ACTIVITY.getDisplayName());
+            if (antaraActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, antaraActivityCH);
+            }
             if (ect.getAntraDose().contains("Dose-1")) {
                 IncentiveActivity antaraActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA1", "FAMILY PLANNING");
