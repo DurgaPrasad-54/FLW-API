@@ -341,7 +341,8 @@ public class CoupleServiceImpl implements CoupleService {
             if (copperTActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, copperTActivity);
             }
-        } else if (ect.getMethodOfContraception() != null && (ect.getMethodOfContraception().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getMethodOfContraception().contains("MiniLap") || ect.getMethodOfContraception().contains("MALE STERILIZATION") || ect.getMethodOfContraception().contains("FEMALE STERILIZATION"))) {
+        }
+        if (ect.getMethodOfContraception() != null && (ect.getMethodOfContraception().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getMethodOfContraception().contains("MiniLap") || ect.getMethodOfContraception().contains("MALE STERILIZATION") || ect.getMethodOfContraception().contains("FEMALE STERILIZATION"))) {
             IncentiveActivity limitiing2ChildActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.FAMILY_PLANNING.getDisplayName());
 

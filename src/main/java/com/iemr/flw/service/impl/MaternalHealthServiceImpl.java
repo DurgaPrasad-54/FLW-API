@@ -435,7 +435,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             if (ppsActivityCH != null) {
                 addIncenticeRecord(recordList, ect, userId, ppsActivityCH);
             }
-        }else  if(ect.getContraceptionMethod() != null && (ect.getContraceptionMethod().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getContraceptionMethod().contains("MiniLap") || ect.getContraceptionMethod().contains("MALE STERILIZATION") || ect.getContraceptionMethod().contains("FEMALE STERILIZATION")) ){
+        }
+        if(ect.getContraceptionMethod() != null && (ect.getContraceptionMethod().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getContraceptionMethod().contains("MiniLap") || ect.getContraceptionMethod().contains("MALE STERILIZATION") || ect.getContraceptionMethod().contains("FEMALE STERILIZATION")) ){
             IncentiveActivity limitiing2ChildActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.FAMILY_PLANNING.getDisplayName());
 
