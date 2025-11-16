@@ -162,6 +162,7 @@ public class CoupleServiceImpl implements CoupleService {
                     existingECR.setId(null);
                 }
 
+
                 if (existingECR.getIsKitHandedOver()) {
                     IncentiveActivity handoverKitActivityAM =
                             incentivesRepo.findIncentiveMasterByNameAndGroup("FP_NP_KIT", GroupName.FAMILY_PLANNING.getDisplayName());
@@ -259,7 +260,7 @@ public class CoupleServiceImpl implements CoupleService {
                     addIncenticeRecord(recordList, ect, userId, antaraActivityCH);
 
                 }
-             }
+            }
             if (ect.getAntraDose().contains("Dose-1")) {
                 IncentiveActivity antaraActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA1", "FAMILY PLANNING");
@@ -339,6 +340,19 @@ public class CoupleServiceImpl implements CoupleService {
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_CONDOM", "FAMILY PLANNING");
             if (copperTActivity != null) {
                 addIncenticeRecord(recordList, ect, userId, copperTActivity);
+            }
+        } else if (ect.getMethodOfContraception() != null && (ect.getMethodOfContraception().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getMethodOfContraception().contains("MiniLap") || ect.getMethodOfContraception().contains("MALE STERILIZATION") || ect.getMethodOfContraception().contains("FEMALE STERILIZATION"))) {
+            IncentiveActivity limitiing2ChildActivityAM =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.FAMILY_PLANNING.getDisplayName());
+
+            IncentiveActivity limitiing2ChildActivityCH =
+                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.ACTIVITY.getDisplayName());
+            if (limitiing2ChildActivityAM != null) {
+                addIncenticeRecord(recordList, ect, userId, limitiing2ChildActivityAM);
+            }
+
+            if (limitiing2ChildActivityCH != null) {
+                addIncenticeRecord(recordList, ect, userId, limitiing2ChildActivityCH);
             }
         }
     }
