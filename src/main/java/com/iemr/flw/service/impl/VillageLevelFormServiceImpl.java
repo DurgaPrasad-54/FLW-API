@@ -260,7 +260,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
 
         if (villageFormEntryActivityAM != null) {
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityAM.getId(), timestamp, null);
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityAM.getId(), timestamp, 0L,userID);
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityAM.getId());
@@ -280,7 +280,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
 
         if (villageFormEntryActivityCH != null) {
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityCH.getId(), timestamp, null);
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityCH.getId(), timestamp, 0L,userID);
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityCH.getId());
