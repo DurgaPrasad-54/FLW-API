@@ -122,6 +122,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         try {
             String user = beneficiaryRepo.getUserName(dto.getAshaId());
             List<ANCVisit> ancVisits = ancVisitRepo.getANCForPW(user, dto.getFromDate(), dto.getToDate());
+            checkAndAddIncentives(ancVisits);
             return ancVisits.stream()
                     .map(anc -> mapper.convertValue(anc, ANCVisitDTO.class))
                     .collect(Collectors.toList());

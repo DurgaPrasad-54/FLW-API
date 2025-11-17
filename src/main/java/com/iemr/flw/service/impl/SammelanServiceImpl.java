@@ -92,6 +92,7 @@ public class SammelanServiceImpl implements SammelanService {
 
     }
 
+
     @Override
     public List<SammelanResponseDTO> getSammelanHistory(Integer ashaId) {
         List<SammelanRecord> records = recordRepo.findByAshaId(ashaId);
