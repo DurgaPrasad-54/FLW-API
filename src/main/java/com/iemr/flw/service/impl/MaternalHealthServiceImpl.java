@@ -421,7 +421,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             if (PPIUCDActivityCH != null) {
                 addIncenticeRecord(recordList, ect, userId, PPIUCDActivityCH);
             }
-        }else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)")) {
+        }else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("POST PARTUM STERILIZATION (PPS)")) {
 
             IncentiveActivity ppsActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPS", GroupName.FAMILY_PLANNING.getDisplayName());
@@ -436,7 +436,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 addIncenticeRecord(recordList, ect, userId, ppsActivityCH);
             }
         }
-        if(ect.getContraceptionMethod() != null && (ect.getContraceptionMethod().contains("POST PARTUM STERILIZATION (PPS WITHIN 7 DAYS OF DELIVERY)") || ect.getContraceptionMethod().contains("MiniLap") || ect.getContraceptionMethod().contains("MALE STERILIZATION") || ect.getContraceptionMethod().contains("FEMALE STERILIZATION")) ){
+        if(ect.getContraceptionMethod() != null && (ect.getContraceptionMethod().equals("POST PARTUM STERILIZATION (PPS)") || ect.getContraceptionMethod().contains("MiniLap") || ect.getContraceptionMethod().contains("MALE STERILIZATION") || ect.getContraceptionMethod().contains("FEMALE STERILIZATION")) ){
             IncentiveActivity limitiing2ChildActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.FAMILY_PLANNING.getDisplayName());
 
@@ -486,7 +486,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.ACTIVITY.getDisplayName());
 
         IncentiveActivity comprehensiveAbortionActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
-        IncentiveActivity comprehensiveAbortionActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
+        IncentiveActivity comprehensiveAbortionActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.ACTIVITY.getDisplayName());
 
         IncentiveActivity identifiedHrpActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
         IncentiveActivity identifiedHrpActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.ACTIVITY.getDisplayName());
