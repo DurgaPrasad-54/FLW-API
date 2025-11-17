@@ -37,26 +37,8 @@ public class MalariaFollowUp {
     @Column(name = "treatment_given", nullable = false)
     private String treatmentGiven;
 
-    @Column(name = "pf_day_1")
-    private Boolean pfDay1;
-
-    @Column(name = "pf_day_2")
-    private Boolean pfDay2;
-
-    @Column(name = "pf_day_3")
-    private Boolean pfDay3;
-
-    @Column(name = "pv_day_1")
-    private Boolean pvDay1;
-
-    @Column(name = "pv_day_2")
-    private Boolean pvDay2;
-
-    @Column(name = "pv_day_3")
-    private Boolean pvDay3;
-
-    @Column(name = "pv_day_4")
-    private Boolean pvDay4;
+    @Column(name = "days", nullable = false)
+    private String day;
 
     @Column(name = "treatment_completion_date")
     @Temporal(TemporalType.DATE)

@@ -37,16 +37,7 @@ public class MalariaFollowListUpDTO {
     private Date dateOfDiagnosis;
     private Date treatmentStartDate;
     private String treatmentGiven;
-
-    private Boolean pfDay1;
-    private Boolean pfDay2;
-    private Boolean pfDay3;
-
-    private Boolean pvDay1;
-    private Boolean pvDay2;
-    private Boolean pvDay3;
-    private Boolean pvDay4;
-
+    private String  day;
     private Date treatmentCompletionDate;
     private Date referralDate;
 }
