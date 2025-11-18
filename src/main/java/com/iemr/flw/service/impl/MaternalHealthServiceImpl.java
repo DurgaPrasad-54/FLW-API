@@ -134,11 +134,18 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     @Override
     public String saveANCVisit(List<ANCVisitDTO> ancVisitDTOs) {
         try {
-            ANCVisit ancVisit = new ANCVisit();
-
             List<ANCVisit> ancList = new ArrayList<>();
             List<AncCare> ancCareList = new ArrayList<>();
             ancVisitDTOs.forEach(it -> {
+                ANCVisit ancVisit =
+                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActive(it.getBenId(), it.getAncVisit(), true);
+
+                if (ancVisit != null) {
+                    Long id = ancVisit.getId();
+                    modelMapper.map(it, ancVisit);
+                    ancVisit.setId(id);
+                } else {
+                    ancVisit = new ANCVisit();
                     modelMapper.map(it, ancVisit);
                     ancVisit.setId(null);
 
@@ -175,7 +182,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     ancCare.setLastModDate(it.getUpdatedDate());
                     ancCare.setProcessed("N");
                     ancCareList.add(ancCare);
-
+                }
                 ancList.add(ancVisit);
             });
 
@@ -185,6 +192,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             logger.info("ANC visit details saved");
             return "no of anc details saved: " + ancList.size();
         } catch (Exception e) {
+            logger.info("Saving ANC visit details failed with error : " + e.getMessage());
             logger.info("Saving ANC visit details failed with error : " + e);
         }
         return null;
