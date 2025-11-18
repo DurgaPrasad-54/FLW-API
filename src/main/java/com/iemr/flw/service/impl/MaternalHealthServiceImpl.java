@@ -135,18 +135,14 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     @Override
     public String saveANCVisit(List<ANCVisitDTO> ancVisitDTOs) {
         try {
+
             List<ANCVisit> ancList = new ArrayList<>();
             List<AncCare> ancCareList = new ArrayList<>();
             ancVisitDTOs.forEach(it -> {
-                ANCVisit ancVisit =
-                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActive(it.getBenId(), it.getAncVisit(), true);
+                if(ancVisitDTOs!=null){
 
-                if (ancVisit != null) {
-                    Long id = ancVisit.getId();
-                    modelMapper.map(it, ancVisit);
-                    ancVisit.setId(id);
-                } else {
-                    ancVisit = new ANCVisit();
+                    ANCVisit ancVisit = new ANCVisit();
+
                     modelMapper.map(it, ancVisit);
                     ancVisit.setId(null);
 
@@ -183,8 +179,10 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     ancCare.setLastModDate(it.getUpdatedDate());
                     ancCare.setProcessed("N");
                     ancCareList.add(ancCare);
+
+                    ancList.add(ancVisit);
                 }
-                ancList.add(ancVisit);
+
             });
 
             ancVisitRepo.saveAll(ancList);
@@ -322,7 +320,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     Long benRegId = beneficiaryRepo.getRegIDFromBenId(it.getBenId());
 
                     // Saving data in BenVisitDetails table
-                    PregnantWomanRegister pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
                     BenVisitDetail benVisitDetail = new BenVisitDetail();
                     modelMapper.map(it, benVisitDetail);
                     benVisitDetail.setBeneficiaryRegId(benRegId);
@@ -339,11 +336,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     modelMapper.map(it, pncCare);
                     pncCare.setBenVisitId(benVisitDetail.getBenVisitId());
                     pncCare.setBeneficiaryRegId(benRegId);
-//                    pncCare.setLastMenstrualPeriodLmp(pwr.getLmpDate());
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(pwr.getLmpDate());
-//                    cal.add(Calendar.DAY_OF_WEEK, 280);
-//                    pncCare.setExpectedDateofDelivery(new Timestamp(cal.getTime().getTime()));
                     pncCare.setVisitNo((short) PNC_PERIODS.indexOf(it.getPncPeriod()));
                     pncCare.setModifiedBy(it.getUpdatedBy());
                     pncCare.setLastModDate(it.getUpdatedDate());
@@ -566,10 +558,10 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 if (ancVisit.getAncVisit() == 4) {
 
                     IncentiveActivityRecord recordAM = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getAncDate(), ancVisit.getBenId());
 
                     IncentiveActivityRecord recordCH = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getAncDate(), ancVisit.getBenId());
 
 
                     if (recordAM == null) {
