@@ -122,7 +122,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         try {
             String user = beneficiaryRepo.getUserName(dto.getAshaId());
             List<ANCVisit> ancVisits = ancVisitRepo.getANCForPW(user, dto.getFromDate(), dto.getToDate());
-            checkAndAddIncentives(ancVisits);
             return ancVisits.stream()
                     .map(anc -> mapper.convertValue(anc, ANCVisitDTO.class))
                     .collect(Collectors.toList());
@@ -186,7 +185,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             logger.info("ANC visit details saved");
             return "no of anc details saved: " + ancList.size();
         } catch (Exception e) {
-            logger.info("Saving ANC visit details failed with error : " + e.getMessage());
+            logger.info("Saving ANC visit details failed with error : " + e);
         }
         return null;
     }
