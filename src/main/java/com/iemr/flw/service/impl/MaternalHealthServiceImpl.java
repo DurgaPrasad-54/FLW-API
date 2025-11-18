@@ -135,14 +135,11 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     @Override
     public String saveANCVisit(List<ANCVisitDTO> ancVisitDTOs) {
         try {
+            ANCVisit ancVisit = new ANCVisit();
 
             List<ANCVisit> ancList = new ArrayList<>();
             List<AncCare> ancCareList = new ArrayList<>();
             ancVisitDTOs.forEach(it -> {
-                if(ancVisitDTOs!=null){
-
-                    ANCVisit ancVisit = new ANCVisit();
-
                     modelMapper.map(it, ancVisit);
                     ancVisit.setId(null);
 
@@ -180,9 +177,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     ancCare.setProcessed("N");
                     ancCareList.add(ancCare);
 
-                    ancList.add(ancVisit);
-                }
-
+                ancList.add(ancVisit);
             });
 
             ancVisitRepo.saveAll(ancList);
@@ -477,240 +472,87 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         IncentiveActivity paiucdActivityCH =
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PAIUCD", GroupName.ACTIVITY.getDisplayName());
-        if (paiucdActivityAM != null) {
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+        ancList.forEach(ancVisit -> {
+            if (paiucdActivityAM != null) {
+                if (ancVisit.getIsPaiucd().equals("Yes")) {
+
+                    recordAncRelatedIncentive(paiucdActivityAM,ancVisit);
+
+                }
+            }
+
+            if (paiucdActivityCH != null) {
+
 
                 if (ancVisit.getIsPaiucd().equals("Yes")) {
 
-                    if (record == null) {
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(paiucdActivityAM.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(paiucdActivityAM.getRate()));
-                        recordRepo.save(record);
-                    }
+                   recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
 
                 }
-            }));
-        }
 
-        if (paiucdActivityCH != null) {
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(paiucdActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-
-                if (ancVisit.getIsPaiucd().equals("Yes")) {
-
-                    if (record == null) {
-                        logger.info("record:"+record.getName());
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(paiucdActivityCH.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(paiucdActivityCH.getRate()));
-                        recordRepo.save(record);
-                    }
-
-                }
-            }));
-        }
-
-
-        if (anc1Activity != null) {
-            ancList.forEach(ancVisit -> {
-
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+            }
+            if(anc1Activity!=null){
                 if (ancVisit.getAncVisit() == 1) {
-                    IncentiveActivityRecord record = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(anc1Activity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-
-                    if (record == null) {
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(anc1Activity.getId());
-                        record.setCreatedDate(ancVisit.getAncDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getAncDate());
-                        record.setEndDate(ancVisit.getAncDate());
-                        record.setUpdatedDate(ancVisit.getAncDate());
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(anc1Activity.getRate()));
-                        recordRepo.save(record);
-                    }
+                   recordAncRelatedIncentive(anc1Activity,ancVisit);
                 }
-
-                if (ancVisit.getAncVisit() == 4) {
-
-                    IncentiveActivityRecord recordAM = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getAncDate(), ancVisit.getBenId());
-
-                    IncentiveActivityRecord recordCH = recordRepo
-                            .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getAncDate(), ancVisit.getBenId());
-
-
-                    if (recordAM == null) {
-
-                        recordAM = new IncentiveActivityRecord();
-                        recordAM.setActivityId(ancFullActivityAM.getId());
-                        recordAM.setCreatedDate(ancVisit.getAncDate());
-                        recordAM.setCreatedBy(ancVisit.getCreatedBy());
-                        recordAM.setUpdatedDate(ancVisit.getAncDate());
-                        recordAM.setUpdatedBy(ancVisit.getCreatedBy());
-                        recordAM.setStartDate(ancVisit.getAncDate());
-                        recordAM.setEndDate(ancVisit.getAncDate());
-                        recordAM.setBenId(ancVisit.getBenId());
-                        recordAM.setAshaId(userId);
-                        recordAM.setAmount(Long.valueOf(ancFullActivityAM.getRate()));
-                        recordRepo.save(recordAM);
-                    }
-
-                    if (recordCH == null ) {
-
-                        recordCH = new IncentiveActivityRecord();
-                        recordCH.setActivityId(ancFullActivityCH.getId());
-                        recordCH.setCreatedDate(ancVisit.getAncDate());
-                        recordCH.setCreatedBy(ancVisit.getCreatedBy());
-                        recordCH.setUpdatedDate(ancVisit.getAncDate());
-                        recordCH.setUpdatedBy(ancVisit.getCreatedBy());
-                        recordCH.setStartDate(ancVisit.getAncDate());
-                        recordCH.setEndDate(ancVisit.getAncDate());
-                        recordCH.setBenId(ancVisit.getBenId());
-                        recordCH.setAshaId(userId);
-                        recordCH.setAmount(Long.valueOf(ancFullActivityCH.getRate()));
-                        recordRepo.save(recordCH);
-                    }
+            }
+            if(ancFullActivityAM!=null){
+                if(ancVisit.getAncVisit()==4){
+                    recordAncRelatedIncentive(ancFullActivityAM,ancVisit);
                 }
-
-            });
-        }
-        if (comprehensiveAbortionActivityAM != null) {
-
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getAbortionDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                logger.info("ancVisit.getIsAborted()"+ancVisit.getIsAborted());
-
-                if (ancVisit.getIsAborted()) {
-
-                    if (record == null) {
-                        logger.info("record:"+record.getName());
-                        logger.info("condition:"+ancVisit.getIsAborted());
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(comprehensiveAbortionActivityAM.getId());
-                        record.setCreatedDate(ancVisit.getAbortionDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getAbortionDate());
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getAbortionDate());
-                        record.setEndDate(ancVisit.getAbortionDate());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(comprehensiveAbortionActivityAM.getRate()));
-                        recordRepo.save(record);
-                    }
-
+                
+            }
+            if(ancFullActivityCH!=null){
+                if(ancVisit.getAncVisit()==4){
+                    recordAncRelatedIncentive(ancFullActivityCH,ancVisit);
                 }
-            }));
-        }
-        if (comprehensiveAbortionActivityCH != null) {
-
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getAbortionDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                logger.info("ancVisit.getIsAborted()"+ancVisit.getIsAborted());
-
-                if (ancVisit.getIsAborted()) {
-
-                    if (record == null) {
-                        logger.info("record:"+record.getName());
-                        logger.info("condition:"+ancVisit.getIsAborted());
-                        record = new IncentiveActivityRecord();
-                        record.setActivityId(comprehensiveAbortionActivityCH.getId());
-                        record.setCreatedDate(ancVisit.getAbortionDate());
-                        record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getAbortionDate());
-                        record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getAbortionDate());
-                        record.setEndDate(ancVisit.getAbortionDate());
-                        record.setBenId(ancVisit.getBenId());
-                        record.setAshaId(userId);
-                        record.setAmount(Long.valueOf(comprehensiveAbortionActivityCH.getRate()));
-                        recordRepo.save(record);
-                    }
-
+            }
+            if(comprehensiveAbortionActivityAM!=null){
+                if(ancVisit.getIsAborted()){
+                    recordAncRelatedIncentive(comprehensiveAbortionActivityAM,ancVisit);
                 }
-            }));
-        }
+            }
 
-        if (identifiedHrpActivityAM != null) {
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                if (ancVisit.getIsHrpConfirmed() != null) {
-                    if (ancVisit.getIsHrpConfirmed()) {
-                        if (record == null) {
-                            record = new IncentiveActivityRecord();
-                            record.setActivityId(identifiedHrpActivityAM.getId());
-                            record.setCreatedDate(ancVisit.getCreatedDate());
-                            record.setCreatedBy(ancVisit.getCreatedBy());
-                            record.setUpdatedDate(ancVisit.getCreatedDate());
-                            record.setUpdatedBy(ancVisit.getCreatedBy());
-                            record.setStartDate(ancVisit.getCreatedDate());
-                            record.setEndDate(ancVisit.getCreatedDate());
-                            record.setBenId(ancVisit.getBenId());
-                            record.setAshaId(userId);
-                            record.setAmount(Long.valueOf(identifiedHrpActivityAM.getRate()));
-                            recordRepo.save(record);
-                        }
-                    }
-
-
+            if(comprehensiveAbortionActivityCH!=null){
+                if(ancVisit.getIsAborted()){
+                    recordAncRelatedIncentive(comprehensiveAbortionActivityCH,ancVisit);
                 }
-            }));
-        }
-
-
-        if (identifiedHrpActivityCH != null) {
-            ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(identifiedHrpActivityCH.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
-                Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
-                if (ancVisit.getIsHrpConfirmed() != null) {
-                    if (ancVisit.getIsHrpConfirmed()) {
-                        if (record == null) {
-                            record = new IncentiveActivityRecord();
-                            record.setActivityId(identifiedHrpActivityCH.getId());
-                            record.setCreatedDate(ancVisit.getCreatedDate());
-                            record.setCreatedBy(ancVisit.getCreatedBy());
-                            record.setUpdatedDate(ancVisit.getCreatedDate());
-                            record.setUpdatedBy(ancVisit.getCreatedBy());
-                            record.setStartDate(ancVisit.getCreatedDate());
-                            record.setEndDate(ancVisit.getCreatedDate());
-                            record.setBenId(ancVisit.getBenId());
-                            record.setAshaId(userId);
-                            record.setAmount(Long.valueOf(identifiedHrpActivityCH.getRate()));
-                            recordRepo.save(record);
-                        }
-                    }
-
-
+            }
+            if(identifiedHrpActivityAM!=null){
+                if(ancVisit.getIsHrpConfirmed()){
+                    recordAncRelatedIncentive(identifiedHrpActivityAM,ancVisit);
                 }
-            }));
+            }
+
+            if(identifiedHrpActivityCH!=null){
+                if(ancVisit.getIsHrpConfirmed()){
+                    recordAncRelatedIncentive(identifiedHrpActivityCH,ancVisit);
+                }
+            }
+
+        });
+
+
+
+    }
+    private void recordAncRelatedIncentive(IncentiveActivity incentiveActivity,ANCVisit ancVisit){
+        IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+        Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
+
+        if (record == null) {
+            record = new IncentiveActivityRecord();
+            record.setActivityId(incentiveActivity.getId());
+            record.setCreatedDate(ancVisit.getCreatedDate());
+            record.setCreatedBy(ancVisit.getCreatedBy());
+            record.setUpdatedDate(ancVisit.getCreatedDate());
+            record.setUpdatedBy(ancVisit.getCreatedBy());
+            record.setStartDate(ancVisit.getCreatedDate());
+            record.setEndDate(ancVisit.getCreatedDate());
+            record.setBenId(ancVisit.getBenId());
+            record.setAshaId(userId);
+            record.setAmount(Long.valueOf(incentiveActivity.getRate()));
+            recordRepo.save(record);
         }
 
     }
