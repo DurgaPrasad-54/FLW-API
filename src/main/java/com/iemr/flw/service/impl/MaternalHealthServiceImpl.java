@@ -571,16 +571,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     IncentiveActivityRecord recordCH = recordRepo
                             .findRecordByActivityIdCreatedDateBenId(ancFullActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
 
-                    ANCVisit visit1 = ancVisitRepo
-                            .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 1, true);
-                    ANCVisit visit2 = ancVisitRepo
-                            .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 2, true);
-                    ANCVisit visit3 = ancVisitRepo
-                            .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 3, true);
-                    ANCVisit visit4 = ancVisitRepo
-                            .findANCVisitByBenIdAndAncVisitAndIsActive(ancVisit.getBenId(), 4, true);
 
-                    if (recordAM == null && (visit1 != null) && (visit2 != null) && (visit3 != null) && (visit4 != null)) {
+                    if (recordAM == null) {
 
                         recordAM = new IncentiveActivityRecord();
                         recordAM.setActivityId(ancFullActivityAM.getId());
@@ -588,15 +580,15 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         recordAM.setCreatedBy(ancVisit.getCreatedBy());
                         recordAM.setUpdatedDate(ancVisit.getAncDate());
                         recordAM.setUpdatedBy(ancVisit.getCreatedBy());
-                        recordAM.setStartDate(visit1.getAncDate());
-                        recordAM.setEndDate(visit4.getAncDate());
+                        recordAM.setStartDate(ancVisit.getAncDate());
+                        recordAM.setEndDate(ancVisit.getAncDate());
                         recordAM.setBenId(ancVisit.getBenId());
                         recordAM.setAshaId(userId);
                         recordAM.setAmount(Long.valueOf(ancFullActivityAM.getRate()));
                         recordRepo.save(recordAM);
                     }
 
-                    if (recordCH == null && (visit1 != null) && (visit2 != null) && (visit3 != null) && (visit4 != null)) {
+                    if (recordCH == null ) {
 
                         recordCH = new IncentiveActivityRecord();
                         recordCH.setActivityId(ancFullActivityCH.getId());
@@ -604,8 +596,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         recordCH.setCreatedBy(ancVisit.getCreatedBy());
                         recordCH.setUpdatedDate(ancVisit.getAncDate());
                         recordCH.setUpdatedBy(ancVisit.getCreatedBy());
-                        recordCH.setStartDate(visit1.getAncDate());
-                        recordCH.setEndDate(visit4.getAncDate());
+                        recordCH.setStartDate(ancVisit.getAncDate());
+                        recordCH.setEndDate(ancVisit.getAncDate());
                         recordCH.setBenId(ancVisit.getBenId());
                         recordCH.setAshaId(userId);
                         recordCH.setAmount(Long.valueOf(ancFullActivityCH.getRate()));
@@ -618,7 +610,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         if (comprehensiveAbortionActivityAM != null) {
 
             ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getAbortionDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
                 logger.info("ancVisit.getIsAborted()"+ancVisit.getIsAborted());
 
@@ -629,12 +621,12 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         logger.info("condition:"+ancVisit.getIsAborted());
                         record = new IncentiveActivityRecord();
                         record.setActivityId(comprehensiveAbortionActivityAM.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedDate(ancVisit.getAbortionDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedDate(ancVisit.getAbortionDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setStartDate(ancVisit.getAbortionDate());
+                        record.setEndDate(ancVisit.getAbortionDate());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
                         record.setAmount(Long.valueOf(comprehensiveAbortionActivityAM.getRate()));
@@ -647,7 +639,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         if (comprehensiveAbortionActivityCH != null) {
 
             ancList.forEach((ancVisit -> {
-                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
+                IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(comprehensiveAbortionActivityAM.getId(), ancVisit.getAbortionDate(), ancVisit.getBenId());
                 Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
                 logger.info("ancVisit.getIsAborted()"+ancVisit.getIsAborted());
 
@@ -658,12 +650,12 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                         logger.info("condition:"+ancVisit.getIsAborted());
                         record = new IncentiveActivityRecord();
                         record.setActivityId(comprehensiveAbortionActivityCH.getId());
-                        record.setCreatedDate(ancVisit.getCreatedDate());
+                        record.setCreatedDate(ancVisit.getAbortionDate());
                         record.setCreatedBy(ancVisit.getCreatedBy());
-                        record.setUpdatedDate(ancVisit.getCreatedDate());
+                        record.setUpdatedDate(ancVisit.getAbortionDate());
                         record.setUpdatedBy(ancVisit.getCreatedBy());
-                        record.setStartDate(ancVisit.getCreatedDate());
-                        record.setEndDate(ancVisit.getCreatedDate());
+                        record.setStartDate(ancVisit.getAbortionDate());
+                        record.setEndDate(ancVisit.getAbortionDate());
                         record.setBenId(ancVisit.getBenId());
                         record.setAshaId(userId);
                         record.setAmount(Long.valueOf(comprehensiveAbortionActivityCH.getRate()));
