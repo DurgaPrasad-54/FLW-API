@@ -239,6 +239,7 @@ public class ChildCareController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
+
             String responseObject = childCareService.saveSamDetails(samRequest);
 
             if (responseObject != null) {

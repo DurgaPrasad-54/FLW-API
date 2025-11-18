@@ -366,6 +366,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     private void checkAndAddAntaraIncentive(List<PNCVisit> recordList, PNCVisit ect) {
         Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
         logger.info("ContraceptionMethod:" + ect.getContraceptionMethod());
+
         if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MALE STERILIZATION")) {
 
             IncentiveActivity maleSterilizationActivityAM=
@@ -437,20 +438,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 addIncenticeRecord(recordList, ect, userId, ppsActivityCH);
             }
         }
-        if(ect.getContraceptionMethod() != null && (ect.getContraceptionMethod().equals("POST PARTUM STERILIZATION (PPS)") || ect.getContraceptionMethod().contains("MiniLap") || ect.getContraceptionMethod().contains("MALE STERILIZATION") || ect.getContraceptionMethod().contains("FEMALE STERILIZATION")) ){
-            IncentiveActivity limitiing2ChildActivityAM =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.FAMILY_PLANNING.getDisplayName());
 
-            IncentiveActivity limitiing2ChildActivityCH =
-                    incentivesRepo.findIncentiveMasterByNameAndGroup("FP_LIMIT_2CHILD", GroupName.ACTIVITY.getDisplayName());
-            if (limitiing2ChildActivityAM != null) {
-                addIncenticeRecord(recordList, ect, userId, limitiing2ChildActivityAM);
-            }
-
-            if (limitiing2ChildActivityCH != null) {
-                addIncenticeRecord(recordList, ect, userId, limitiing2ChildActivityCH);
-            }
-        }
     }
 
     private void addIncenticeRecord(List<PNCVisit> recordList, PNCVisit ect, Integer userId, IncentiveActivity antaraActivity) {
