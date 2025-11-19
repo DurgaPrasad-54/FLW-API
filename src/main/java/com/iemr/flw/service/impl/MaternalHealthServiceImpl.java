@@ -242,22 +242,22 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     }
 
     private void checkAndAddHighRisk(List<PMSMA> pmsmaList) {
-        IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED",GroupName.MATERNAL_HEALTH.getDisplayName());
-        IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED",GroupName.ACTIVITY.getDisplayName());
-        if(incentiveActivityAM!=null){
+        IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.MATERNAL_HEALTH.getDisplayName());
+        IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("EPMSMA_HRP_IDENTIFIED", GroupName.ACTIVITY.getDisplayName());
+        if (incentiveActivityAM != null) {
             pmsmaList.forEach(pmsma -> {
-                if(pmsma.getHighRiskPregnant()){
-                    addIncentiveForHighRisk(incentiveActivityAM,pmsma);
+                if (pmsma.getHighRiskPregnant()) {
+                    addIncentiveForHighRisk(incentiveActivityAM, pmsma);
 
                 }
 
             });
         }
 
-        if(incentiveActivityCH!=null){
+        if (incentiveActivityCH != null) {
             pmsmaList.forEach(pmsma -> {
-                if(pmsma.getHighRiskPregnant()){
-                    addIncentiveForHighRisk(incentiveActivityCH,pmsma);
+                if (pmsma.getHighRiskPregnant()) {
+                    addIncentiveForHighRisk(incentiveActivityCH, pmsma);
 
                 }
 
@@ -363,7 +363,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("MALE STERILIZATION")) {
 
-            IncentiveActivity maleSterilizationActivityAM=
+            IncentiveActivity maleSterilizationActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_MALE_STER", GroupName.FAMILY_PLANNING.getDisplayName());
 
             IncentiveActivity maleSterilizationActivityCH =
@@ -417,7 +417,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             if (PPIUCDActivityCH != null) {
                 addIncenticeRecord(recordList, ect, userId, PPIUCDActivityCH);
             }
-        }else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("POST PARTUM STERILIZATION (PPS)")) {
+        } else if (ect.getContraceptionMethod() != null && ect.getContraceptionMethod().equals("POST PARTUM STERILIZATION (PPS)")) {
 
             IncentiveActivity ppsActivityAM =
                     incentivesRepo.findIncentiveMasterByNameAndGroup("FP_PPS", GroupName.FAMILY_PLANNING.getDisplayName());
@@ -466,7 +466,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.MATERNAL_HEALTH.getDisplayName());
 
         IncentiveActivity ancFullActivityCH =
-                incentivesRepo.findIncentiveMasterByNameAndGroup("FULL_ANC", GroupName.ACTIVITY.getDisplayName());
+                incentivesRepo.findIncentiveMasterByNameAndGroup("ANC_FOUR_CHECKUPS_SUPPORT", GroupName.ACTIVITY.getDisplayName());
 
         IncentiveActivity comprehensiveAbortionActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.MATERNAL_HEALTH.getDisplayName());
         IncentiveActivity comprehensiveAbortionActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("COMPREHENSIVE_ABORTION_CARE", GroupName.ACTIVITY.getDisplayName());
@@ -482,9 +482,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         ancList.forEach(ancVisit -> {
             if (paiucdActivityAM != null) {
-                if(ancVisit.getIsPaiucd()!=null){
+                if (ancVisit.getIsPaiucd()!= null) {
                     if (ancVisit.getIsPaiucd().equals("Yes")) {
-                        recordAncRelatedIncentive(paiucdActivityAM,ancVisit);
+                        recordAncRelatedIncentive(paiucdActivityAM, ancVisit);
 
                     }
                 }
@@ -493,68 +493,68 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             if (paiucdActivityCH != null) {
 
-                if(ancVisit.getIsPaiucd()!=null){
+                if (ancVisit.getIsPaiucd()!= null) {
                     if (ancVisit.getIsPaiucd().equals("Yes")) {
 
-                        recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
+                        recordAncRelatedIncentive(paiucdActivityCH, ancVisit);
 
                     }
                 }
 
 
             }
-            if(anc1Activity!=null){
-                if(ancVisit.getAncVisit()!=null) {
+            if (anc1Activity != null) {
+                if (ancVisit.getAncVisit() != null) {
 
                     if (ancVisit.getAncVisit() == 1) {
                         recordAncRelatedIncentive(anc1Activity, ancVisit);
                     }
                 }
             }
-            if(ancFullActivityAM!=null){
-                if(ancVisit.getAncVisit() == 4){
-                    recordAncRelatedIncentive(ancFullActivityAM,ancVisit);
+            if (ancFullActivityAM != null) {
+                if (ancVisit.getAncVisit() == 4) {
+                    recordAncRelatedIncentive(ancFullActivityAM, ancVisit);
                 }
 
             }
-            if(ancFullActivityCH!=null){
-                if(ancVisit.getAncVisit()!=null){
-                    if(ancVisit.getAncVisit()==4){
-                        recordAncRelatedIncentive(ancFullActivityCH,ancVisit);
+            if (ancFullActivityCH != null) {
+                if (ancVisit.getAncVisit() != null) {
+                    if (ancVisit.getAncVisit() == 4) {
+                        recordAncRelatedIncentive(ancFullActivityCH, ancVisit);
                     }
                 }
 
             }
-            if(comprehensiveAbortionActivityAM!=null){
-                if(ancVisit.getIsAborted()!=null){
-                    if(ancVisit.getIsAborted()){
-                        recordAncRelatedIncentive(comprehensiveAbortionActivityAM,ancVisit);
-                    }
-                }
-
-            }
-
-            if(comprehensiveAbortionActivityCH!=null){
-                if(ancVisit.getIsAborted()!=null){
-                    if(ancVisit.getIsAborted()){
-                        recordAncRelatedIncentive(comprehensiveAbortionActivityCH,ancVisit);
-                    }
-                }
-
-            }
-            if(identifiedHrpActivityAM!=null){
-                if(ancVisit.getIsHrpConfirmed()!=null){
-                    if(ancVisit.getIsHrpConfirmed()){
-                        recordAncRelatedIncentive(identifiedHrpActivityAM,ancVisit);
+            if (comprehensiveAbortionActivityAM != null) {
+                if (ancVisit.getIsAborted() != null) {
+                    if (ancVisit.getIsAborted()) {
+                        recordAncRelatedIncentive(comprehensiveAbortionActivityAM, ancVisit);
                     }
                 }
 
             }
 
-            if(identifiedHrpActivityCH!=null){
-                if(ancVisit.getIsHrpConfirmed()!=null){
-                    if(ancVisit.getIsHrpConfirmed()){
-                        recordAncRelatedIncentive(identifiedHrpActivityCH,ancVisit);
+            if (comprehensiveAbortionActivityCH != null) {
+                if (ancVisit.getIsAborted() != null) {
+                    if (ancVisit.getIsAborted()) {
+                        recordAncRelatedIncentive(comprehensiveAbortionActivityCH, ancVisit);
+                    }
+                }
+
+            }
+            if (identifiedHrpActivityAM != null) {
+                if (ancVisit.getIsHrpConfirmed() != null) {
+                    if (ancVisit.getIsHrpConfirmed()) {
+                        recordAncRelatedIncentive(identifiedHrpActivityAM, ancVisit);
+                    }
+                }
+
+            }
+
+            if (identifiedHrpActivityCH != null) {
+                if (ancVisit.getIsHrpConfirmed() != null) {
+                    if (ancVisit.getIsHrpConfirmed()) {
+                        recordAncRelatedIncentive(identifiedHrpActivityCH, ancVisit);
                     }
                 }
 
@@ -563,9 +563,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         });
 
 
-
     }
-    private void recordAncRelatedIncentive(IncentiveActivity incentiveActivity,ANCVisit ancVisit){
+
+    private void recordAncRelatedIncentive(IncentiveActivity incentiveActivity, ANCVisit ancVisit) {
         IncentiveActivityRecord record = recordRepo.findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), ancVisit.getCreatedDate(), ancVisit.getBenId());
         Integer userId = userRepo.getUserIdByName(ancVisit.getCreatedBy());
 
