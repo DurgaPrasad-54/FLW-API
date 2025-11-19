@@ -493,12 +493,14 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             if (paiucdActivityCH != null) {
 
+                if(ancVisit.getIsPaiucdId()!=null){
+                    if (ancVisit.getIsPaiucd().equals("Yes")) {
 
-                if (ancVisit.getIsPaiucd().equals("Yes")) {
+                        recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
 
-                    recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
-
+                    }
                 }
+
 
             }
             if(anc1Activity!=null){
