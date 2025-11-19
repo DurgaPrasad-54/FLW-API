@@ -504,8 +504,11 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             }
             if(anc1Activity!=null){
-                if (ancVisit.getAncVisit() == 1) {
-                    recordAncRelatedIncentive(anc1Activity,ancVisit);
+                if(ancVisit.getAncVisit()!=null) {
+
+                    if (ancVisit.getAncVisit() == 1) {
+                        recordAncRelatedIncentive(anc1Activity, ancVisit);
+                    }
                 }
             }
             if(ancFullActivityAM!=null){
@@ -515,31 +518,46 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             }
             if(ancFullActivityCH!=null){
-                if(ancVisit.getAncVisit()==4){
-                    recordAncRelatedIncentive(ancFullActivityCH,ancVisit);
+                if(ancVisit.getAncVisit()!=null){
+                    if(ancVisit.getAncVisit()==4){
+                        recordAncRelatedIncentive(ancFullActivityCH,ancVisit);
+                    }
                 }
+
             }
             if(comprehensiveAbortionActivityAM!=null){
-                if(ancVisit.getIsAborted()){
-                    recordAncRelatedIncentive(comprehensiveAbortionActivityAM,ancVisit);
+                if(ancVisit.getIsAborted()!=null){
+                    if(ancVisit.getIsAborted()){
+                        recordAncRelatedIncentive(comprehensiveAbortionActivityAM,ancVisit);
+                    }
                 }
+
             }
 
             if(comprehensiveAbortionActivityCH!=null){
-                if(ancVisit.getIsAborted()){
-                    recordAncRelatedIncentive(comprehensiveAbortionActivityCH,ancVisit);
+                if(ancVisit.getIsAborted()!=null){
+                    if(ancVisit.getIsAborted()){
+                        recordAncRelatedIncentive(comprehensiveAbortionActivityCH,ancVisit);
+                    }
                 }
+
             }
             if(identifiedHrpActivityAM!=null){
-                if(ancVisit.getIsHrpConfirmed()){
-                    recordAncRelatedIncentive(identifiedHrpActivityAM,ancVisit);
+                if(ancVisit.getIsHrpConfirmed()!=null){
+                    if(ancVisit.getIsHrpConfirmed()){
+                        recordAncRelatedIncentive(identifiedHrpActivityAM,ancVisit);
+                    }
                 }
+
             }
 
             if(identifiedHrpActivityCH!=null){
-                if(ancVisit.getIsHrpConfirmed()){
-                    recordAncRelatedIncentive(identifiedHrpActivityCH,ancVisit);
+                if(ancVisit.getIsHrpConfirmed()!=null){
+                    if(ancVisit.getIsHrpConfirmed()){
+                        recordAncRelatedIncentive(identifiedHrpActivityCH,ancVisit);
+                    }
                 }
+
             }
 
         });
