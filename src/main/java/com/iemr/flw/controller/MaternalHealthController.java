@@ -109,7 +109,7 @@ public class MaternalHealthController {
             } else
                 response.setError(5000, "Invalid/NULL request obj");
         } catch (Exception e) {
-            logger.error("Error in save ANC visit details : " ,e);
+            logger.error("Error in save ANC visit details : ",e);
 
             response.setError(5000, "Error in save ANC visit details : " + e);
         }

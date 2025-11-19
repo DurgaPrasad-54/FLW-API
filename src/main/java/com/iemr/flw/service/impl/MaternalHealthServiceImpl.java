@@ -77,19 +77,19 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         try {
             List<PregnantWomanRegister> pwrList = new ArrayList<>();
             pregnantWomanDTOs.forEach(it -> {
-               List<PregnantWomanRegister> pwr =
+                PregnantWomanRegister pwr =
                         pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
 
                 if (pwr != null) {
-                    Long id = pwr.get(0).getId();
+                    Long id = pwr.getId();
                     modelMapper.map(it, pwr);
-                    pwr.get(0).setId(id);
+                    pwr.setId(id);
                 } else {
-                    pwr = new ArrayList<>();
+                    pwr = new PregnantWomanRegister();
                     modelMapper.map(it, pwr);
-                    pwr.get(0).setId(null);
+                    pwr.setId(null);
                 }
-                pwrList.add(pwr.get(0));
+                pwrList.add(pwr);
             });
             pregnantWomanRegisterRepo.saveAll(pwrList);
 
@@ -133,73 +133,69 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
     @Override
     public String saveANCVisit(List<ANCVisitDTO> ancVisitDTOs) {
+        try {
+            List<ANCVisit> ancList = new ArrayList<>();
+            List<AncCare> ancCareList = new ArrayList<>();
+            ancVisitDTOs.forEach(it -> {
+                ANCVisit ancVisit =
+                        ancVisitRepo.findANCVisitByBenIdAndAncVisictAndIsActive(it.getBenId(), it.getAncVisit(), true);
 
-        List<ANCVisit> ancList = new ArrayList<>();
-        List<AncCare> ancCareList = new ArrayList<>();
-        ancVisitDTOs.forEach(it -> {
-            ANCVisit ancVisit =
-                    ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActiveAndCreatedBy(it.getBenId(), it.getAncVisit(), true,it.getCreatedBy());
+                if (ancVisit != null) {
+                    Long id = ancVisit.getId();
+                    modelMapper.map(it, ancVisit);
+                    ancVisit.setId(id);
+                } else {
+                    ancVisit = new ANCVisit();
+                    modelMapper.map(it, ancVisit);
+                    ancVisit.setId(null);
 
-            if (ancVisit != null) {
-                Long id = ancVisit.getId();
-                modelMapper.map(it, ancVisit);
-                ancVisit.setId(id);
-            } else {
-                ancVisit = new ANCVisit();
-                modelMapper.map(it, ancVisit);
-                ancVisit.setId(null);
+                    Long benRegId = beneficiaryRepo.getRegIDFromBenId(it.getBenId());
 
-                Long benRegId = beneficiaryRepo.getRegIDFromBenId(it.getBenId());
+                    // Saving data in BenVisitDetails table
+                    PregnantWomanRegister pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
+                    BenVisitDetail benVisitDetail = new BenVisitDetail();
+                    modelMapper.map(it, benVisitDetail);
+                    benVisitDetail.setBeneficiaryRegId(benRegId);
+                    benVisitDetail.setVisitCategory("ANC");
+                    benVisitDetail.setVisitReason("Follow Up");
+                    benVisitDetail.setPregnancyStatus("Yes");
+                    benVisitDetail.setProcessed("N");
+                    benVisitDetail.setModifiedBy(it.getUpdatedBy());
+                    benVisitDetail.setLastModDate(it.getUpdatedDate());
+                    benVisitDetail.setProviderServiceMapID(it.getProviderServiceMapID());
+                    benVisitDetail = benVisitDetailsRepo.save(benVisitDetail);
 
-                // Saving data in BenVisitDetails table
-                BenVisitDetail benVisitDetail = new BenVisitDetail();
-                modelMapper.map(it, benVisitDetail);
-                benVisitDetail.setBeneficiaryRegId(benRegId);
-                benVisitDetail.setVisitCategory("ANC");
-                benVisitDetail.setVisitReason("Follow Up");
-                benVisitDetail.setPregnancyStatus("Yes");
-                benVisitDetail.setProcessed("N");
-                benVisitDetail.setModifiedBy(it.getUpdatedBy());
-                benVisitDetail.setLastModDate(it.getUpdatedDate());
-                benVisitDetail.setProviderServiceMapID(it.getProviderServiceMapID());
-                benVisitDetail = benVisitDetailsRepo.save(benVisitDetail);
-
-                // Saving Data in AncCare table
-                AncCare ancCare = new AncCare();
-                modelMapper.map(it, ancCare);
-                ancCare.setBenVisitId(benVisitDetail.getBenVisitId());
-                ancCare.setBeneficiaryRegId(benRegId);
-                List<PregnantWomanRegister> pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
-                logger.info("PWR"+pwr.size());
-
-                if (pwr != null) {
-                    ancCare.setLastMenstrualPeriodLmp(pwr.get(0).getLmpDate());
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(pwr.get(0).getLmpDate());
-                    cal.add(Calendar.DAY_OF_WEEK, 280);
-                    ancCare.setExpectedDateofDelivery(new Timestamp(cal.getTime().getTime()));
+                    // Saving Data in AncCare table
+                    AncCare ancCare = new AncCare();
+                    modelMapper.map(it, ancCare);
+                    ancCare.setBenVisitId(benVisitDetail.getBenVisitId());
+                    ancCare.setBeneficiaryRegId(benRegId);
+                    if (pwr != null) {
+                        ancCare.setLastMenstrualPeriodLmp(pwr.getLmpDate());
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(pwr.getLmpDate());
+                        cal.add(Calendar.DAY_OF_WEEK, 280);
+                        ancCare.setExpectedDateofDelivery(new Timestamp(cal.getTime().getTime()));
+                    }
+                    ancCare.setTrimesterNumber(it.getAncVisit().shortValue());
+                    ancCare.setModifiedBy(it.getUpdatedBy());
+                    ancCare.setLastModDate(it.getUpdatedDate());
+                    ancCare.setProcessed("N");
+                    ancCareList.add(ancCare);
                 }
-                ancCare.setTrimesterNumber(it.getAncVisit().shortValue());
-                ancCare.setModifiedBy(it.getUpdatedBy());
-                ancCare.setLastModDate(it.getUpdatedDate());
-                ancCare.setProcessed("N");
-                ancCareList.add(ancCare);
-            }
-            ancList.add(ancVisit);
-        });
+                ancList.add(ancVisit);
+            });
 
-        ancVisitRepo.saveAll(ancList);
-        checkAndAddIncentives(ancList);
-        ancCareRepo.saveAll(ancCareList);
-        logger.info("ANC visit details saved");
-        return "no of anc details saved: " + ancList.size();
-//        try {
-//
-//        } catch (Exception e) {
-//            logger.info("Saving ANC visit details failed with error : " + e.getMessage());
-//            logger.info("Saving ANC visit details failed with error : " + e);
-//        }
-       // return null;
+            ancVisitRepo.saveAll(ancList);
+            ancCareRepo.saveAll(ancCareList);
+            checkAndAddIncentives(ancList);
+            logger.info("ANC visit details saved");
+            return "no of anc details saved: " + ancList.size();
+        } catch (Exception e) {
+            logger.info("Saving ANC visit details failed with error : " + e.getMessage());
+            logger.info("Saving ANC visit details failed with error : " + e);
+        }
+        return null;
     }
 
     @Override
@@ -236,7 +232,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             });
             pmsmaRepo.saveAll(pmsmaList);
             logger.info("PMSMA details saved");
-             checkAndAddHighRisk(pmsmaList);
+            checkAndAddHighRisk(pmsmaList);
 
             return "No. of PMSMA records saved: " + pmsmaList.size();
         } catch (Exception e) {
@@ -498,21 +494,21 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
                 if (ancVisit.getIsPaiucd().equals("Yes")) {
 
-                   recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
+                    recordAncRelatedIncentive(paiucdActivityCH,ancVisit);
 
                 }
 
             }
             if(anc1Activity!=null){
                 if (ancVisit.getAncVisit() == 1) {
-                   recordAncRelatedIncentive(anc1Activity,ancVisit);
+                    recordAncRelatedIncentive(anc1Activity,ancVisit);
                 }
             }
             if(ancFullActivityAM!=null){
                 if(ancVisit.getAncVisit()==4){
                     recordAncRelatedIncentive(ancFullActivityAM,ancVisit);
                 }
-                
+
             }
             if(ancFullActivityCH!=null){
                 if(ancVisit.getAncVisit()==4){
