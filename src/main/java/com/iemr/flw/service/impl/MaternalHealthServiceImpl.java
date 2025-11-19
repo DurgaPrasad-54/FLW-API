@@ -77,19 +77,19 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         try {
             List<PregnantWomanRegister> pwrList = new ArrayList<>();
             pregnantWomanDTOs.forEach(it -> {
-                PregnantWomanRegister pwr =
+               List< PregnantWomanRegister> pwr =
                         pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
 
                 if (pwr != null) {
-                    Long id = pwr.getId();
+                    Long id = pwr.get(0).getId();
                     modelMapper.map(it, pwr);
-                    pwr.setId(id);
+                    pwr.get(0).setId(id);
                 } else {
-                    pwr = new PregnantWomanRegister();
+                    pwr = new ArrayList<>();
                     modelMapper.map(it, pwr);
-                    pwr.setId(null);
+                    pwr.get(0).setId(null);
                 }
-                pwrList.add(pwr);
+                pwrList.add(pwr.get(0));
             });
             pregnantWomanRegisterRepo.saveAll(pwrList);
 
@@ -138,7 +138,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             List<AncCare> ancCareList = new ArrayList<>();
             ancVisitDTOs.forEach(it -> {
                 ANCVisit ancVisit =
-                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActiveAndCreatedBy(it.getBenId(), it.getAncVisit(), true,it.getCreatedBy());
+                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActive(it.getBenId(), it.getAncVisit(), true);
 
                 if (ancVisit != null) {
                     Long id = ancVisit.getId();
@@ -152,7 +152,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     Long benRegId = beneficiaryRepo.getRegIDFromBenId(it.getBenId());
 
                     // Saving data in BenVisitDetails table
-                    PregnantWomanRegister pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
+                    List<PregnantWomanRegister> pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
                     BenVisitDetail benVisitDetail = new BenVisitDetail();
                     modelMapper.map(it, benVisitDetail);
                     benVisitDetail.setBeneficiaryRegId(benRegId);
@@ -171,9 +171,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                     ancCare.setBenVisitId(benVisitDetail.getBenVisitId());
                     ancCare.setBeneficiaryRegId(benRegId);
                     if (pwr != null) {
-                        ancCare.setLastMenstrualPeriodLmp(pwr.getLmpDate());
+                        ancCare.setLastMenstrualPeriodLmp(pwr.get(0).getLmpDate());
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(pwr.getLmpDate());
+                        cal.setTime(pwr.get(0).getLmpDate());
                         cal.add(Calendar.DAY_OF_WEEK, 280);
                         ancCare.setExpectedDateofDelivery(new Timestamp(cal.getTime().getTime()));
                     }
