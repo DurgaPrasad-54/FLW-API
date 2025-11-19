@@ -482,11 +482,13 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         ancList.forEach(ancVisit -> {
             if (paiucdActivityAM != null) {
-                if (ancVisit.getIsPaiucd().equals("Yes")) {
+                if(ancVisit.getIsPaiucd()!=null){
+                    if (ancVisit.getIsPaiucd().equals("Yes")) {
+                        recordAncRelatedIncentive(paiucdActivityAM,ancVisit);
 
-                    recordAncRelatedIncentive(paiucdActivityAM,ancVisit);
-
+                    }
                 }
+
             }
 
             if (paiucdActivityCH != null) {
@@ -505,7 +507,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 }
             }
             if(ancFullActivityAM!=null){
-                if(ancVisit.getAncVisit()==4){
+                if(ancVisit.getAncVisit() == 4){
                     recordAncRelatedIncentive(ancFullActivityAM,ancVisit);
                 }
 
