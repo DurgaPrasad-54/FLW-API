@@ -77,7 +77,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         try {
             List<PregnantWomanRegister> pwrList = new ArrayList<>();
             pregnantWomanDTOs.forEach(it -> {
-               List< PregnantWomanRegister> pwr =
+               List<PregnantWomanRegister> pwr =
                         pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
 
                 if (pwr != null) {
@@ -153,6 +153,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
                     // Saving data in BenVisitDetails table
                     List<PregnantWomanRegister> pwr = pregnantWomanRegisterRepo.findPregnantWomanRegisterByBenIdAndIsActive(it.getBenId(), true);
+                    logger.info("PWR"+pwr.size());
                     BenVisitDetail benVisitDetail = new BenVisitDetail();
                     modelMapper.map(it, benVisitDetail);
                     benVisitDetail.setBeneficiaryRegId(benRegId);
