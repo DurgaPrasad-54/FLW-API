@@ -138,7 +138,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             List<AncCare> ancCareList = new ArrayList<>();
             ancVisitDTOs.forEach(it -> {
                 ANCVisit ancVisit =
-                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActive(it.getBenId(), it.getAncVisit(), true);
+                        ancVisitRepo.findANCVisitByBenIdAndAncVisitAndIsActiveAndCreatedBy(it.getBenId(), it.getAncVisit(), true,it.getCreatedBy());
 
                 if (ancVisit != null) {
                     Long id = ancVisit.getId();
