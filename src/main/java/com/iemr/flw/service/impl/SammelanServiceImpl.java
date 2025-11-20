@@ -120,7 +120,7 @@ public class SammelanServiceImpl implements SammelanService {
 
     private void addSammelanIncentive(IncentiveActivity incentiveActivity, SammelanRecord record) {
         IncentiveActivityRecord incentiveActivityRecord = incentiveRecordRepo .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), record.getMeetingDate(), 0L,record.getAshaId());
-        logger.info("SammelanRecord incentiveActivityRecord: "+incentiveActivityRecord.getId());
+        logger.info("SammelanRecord incentiveActivityRecord: "+incentiveActivity.getId());
         try {
             if (incentiveActivityRecord == null) {
                 incentiveActivityRecord = new IncentiveActivityRecord();
