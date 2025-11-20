@@ -153,7 +153,7 @@ public class UwinSessionServiceImpl implements UwinSessionService {
 
         if(incentiveActivityCH!=null){
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(incentiveActivityCH.getId(), session.getDate(), 0L);
+                    .findRecordByActivityIdCreatedDateBenId(incentiveActivityCH.getId(), session.getDate(), 0L,session.getAshaId());
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(incentiveActivityCH.getId());
