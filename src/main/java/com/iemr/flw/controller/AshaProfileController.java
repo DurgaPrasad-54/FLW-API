@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/asha", headers = "Authorization", produces = "application/json")
+@RequestMapping(value = "/asha", produces = "application/json")
 public class AshaProfileController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     @Autowired
@@ -47,9 +47,9 @@ public class AshaProfileController {
     private EmployeeMasterInter employeeMasterInter;
 
     @RequestMapping(value = "editProfile", method = {RequestMethod.POST}, produces = {
-            "application/json"}, consumes = "application/json", headers = "Authorization")
+            "application/json"}, consumes = "application/json")
 
-    public ResponseEntity<Map<String, Object>> editEmployee(@RequestBody AshaWorker editEmployee,@RequestHeader(value = "Authorization") String authorization) {
+    public ResponseEntity<Map<String, Object>> editEmployee(@RequestBody AshaWorker editEmployee) {
 
         try {
             System.out.println(editEmployee.toString());
@@ -69,7 +69,7 @@ public class AshaProfileController {
 
     }
 
-   @RequestMapping(value = "getProfile", method = RequestMethod.GET, headers = "Authorization")
+   @RequestMapping(value = "getProfile", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getProfile(HttpServletRequest request, @Param("employeeId") Integer employeeId) {
         Map<String, Object> response = new HashMap<>();
 
