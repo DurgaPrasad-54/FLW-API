@@ -103,7 +103,7 @@ public class SammelanServiceImpl implements SammelanService {
 
         } catch (Exception e) {
 
-            logger.info("Exception: "+e.getMessage());
+            logger.info("SammelanRecord Exception: "+e.getMessage());
         }
         return response;
 
@@ -112,6 +112,7 @@ public class SammelanServiceImpl implements SammelanService {
 
     private void checkIncentive(SammelanRecord record) {
         IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("FP_SAAS_BAHU", GroupName.FAMILY_PLANNING.getDisplayName());
+        logger.info("SammelanRecord: "+incentiveActivity.getRate());
         if(incentiveActivity!=null){
             addSammelanIncentive(incentiveActivity,record);
         }
