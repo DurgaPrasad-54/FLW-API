@@ -57,7 +57,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     @Autowired
     private HouseHoldRepo houseHoldRepo;
 
-   private boolean isJsyBeneficiary;
+    private boolean isJsyBeneficiary;
 
 
     private Gson gson = new Gson();
@@ -104,9 +104,10 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             return "error while saving delivery outcome details: " + e.getMessage();
         }
     }
+
     @Override
     public List<DeliveryOutcomeDTO> getDeliveryOutcome(GetBenRequestHandler dto) {
-        try{
+        try {
             String user = beneficiaryRepo.getUserName(dto.getAshaId());
             List<DeliveryOutcome> deliveryOutcomeList = deliveryOutcomeRepo.getDeliveryOutcomeByAshaId(user, dto.getFromDate(), dto.getToDate());
             return deliveryOutcomeList.stream()
@@ -119,83 +120,83 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     }
 
 
-    public void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
+    public void checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList) {
 
         delOutList.forEach(deliveryOutcome -> {
 
             IncentiveActivity institutionalDeliveryActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_MOTIVATE_INST_DEL", GroupName.MATERNAL_HEALTH.getDisplayName());
             IncentiveActivity institutionalDeliveryActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("INST_DELIVERY_ESCORT", GroupName.ACTIVITY.getDisplayName());
-            String placeOfDelivery = deliveryOutcome.getPlaceOfDelivery();
+            if (deliveryOutcome.getPlaceOfDelivery() != null) {
+                String placeOfDelivery = deliveryOutcome.getPlaceOfDelivery();
 
-            if (placeOfDelivery != null &&
-                    (!placeOfDelivery.equalsIgnoreCase("home") ||
-                            !placeOfDelivery.equalsIgnoreCase("in transit") ||
-                            !placeOfDelivery.equalsIgnoreCase("other private hospital"))) {
+                if (placeOfDelivery != null &&
+                        (!placeOfDelivery.equalsIgnoreCase("home") ||
+                                !placeOfDelivery.equalsIgnoreCase("in transit") ||
+                                !placeOfDelivery.equalsIgnoreCase("other private hospital"))) {
 
-                // Institutional delivery (eligible case)
-                if (institutionalDeliveryActivityAM != null) {
-                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityAM);
-                }
+                    // Institutional delivery (eligible case)
+                    if (institutionalDeliveryActivityAM != null) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityAM);
+                    }
 
-                if (institutionalDeliveryActivityCH != null) {
-                    createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityCH);
+                    if (institutionalDeliveryActivityCH != null) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), institutionalDeliveryActivityCH);
+                    }
                 }
             }
 
-             if(deliveryOutcome.getIsJSYBenificiary()){
-                 IncentiveActivity incentiveActivityInstJSY1= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
-                 IncentiveActivity incentiveActivityInstJSY2= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_2ND_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
-                 IncentiveActivity incentiveActivityInstJSY3= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_3RD_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
-                 IncentiveActivity incentiveActivityInstJSY4= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+            if (deliveryOutcome.getIsJSYBenificiary()) {
+                IncentiveActivity incentiveActivityInstJSY1 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+                IncentiveActivity incentiveActivityInstJSY2 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_2ND_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+                IncentiveActivity incentiveActivityInstJSY3 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_3RD_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+                IncentiveActivity incentiveActivityInstJSY4 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
 
 
-                 logger.info("delOutList"+gson.toJson(deliveryOutcome));
-                 IncentiveActivity incentiveActivityJSY1 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
-                 if (incentiveActivityJSY1 != null) {
-                     if(deliveryOutcome.getDeliveryOutcome()==1){
-                         createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY1);
-                         if(deliveryOutcome.getPlaceOfDelivery()!=null) {
-                             createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY1);
-                         }
-                     }
-                 }
+                logger.info("delOutList" + gson.toJson(deliveryOutcome));
+                IncentiveActivity incentiveActivityJSY1 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
+                if (incentiveActivityJSY1 != null) {
+                    if (deliveryOutcome.getDeliveryOutcome() == 1 && deliveryOutcome.getLiveBirth()==0) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityJSY1);
+                        if (deliveryOutcome.getPlaceOfDelivery() != null) {
+                            createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY1);
+                        }
+                    }
+                }
 
 
-                 IncentiveActivity incentiveActivityJSY2 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_2ND_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
-                 if (incentiveActivityJSY2 != null) {
-                     if(deliveryOutcome.getDeliveryOutcome()==2){
-                         createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY2);
-                         if(deliveryOutcome.getPlaceOfDelivery()!=null) {
+                IncentiveActivity incentiveActivityJSY2 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_2ND_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
+                if (incentiveActivityJSY2 != null) {
+                    if (deliveryOutcome.getDeliveryOutcome() == 2 && deliveryOutcome.getLiveBirth()==1) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityJSY2);
+                        if (deliveryOutcome.getPlaceOfDelivery() != null) {
 
-                             createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY2);
-                         }
-                     }
-                 }
+                            createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY2);
+                        }
+                    }
+                }
 
-                 IncentiveActivity incentiveActivityJSY3= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_3RD_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
-                 if (incentiveActivityJSY3 != null) {
-                     if(deliveryOutcome.getDeliveryOutcome()==3){
-                         createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY3);
-                         if(deliveryOutcome.getPlaceOfDelivery()!=null) {
-                             createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY3);
-                         }
-                     }
-                 }
+                IncentiveActivity incentiveActivityJSY3 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_3RD_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
+                if (incentiveActivityJSY3 != null) {
+                    if (deliveryOutcome.getDeliveryOutcome() == 3 &&  deliveryOutcome.getLiveBirth()==2) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityJSY3);
+                        if (deliveryOutcome.getPlaceOfDelivery() != null) {
+                            createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY3);
+                        }
+                    }
+                }
 
-                 IncentiveActivity incentiveActivityJSY4= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
-                 if (incentiveActivityJSY4 != null) {
-                     if(deliveryOutcome.getDeliveryOutcome()==4){
-                         createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY4);
-                         if(deliveryOutcome.getPlaceOfDelivery()!=null){
-                             createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityInstJSY4);
+                IncentiveActivity incentiveActivityJSY4 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
+                if (incentiveActivityJSY4 != null) {
+                    if (deliveryOutcome.getDeliveryOutcome() == 4 &&  deliveryOutcome.getLiveBirth()==3) {
+                        createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityJSY4);
+                        if (deliveryOutcome.getPlaceOfDelivery() != null) {
+                            createIncentiveRecordforJsy(deliveryOutcome, deliveryOutcome.getBenId(), incentiveActivityInstJSY4);
 
-                         }
-                     }
-                 }
+                        }
+                    }
+                }
 
-             }
-
-
+            }
 
 
         });
@@ -204,11 +205,10 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 //        JSY_INST_URBAN
 
 
-
-
     }
+
     private void createIncentiveRecordforJsy(DeliveryOutcome delOutList, Long benId, IncentiveActivity immunizationActivity) {
-        logger.info("benId"+benId);
+        logger.info("benId" + benId);
 
         try {
             IncentiveActivityRecord record = recordRepo
@@ -216,8 +216,8 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
 
             if (record == null) {
-                logger.info("setStartDate"+delOutList.getDateOfDelivery());
-                logger.info("setCreatedDate"+delOutList.getCreatedDate());
+                logger.info("setStartDate" + delOutList.getDateOfDelivery());
+                logger.info("setCreatedDate" + delOutList.getCreatedDate());
                 record = new IncentiveActivityRecord();
                 record.setActivityId(immunizationActivity.getId());
                 record.setCreatedDate(delOutList.getDateOfDelivery());
@@ -230,12 +230,12 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
                 record.setAshaId(userRepo.getUserIdByName(delOutList.getUpdatedBy()));
                 record.setAmount(Long.valueOf(immunizationActivity.getRate()));
                 recordRepo.save(record);
-            }else {
-                logger.info("benId:"+record.getId());
+            } else {
+                logger.info("benId:" + record.getId());
 
             }
-        }catch (Exception e){
-         logger.error("JSY Incentive:",e);
+        } catch (Exception e) {
+            logger.error("JSY Incentive:", e);
         }
 
 
