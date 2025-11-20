@@ -147,7 +147,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
             IncentiveActivity incentiveActivityJSY4= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
             if (incentiveActivityJSY4 != null) {
-                if(deliveryOutcome.getDeliveryOutcome()==3){
+                if(deliveryOutcome.getDeliveryOutcome()==4){
                     createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY4);
                 }
             }
