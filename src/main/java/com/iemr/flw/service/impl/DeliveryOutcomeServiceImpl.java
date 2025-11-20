@@ -122,11 +122,18 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
     public void  checkAndAddJsyIncentive(List<DeliveryOutcome> delOutList){
 
         delOutList.forEach(deliveryOutcome -> {
+            IncentiveActivity incentiveActivityInstJSY1= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+            IncentiveActivity incentiveActivityInstJSY2= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_2ND_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+            IncentiveActivity incentiveActivityInstJSY3= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_3RD_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+            IncentiveActivity incentiveActivityInstJSY4= incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_4TH_DEL_INST_RURAL", GroupName.JSY.getDisplayName());
+
+
             logger.info("delOutList"+gson.toJson(deliveryOutcome));
             IncentiveActivity incentiveActivityJSY1 = incentivesRepo.findIncentiveMasterByNameAndGroup("JSY_1ST_DEL_ANC_RURAL", GroupName.JSY.getDisplayName());
             if (incentiveActivityJSY1 != null) {
                 if(deliveryOutcome.getDeliveryOutcome()==1){
                     createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY1);
+                    createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityInstJSY1);
                 }
             }
 
@@ -135,6 +142,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             if (incentiveActivityJSY2 != null) {
                 if(deliveryOutcome.getDeliveryOutcome()==2){
                     createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY2);
+                    createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityInstJSY2);
                 }
             }
 
@@ -142,6 +150,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             if (incentiveActivityJSY3 != null) {
                 if(deliveryOutcome.getDeliveryOutcome()==3){
                     createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY3);
+                    createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityInstJSY3);
                 }
             }
 
@@ -149,8 +158,11 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
             if (incentiveActivityJSY4 != null) {
                 if(deliveryOutcome.getDeliveryOutcome()==4){
                     createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityJSY4);
+                    createIncentiveRecordforJsy(deliveryOutcome,deliveryOutcome.getBenId(),incentiveActivityInstJSY4);
                 }
             }
+
+
 
 
             // Determine delivery number
