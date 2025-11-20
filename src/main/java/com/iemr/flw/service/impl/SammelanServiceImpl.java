@@ -87,9 +87,10 @@ public class SammelanServiceImpl implements SammelanService {
 
            if(record!=null){
                record = recordRepo.save(record);
+               checkIncentive(record);
+
 
            }
-           checkIncentive(record);
         // Prepare Response DTO
             response.setId(record.getId());
             response.setAshaId(record.getAshaId());
