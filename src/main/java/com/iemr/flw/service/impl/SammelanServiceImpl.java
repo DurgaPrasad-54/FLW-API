@@ -120,20 +120,27 @@ public class SammelanServiceImpl implements SammelanService {
 
     private void addSammelanIncentive(IncentiveActivity incentiveActivity, SammelanRecord record) {
         IncentiveActivityRecord incentiveActivityRecord = incentiveRecordRepo .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), record.getMeetingDate(), 0L,record.getAshaId());
-        if (incentiveActivityRecord == null) {
-            incentiveActivityRecord = new IncentiveActivityRecord();
-            incentiveActivityRecord.setActivityId(incentiveActivity.getId());
-            incentiveActivityRecord.setCreatedDate(record.getMeetingDate());
-            incentiveActivityRecord.setCreatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
-            incentiveActivityRecord.setStartDate(record.getMeetingDate());
-            incentiveActivityRecord.setEndDate(record.getMeetingDate());
-            incentiveActivityRecord.setUpdatedDate(record.getMeetingDate());
-            incentiveActivityRecord.setUpdatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
-            incentiveActivityRecord.setBenId(0L);
-            incentiveActivityRecord.setAshaId(record.getAshaId());
-            incentiveActivityRecord.setAmount(Long.valueOf(incentiveActivity.getRate()));
-            recordRepo.save(record);
+        logger.info("SammelanRecord incentiveActivityRecord: "+incentiveActivityRecord.getId());
+        try {
+            if (incentiveActivityRecord == null) {
+                incentiveActivityRecord = new IncentiveActivityRecord();
+                incentiveActivityRecord.setActivityId(incentiveActivity.getId());
+                incentiveActivityRecord.setCreatedDate(record.getMeetingDate());
+                incentiveActivityRecord.setCreatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
+                incentiveActivityRecord.setStartDate(record.getMeetingDate());
+                incentiveActivityRecord.setEndDate(record.getMeetingDate());
+                incentiveActivityRecord.setUpdatedDate(record.getMeetingDate());
+                incentiveActivityRecord.setUpdatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
+                incentiveActivityRecord.setBenId(0L);
+                incentiveActivityRecord.setAshaId(record.getAshaId());
+                incentiveActivityRecord.setAmount(Long.valueOf(incentiveActivity.getRate()));
+                recordRepo.save(record);
+            }
+        }catch (Exception e){
+            logger.info("SammelanRecord save Record: ",e);
+
         }
+
     }
 
 
