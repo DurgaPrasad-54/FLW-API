@@ -51,8 +51,8 @@ public class AshaProfileImpl implements AshaProfileService {
         try {
             Objects.requireNonNull(ashaWorkerRequest, "ashaWorker must not be null");
             AshaWorker savedWorker = ashaWorkerRequest.getId() != null
-                    ? ashaProfileRepo.saveAndFlush(updateProfile(ashaWorkerRequest))
-                    : ashaProfileRepo.saveAndFlush(ashaWorkerRequest);
+                    ? ashaProfileRepo.save(updateProfile(ashaWorkerRequest))
+                    : ashaProfileRepo.save(ashaWorkerRequest);
             logger.info("ASHA worker profile saved successfully: {}", savedWorker);
             return savedWorker;
         } catch (Exception e) {
