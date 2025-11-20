@@ -310,7 +310,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 
             }
         }catch (Exception e){
-
+         logger.error("JSY Incentive:",e);
         }
 
 
