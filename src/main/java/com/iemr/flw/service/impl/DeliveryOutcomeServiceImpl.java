@@ -270,7 +270,7 @@ public class DeliveryOutcomeServiceImpl implements DeliveryOutcomeService {
 //                }
 //            }
             IncentiveActivity institutionalDeliveryActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_MOTIVATE_INST_DEL", GroupName.MATERNAL_HEALTH.getDisplayName());
-            IncentiveActivity institutionalDeliveryActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("MH_MOTIVATE_INST_DEL", GroupName.ACTIVITY.getDisplayName());
+            IncentiveActivity institutionalDeliveryActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("INST_DELIVERY_ESCORT", GroupName.ACTIVITY.getDisplayName());
             String placeOfDelivery = deliveryOutcome.getPlaceOfDelivery();
 
             if (placeOfDelivery != null &&
