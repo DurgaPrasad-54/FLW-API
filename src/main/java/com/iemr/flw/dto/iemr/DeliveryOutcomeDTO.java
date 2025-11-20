@@ -10,7 +10,7 @@ public class DeliveryOutcomeDTO {
     private Long id;
     private Long benId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy, hh:mm:ss a", locale = "en")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Timestamp dateOfDelivery;
     private String timeOfDelivery;
     private String placeOfDelivery;
