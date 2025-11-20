@@ -50,7 +50,7 @@ public class AshaProfileImpl implements AshaProfileService {
     public AshaWorker saveEditData(AshaWorker ashaWorkerRequest) {
         try {
             Objects.requireNonNull(ashaWorkerRequest, "ashaWorker must not be null");
-            AshaWorker savedWorker = ashaWorkerRequest.getId() != null
+            AshaWorker savedWorker = (ashaWorkerRequest.getId() >0 || ashaWorkerRequest.getId()!=null)
                     ? ashaProfileRepo.save(updateProfile(ashaWorkerRequest))
                     : ashaProfileRepo.save(ashaWorkerRequest);
             logger.info("ASHA worker profile saved successfully: {}", savedWorker);
