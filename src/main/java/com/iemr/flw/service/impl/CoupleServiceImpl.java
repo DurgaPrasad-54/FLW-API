@@ -89,11 +89,11 @@ public class CoupleServiceImpl implements CoupleService {
                 }
 
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
-                    if (existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 &&  it.getMarriageFirstChildGap()!=null && it.getMarriageFirstChildGap() >= 2) {
+                    if (existingECR.getNumLiveChildren() == 0 && it.getNumLiveChildren() >= 1 && it.getMarriageFirstChildGap() != null && it.getMarriageFirstChildGap() >= 2) {
                         IncentiveActivity activity1 =
                                 incentivesRepo.findIncentiveMasterByNameAndGroup("FP_DELAY_2Y", GroupName.FAMILY_PLANNING.getDisplayName());
                         createIncentiveRecord(recordList, it, activity1);
-                    } else if (existingECR.getNumLiveChildren() == 1 && it.getNumLiveChildren() >= 2 &&  it.getFirstAndSecondChildGap()!=null &&  it.getFirstAndSecondChildGap() == 3) {
+                    } else if (existingECR.getNumLiveChildren() == 1 && it.getNumLiveChildren() >= 2 && it.getFirstAndSecondChildGap() != null && it.getFirstAndSecondChildGap() == 3) {
                         IncentiveActivity activity2 =
                                 incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", GroupName.FAMILY_PLANNING.getDisplayName());
                         createIncentiveRecord(recordList, it, activity2);
@@ -144,14 +144,23 @@ public class CoupleServiceImpl implements CoupleService {
                         eligibleCoupleRegisterRepo.findEligibleCoupleRegisterByBenId(it.getBenId());
 
                 if (existingECR != null && null != existingECR.getNumLiveChildren()) {
-                    if (it.getNumLiveChildren() >= 1 && it.getMarriageFirstChildGap()!=null && it.getMarriageFirstChildGap() >= 2) {
+                    if (it.getNumLiveChildren() >= 1 && it.getMarriageFirstChildGap() != null && it.getMarriageFirstChildGap() >= 2) {
                         IncentiveActivity activity1 =
-                                incentivesRepo.findIncentiveMasterByNameAndGroup("MARRIAGE_1st_CHILD_GAP", "FAMILY PLANNING");
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("MARRIAGE_1st_CHILD_GAP", GroupName.FAMILY_PLANNING.getDisplayName())
+                        ;
+
+                        IncentiveActivity activityCH =
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("MARRIAGE_1st_CHILD_GAP", GroupName.ACTIVITY.getDisplayName());
                         createIncentiveRecord(recordList, it, activity1);
-                    } else if (it.getNumLiveChildren() >= 2 && it.getMarriageFirstChildGap()!=null && it.getMarriageFirstChildGap() >= 3) {
+                        createIncentiveRecord(recordList, it, activityCH);
+                    } else if (it.getNumLiveChildren() >= 2 && it.getMarriageFirstChildGap() != null && it.getMarriageFirstChildGap() >= 3) {
                         IncentiveActivity activity2 =
-                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", "FAMILY PLANNING");
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", GroupName.FAMILY_PLANNING.getDisplayName());
+
+                        IncentiveActivity activityCH =
+                                incentivesRepo.findIncentiveMasterByNameAndGroup("1st_2nd_CHILD_GAP", GroupName.ACTIVITY.getDisplayName());
                         createIncentiveRecord(recordList, it, activity2);
+                        createIncentiveRecord(recordList, it, activityCH);
                     }
                     Long id = existingECR.getId();
                     modelMapper.map(it, existingECR);
