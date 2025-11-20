@@ -47,19 +47,26 @@ public class AshaProfileImpl implements AshaProfileService {
     private final Logger logger = LoggerFactory.getLogger(AshaProfileImpl.class);
     @Transactional
     @Override
-    public AshaWorker saveEditData(AshaWorker ashaWorkerRequest) {
+    public AshaWorker saveEditData(AshaWorker request) {
         try {
-            Objects.requireNonNull(ashaWorkerRequest, "ASHA worker request must not be null");
+            Objects.requireNonNull(request, "ASHA worker request must not be null");
 
-            // If ID null or 0 → CREATE
-            if (ashaWorkerRequest.getId() == null || ashaWorkerRequest.getId() == 0) {
-                AshaWorker saved = ashaProfileRepo.save(ashaWorkerRequest);
+            Long id = request.getId();
+
+            // ---------- CREATE Case ----------
+            if (id == null || id == 0) {
+                // treat id=0 as null (frontend mistake)
+                if (id != null && id == 0) {
+                    request.setId(null);
+                }
+
+                AshaWorker saved = ashaProfileRepo.save(request);
                 logger.info("Created ASHA Worker: {}", saved.getId());
                 return saved;
             }
 
-            // Otherwise → UPDATE
-            AshaWorker updated = updateProfile(ashaWorkerRequest);
+            // ---------- UPDATE Case ----------
+            AshaWorker updated = updateProfile(request);
             logger.info("Updated ASHA Worker: {}", updated.getId());
             return updated;
 
@@ -68,6 +75,7 @@ public class AshaProfileImpl implements AshaProfileService {
             throw new RuntimeException("Failed to save ASHA worker", e);
         }
     }
+
 
     @Override
     public AshaWorker getProfileData(Integer userId) {
