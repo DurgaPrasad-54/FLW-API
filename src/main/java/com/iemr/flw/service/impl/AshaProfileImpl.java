@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,10 +42,11 @@ public class AshaProfileImpl implements AshaProfileService {
     @Autowired
     JwtUtil jwtUtil;
     @Autowired
-    JwtAuthenticationUtil jwtAuthenticationUtil ;
+    JwtAuthenticationUtil jwtAuthenticationUtil;
     @Autowired
     private UserServiceRoleRepo userServiceRoleRepo;
     private final Logger logger = LoggerFactory.getLogger(AshaProfileImpl.class);
+
     @Transactional
     @Override
     public AshaWorker saveEditData(AshaWorker request) {
@@ -91,14 +93,22 @@ public class AshaProfileImpl implements AshaProfileService {
             throw new RuntimeException("Failed to retrieve ASHA worker profile", e);
         }
     }
+
     private AshaWorker getDetails(Integer userID) {
         try {
             M_User m_user = Objects.requireNonNull(employeeMasterInter.getUserDetails(userID), "User details not found for ID: " + userID);
             AshaWorker ashaWorker = new AshaWorker();
             ashaWorker.setEmployeeId(m_user.getUserID());
             ashaWorker.setDob(m_user.getDOB());
-            ashaWorker.setDateOfJoining(m_user.getDOJ());
+            LocalDate doj = m_user.getDOJ();
+
+            if (doj == null) {
+                doj = LocalDate.now();
+            }
+
+            ashaWorker.setDateOfJoining(doj);
             ashaWorker.setName(String.format("%s %s", Objects.toString(m_user.getFirstName(), ""), Objects.toString(m_user.getLastName(), "")).trim());
+
             ashaWorker.setMobileNumber(m_user.getContactNo());
             ashaWorker.setAlternateMobileNumber(m_user.getEmergencyContactNo());
             ashaWorker.setProviderServiceMapID(m_user.getServiceProviderID());
@@ -131,12 +141,14 @@ public class AshaProfileImpl implements AshaProfileService {
             throw new RuntimeException("Failed to create ASHA worker profile from user details", e);
         }
     }
+
     public AshaWorker updateProfile(AshaWorker request) {
         AshaWorker existing = ashaProfileRepo.findByEmployeeId(request.getEmployeeId()).orElseThrow(() -> new RuntimeException("ASHA worker not found"));
         if (isValid(request.getAbhaNumber())) existing.setAbhaNumber(request.getAbhaNumber());
         if (request.getEmployeeId() != null) existing.setEmployeeId(request.getEmployeeId());
         if (request.getDob() != null) existing.setDob(request.getDob());
-        if (isValid(request.getAlternateMobileNumber())) existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
+        if (isValid(request.getAlternateMobileNumber()))
+            existing.setAlternateMobileNumber(request.getAlternateMobileNumber());
         if (isValid(request.getAnm1Mobile())) existing.setAnm1Mobile(request.getAnm1Mobile());
         if (isValid(request.getAnm2Name())) existing.setAnm2Name(request.getAnm2Name());
         if (isValid(request.getIfsc())) existing.setIfsc(request.getIfsc());
@@ -149,19 +161,22 @@ public class AshaProfileImpl implements AshaProfileService {
         if (isValid(request.getAshaFamilyMember())) existing.setAshaFamilyMember(request.getAshaFamilyMember());
         if (request.getDateOfJoining() != null) existing.setDateOfJoining(request.getDateOfJoining());
         if (isValid(request.getMobileNumber())) existing.setMobileNumber(request.getMobileNumber());
-        if (isValid(request.getAshaHouseholdRegistration())) existing.setAshaHouseholdRegistration(request.getAshaHouseholdRegistration());
+        if (isValid(request.getAshaHouseholdRegistration()))
+            existing.setAshaHouseholdRegistration(request.getAshaHouseholdRegistration());
         if (isValid(request.getFatherOrSpouseName())) existing.setFatherOrSpouseName(request.getFatherOrSpouseName());
         if (request.getPopulationCovered() != null) existing.setPopulationCovered(request.getPopulationCovered());
         if (isValid(request.getAnm1Name())) existing.setAnm1Name(request.getAnm1Name());
         if (isValid(request.getAnm2Mobile())) existing.setAnm2Mobile(request.getAnm2Mobile());
         if (isValid(request.getAwwMobile())) existing.setAwwMobile(request.getAwwMobile());
-        if (request.getProviderServiceMapID() != null) existing.setProviderServiceMapID(request.getProviderServiceMapID());
+        if (request.getProviderServiceMapID() != null)
+            existing.setProviderServiceMapID(request.getProviderServiceMapID());
         if (isValid(request.getProfileImage())) existing.setProfileImage(request.getProfileImage());
         if (request.getIsFatherOrSpouse() != null) existing.setIsFatherOrSpouse(request.getIsFatherOrSpouse());
         if (isValid(request.getSupervisorName())) existing.setSupervisorName(request.getSupervisorName());
         if (isValid(request.getSupervisorMobile())) existing.setSupervisorMobile(request.getSupervisorMobile());
         return existing;
     }
+
     private boolean isValid(String value) {
         return value != null && !value.trim().isEmpty() && !"null".equalsIgnoreCase(value.trim());
     }
