@@ -3,11 +3,13 @@ package com.iemr.flw.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iemr.flw.domain.iemr.IncentiveActivity;
+import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.domain.iemr.SammelanAttachment;
 import com.iemr.flw.domain.iemr.SammelanRecord;
 import com.iemr.flw.dto.iemr.*;
-import com.iemr.flw.repo.iemr.SammelanAttachmentRepository;
-import com.iemr.flw.repo.iemr.SammelanRecordRepository;
+import com.iemr.flw.masterEnum.GroupName;
+import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.SammelanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,18 @@ public class SammelanServiceImpl implements SammelanService {
     private SammelanRecord record;
 
     @Autowired
+    private IncentiveRecordRepo incentiveRecordRepo;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+
+    @Autowired
+    private UserServiceRoleRepo userRepo;
+
+    @Autowired
+    private IncentivesRepo incentivesRepo;
+
 
 
     @Override
@@ -50,7 +63,8 @@ public class SammelanServiceImpl implements SammelanService {
             record = new SammelanRecord();
             record.setAshaId(sammelanRequestDTO.getAshaId());
             logger.info("Meeting Date:"+sammelanRequestDTO.getDate());
-            record.setMeetingDate(sammelanRequestDTO.getDate());
+            Timestamp timestamp = new Timestamp(sammelanRequestDTO.getDate());
+            record.setMeetingDate(timestamp);
             record.setPlace(sammelanRequestDTO.getPlace());
             record.setParticipants(sammelanRequestDTO.getParticipants());
 
@@ -75,10 +89,13 @@ public class SammelanServiceImpl implements SammelanService {
                record = recordRepo.save(record);
 
            }
+           checkIncentive(record);
         // Prepare Response DTO
             response.setId(record.getId());
             response.setAshaId(record.getAshaId());
-            response.setDate(record.getMeetingDate());
+            Timestamp ts = Timestamp.valueOf(record.getMeetingDate().toLocalDateTime());
+            long millis = ts.getTime();
+            response.setDate(millis);
             response.setPlace(record.getPlace());
             response.setParticipants(record.getParticipants());
 
@@ -92,6 +109,31 @@ public class SammelanServiceImpl implements SammelanService {
 
     }
 
+    private void checkIncentive(SammelanRecord record) {
+        IncentiveActivity incentiveActivity = incentivesRepo.findIncentiveMasterByNameAndGroup("FP_SAAS_BAHU", GroupName.FAMILY_PLANNING.getDisplayName());
+        if(incentiveActivity!=null){
+            addSammelanIncentive(incentiveActivity,record);
+        }
+    }
+
+    private void addSammelanIncentive(IncentiveActivity incentiveActivity, SammelanRecord record) {
+        IncentiveActivityRecord incentiveActivityRecord = incentiveRecordRepo .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), record.getMeetingDate(), 0L,record.getAshaId());
+        if (incentiveActivityRecord == null) {
+            incentiveActivityRecord = new IncentiveActivityRecord();
+            incentiveActivityRecord.setActivityId(incentiveActivity.getId());
+            incentiveActivityRecord.setCreatedDate(record.getMeetingDate());
+            incentiveActivityRecord.setCreatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
+            incentiveActivityRecord.setStartDate(record.getMeetingDate());
+            incentiveActivityRecord.setEndDate(record.getMeetingDate());
+            incentiveActivityRecord.setUpdatedDate(record.getMeetingDate());
+            incentiveActivityRecord.setUpdatedBy(userRepo.getUserNamedByUserId(record.getAshaId()));
+            incentiveActivityRecord.setBenId(0L);
+            incentiveActivityRecord.setAshaId(record.getAshaId());
+            incentiveActivityRecord.setAmount(Long.valueOf(incentiveActivity.getRate()));
+            recordRepo.save(record);
+        }
+    }
+
 
     @Override
     public List<SammelanResponseDTO> getSammelanHistory(Integer ashaId) {
@@ -100,7 +142,9 @@ public class SammelanServiceImpl implements SammelanService {
             SammelanResponseDTO dto = new SammelanResponseDTO();
             dto.setId(record.getId());
             dto.setAshaId(record.getAshaId());
-            dto.setDate(record.getMeetingDate());
+            Timestamp ts = Timestamp.valueOf(record.getMeetingDate().toLocalDateTime());
+            long millis = ts.getTime();
+            dto.setDate(millis);
             dto.setPlace(record.getPlace());
             dto.setParticipants(record.getParticipants());
             try {
