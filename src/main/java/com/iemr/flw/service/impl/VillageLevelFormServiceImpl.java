@@ -136,7 +136,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
 
         vhncForm.setFormType("VHNC");
         vhncFormRepo.save(vhncForm);
-        checkAndAddIncentives(vhncForm.getVhncDate(), Math.toIntExact(vhncForm.getUserId()), vhncForm.getFormType(), vhncForm.getCreatedBy());
+        checkAndAddIncentives(vhncForm.getVhncDate(), Math.toIntExact(vhncForm.getUserId()), "VHSNC_MEETING", vhncForm.getCreatedBy());
 
         return true;
     }
@@ -152,7 +152,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         phcReviewForm.setImage2(dto.getImage2());
         phcReviewForm.setFormType("PHC");
         phcReviewFormRepo.save(phcReviewForm);
-        checkAndAddIncentives(phcReviewForm.getPhcReviewDate(), Math.toIntExact(phcReviewForm.getUserId()), phcReviewForm.getFormType(), phcReviewForm.getCreatedBy());
+        checkAndAddIncentives(phcReviewForm.getPhcReviewDate(), Math.toIntExact(phcReviewForm.getUserId()), "CLUSTER_MEETING", phcReviewForm.getCreatedBy());
 
         return true;
     }
@@ -168,7 +168,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         ahdForm.setFormType("AHD");
         ahdFormRepo.save(ahdForm);
         if (Objects.equals(dto.getMobilizedForAHD(), "Yes")) {
-            checkAndAddIncentives(ahdForm.getAhdDate(), Math.toIntExact(ahdForm.getUserId()), ahdForm.getFormType(), ahdForm.getCreatedBy());
+            checkAndAddIncentives(ahdForm.getAhdDate(), Math.toIntExact(ahdForm.getUserId()), "AH_MOBILIZE", ahdForm.getCreatedBy());
 
         }
 
@@ -204,7 +204,7 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         vhndForm.setNoOfBeneficiariesAttended(vhndFormDTO.getNoOfBeneficiariesAttended());
         vhndForm.setFormType("VHND");
         vhndRepo.save(vhndForm);
-        checkAndAddIncentives(vhndForm.getVhndDate(), vhndForm.getUserId(), vhndForm.getFormType(), vhndForm.getCreatedBy());
+        checkAndAddIncentives(vhndForm.getVhndDate(), vhndForm.getUserId(), "VHND_PARTICIPATION", vhndForm.getCreatedBy());
         return true;
 
 
@@ -260,17 +260,18 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
 
         if (villageFormEntryActivityAM != null) {
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityAM.getId(), timestamp, null);
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityAM.getId(), timestamp, 0L,userID);
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityAM.getId());
                 record.setCreatedDate(timestamp);
-                record.setCreatedBy(createdBY);
+                record.setCreatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setStartDate(timestamp);
                 record.setEndDate(timestamp);
                 record.setUpdatedDate(timestamp);
-                record.setUpdatedBy(createdBY);
+                record.setUpdatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setAshaId(userID);
+                record.setBenId(0L);
                 record.setAmount(Long.valueOf(villageFormEntryActivityAM.getRate()));
                 recordRepo.save(record);
 
@@ -279,16 +280,17 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
 
         if (villageFormEntryActivityCH != null) {
             IncentiveActivityRecord record = recordRepo
-                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityCH.getId(), timestamp, null);
+                    .findRecordByActivityIdCreatedDateBenId(villageFormEntryActivityCH.getId(), timestamp, 0L,userID);
             if (record == null) {
                 record = new IncentiveActivityRecord();
                 record.setActivityId(villageFormEntryActivityCH.getId());
                 record.setCreatedDate(timestamp);
-                record.setCreatedBy(createdBY);
+                record.setCreatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setStartDate(timestamp);
                 record.setEndDate(timestamp);
+                record.setBenId(0L);
                 record.setUpdatedDate(timestamp);
-                record.setUpdatedBy(createdBY);
+                record.setUpdatedBy(userRepo.getUserNamedByUserId(userID));
                 record.setAshaId(userID);
                 record.setAmount(Long.valueOf(villageFormEntryActivityCH.getRate()));
                 recordRepo.save(record);

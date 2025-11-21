@@ -122,7 +122,7 @@ public class MaaMeetingService {
 
     private void  addIncentive(IncentiveActivity incentiveActivity,MaaMeeting meeting){
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L);
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L,meeting.getAshaId());
 
         if (record == null) {
             record = new IncentiveActivityRecord();
