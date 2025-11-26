@@ -401,6 +401,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("placeOfDeathId", benDetailsRMNCH_OBJ.getPlaceOfDeathId());
                     resultMap.put("isSpouseAdded", benDetailsRMNCH_OBJ.getIsSpouseAdded());
                     resultMap.put("isChildrenAdded", benDetailsRMNCH_OBJ.getIsChildrenAdded());
+                    resultMap.put("noOfchildren", benDetailsRMNCH_OBJ.getNoOfchildren());
                     resultMap.put("isMarried", benDetailsRMNCH_OBJ.getIsMarried());
                     resultMap.put("doYouHavechildren", benDetailsRMNCH_OBJ.getDoYouHavechildren());
                     resultMap.put("noofAlivechildren    ",benDetailsRMNCH_OBJ.getNoofAlivechildren());

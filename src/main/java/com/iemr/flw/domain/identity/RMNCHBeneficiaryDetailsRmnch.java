@@ -378,7 +378,11 @@ public class RMNCHBeneficiaryDetailsRmnch {
 	private Boolean isMarried;
 
 	@Expose
-	private Integer doYouHavechildren;
+	private Boolean doYouHavechildren;
+
+	@Expose
+	private Integer noOfchildren;
+
 	@Expose
 	private Integer noofAlivechildren;
 
