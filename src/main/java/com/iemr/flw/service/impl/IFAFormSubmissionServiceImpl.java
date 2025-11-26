@@ -96,6 +96,7 @@ public class IFAFormSubmissionServiceImpl implements IFAFormSubmissionService {
             incentiveActivityRecord.setEndDate(ifaVisitDateTimestamp);
             incentiveActivityRecord.setUpdatedDate(ifaVisitDateTimestamp);
             incentiveActivityRecord.setUpdatedBy(ifaFormSubmissionData.getUserName());
+            incentiveActivityRecord.setCreatedBy(ifaFormSubmissionData.getUserName());
             incentiveActivityRecord.setBenId(ifaFormSubmissionData.getBeneficiaryId());
             incentiveActivityRecord.setAshaId(userServiceRoleRepo.getUserIdByName(ifaFormSubmissionData.getUserName()));
             incentiveActivityRecord.setAmount(Long.valueOf(incentiveActivityAM.getRate()));
