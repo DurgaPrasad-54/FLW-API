@@ -734,13 +734,13 @@ public class ChildCareServiceImpl implements ChildCareService {
             IncentiveActivity orsPacketActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if(orsPacketActivityAM!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,jwtUtil.getUserNameFromStorage());
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,jwtUtil.getUserNameFromStorage(),false);
                 }
             }
 
             if(orsPacketActivityCH!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,jwtUtil.getUserNameFromStorage());
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,jwtUtil.getUserNameFromStorage(),true);
                 }
             }
 
@@ -991,7 +991,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         }
     }
 
-    private void createIncentiveRecordforOrsDistribution(OrsDistribution data, Long benId, IncentiveActivity immunizationActivity, String createdBy) {
+    private void createIncentiveRecordforOrsDistribution(OrsDistribution data, Long benId, IncentiveActivity immunizationActivity, String createdBy,boolean isCH) {
          try {
              // Convert to LocalDate
              Timestamp visitDate = Timestamp.valueOf(data.getVisitDate().atStartOfDay());
@@ -1012,7 +1012,13 @@ public class ChildCareServiceImpl implements ChildCareService {
                  record.setUpdatedBy(createdBy);
                  record.setBenId(benId);
                  record.setAshaId(beneficiaryRepo.getUserIDByUserName(createdBy));
-                 record.setAmount((long) (rate * packets));
+                 if(isCH){
+                     record.setAmount((long) rate);
+
+                 }else {
+                     record.setAmount((long) (rate * packets));
+
+                 }
                  recordRepo.save(record);
              }
          }catch (Exception e){
