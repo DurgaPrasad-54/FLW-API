@@ -762,7 +762,7 @@ public class ChildCareServiceImpl implements ChildCareService {
         hbycList.forEach(hbyc -> {
 
             if (hbyncVisitActivity != null) {
-                if (hbyc.getVisit_day().equals("15 Months")) {
+                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("15 Months")) {
                     createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
 
                 }
@@ -770,7 +770,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             }
 
             if (hbync15MonethVisitActivityCH != null) {
-                if (hbyc.getVisit_day().equals("15 Months")) {
+                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("15 Months")) {
                     createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
 
                 }
