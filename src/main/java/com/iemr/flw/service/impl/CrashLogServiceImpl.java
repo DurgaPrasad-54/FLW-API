@@ -1,28 +1,28 @@
 package com.iemr.flw.service.impl;
 
-import java.io.File;  
-import java.io.FileOutputStream;  
-import java.io.IOException;  
-import java.time.LocalDate;  
-import java.time.format.DateTimeFormatter;  
-  
-import org.slf4j.Logger;  
-import org.slf4j.LoggerFactory;  
-import org.springframework.beans.factory.annotation.Value;  
-import org.springframework.stereotype.Service;  
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.iemr.flw.dto.crashlogs.CrashLogRequest;
 import com.iemr.flw.service.CrashLogService;
-import com.iemr.flw.utils.exception.IEMRException;  
+import com.iemr.flw.utils.exception.IEMRException;
 
 @Service
 public class CrashLogServiceImpl implements CrashLogService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    @Value("${crash.logs.base.path}")
-    private String crashLogsBasePath;
+    // @Value("${crash.logs.base.path}")
+
+    private String crashLogsBasePath = "/opt/amrit/services/crashlogs";
 
     @Override
     public String saveCrashLog(CrashLogRequest request, Integer userId, MultipartFile file) throws IEMRException {
