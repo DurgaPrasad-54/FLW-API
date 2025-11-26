@@ -169,7 +169,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         }
         entities.forEach(entry -> {
             if(entry.getName()==null){
-                if(entry.getId()>0){
+                if(entry.getBenId()!=0 && entry.getBenId()>0L){
                     Long regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
                     logger.info("rmnchBeneficiaryDetailsRmnch"+regId);
                     BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(BigInteger.valueOf(regId)).getBenDetailsId();
