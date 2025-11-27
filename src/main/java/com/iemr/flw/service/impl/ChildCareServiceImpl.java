@@ -760,22 +760,16 @@ public class ChildCareServiceImpl implements ChildCareService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
 
         hbycList.forEach(hbyc -> {
+            Set<String> eligibleHbycVisits = Set.of("3 Months", "6 Months", "9 Months", "12 Months", "15 Months");
 
-            if (hbyncVisitActivity != null) {
-                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("12 Months") || hbyc.getVisit_day().equals("15 Months")) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
-
-                }
-
+            if (hbyncVisitActivity != null && eligibleHbycVisits.contains(hbyc.getVisit_day())) {
+                createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
             }
 
-            if (hbync15MonethVisitActivityCH != null) {
-                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("12 Months") || hbyc.getVisit_day().equals("15 Months")) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
-
-                }
-
+            if (hbync15MonethVisitActivityCH != null && eligibleHbycVisits.contains(hbyc.getVisit_day())) {
+                createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
             }
+
 
 
 
