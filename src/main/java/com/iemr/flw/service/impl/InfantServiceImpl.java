@@ -112,6 +112,7 @@ public class InfantServiceImpl implements InfantService {
             incentiveActivityRecord.setBenId(benId);
             incentiveActivityRecord.setAshaId(userServiceRoleRepo.getUserIdByName(createdBy));
             incentiveActivityRecord.setAmount(Long.valueOf(activity.getRate()));
+            incentiveRecordRepo.save(incentiveActivityRecord);
         }
     }
 
