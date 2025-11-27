@@ -9,6 +9,7 @@ import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.masterEnum.GroupName;
+import com.iemr.flw.masterEnum.StateCode;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.IncentiveActivityLangMappingRepo;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
@@ -83,7 +84,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         try {
 
             List<IncentiveActivity> incs = new ArrayList<>();
-            if(incentiveRequestDTO.getState()==8){
+            if(incentiveRequestDTO.getState()==StateCode.CG.getStateCode()){
                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
             }else {
@@ -149,13 +150,13 @@ public class IncentiveServiceImpl implements IncentiveService {
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
 
-        if(request.getVillageID()!=8){
+        if(request.getVillageID()!= StateCode.CG.getStateCode()){
             checkMonthlyAshaIncentive(request.getAshaId());
         }
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        if(request.getVillageID()==8){
+        if(request.getVillageID()==StateCode.CG.getStateCode()){
             entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),true)!=null).collect(Collectors.toList());
 
         }else {
