@@ -810,7 +810,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             }
             logger.info("getDischarged_from_sncu" + hbncVisit.getDischarged_from_sncu());
 
-            if (hbncVisit.getVisit_day().equals("42nd Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight() < 2.5) {
+            if (hbncVisit.getVisit_day().equals("42nd Day") && hbncVisit.getDischarged_from_sncu()) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
@@ -1037,7 +1037,6 @@ public class ChildCareServiceImpl implements ChildCareService {
 
 
             if (record == null) {
-
                 record = new IncentiveActivityRecord();
                 record.setActivityId(incentiveActivity.getId());
                 record.setCreatedDate(visitDate);
