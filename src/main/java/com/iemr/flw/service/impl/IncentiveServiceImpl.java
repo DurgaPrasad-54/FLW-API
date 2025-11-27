@@ -51,7 +51,6 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Autowired
     private UserServiceRoleRepo userRepo;
-    private Integer  sateId =0;
 
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
@@ -81,15 +80,10 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
-
         try {
-            logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
-            UserServiceRoleDTO userServiceRoleDTO=   userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0);
-            if(userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId()!=null){
-                sateId = userServiceRoleDTO.getStateId();
-            }
+
             List<IncentiveActivity> incs = new ArrayList<>();
-            if(sateId==8){
+            if(incentiveRequestDTO.getState()==8){
                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
             }else {
@@ -154,13 +148,14 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
-        if(sateId!=8){
+
+        if(request.getVillageID()!=8){
             checkMonthlyAshaIncentive(request.getAshaId());
         }
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
         List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        if(sateId==8){
+        if(request.getVillageID()==8){
             entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),true)!=null).collect(Collectors.toList());
 
         }else {
