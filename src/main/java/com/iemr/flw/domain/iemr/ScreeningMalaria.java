@@ -134,7 +134,7 @@ public class ScreeningMalaria {
     private String malariaSlideTestType;
 
     @Column(name = "visit_Id")
-    private Date visitId;
+    private Long visitId;
 
     @Column(name = "visit_date")
     private Date visitDate;
