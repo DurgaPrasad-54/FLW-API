@@ -155,7 +155,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         }
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
-        List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
+        List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId());
         if(request.getVillageID()==StateCode.CG.getStateCode()){
             entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),true)!=null).collect(Collectors.toList());
 
