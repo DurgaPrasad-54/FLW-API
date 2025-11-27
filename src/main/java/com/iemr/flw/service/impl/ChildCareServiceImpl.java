@@ -760,22 +760,17 @@ public class ChildCareServiceImpl implements ChildCareService {
                 incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
 
         hbycList.forEach(hbyc -> {
+            Set<String> eligibleHbycVisits = Set.of("3 Months", "6 Months", "9 Months", "12 Months", "15 Months");
 
-            if (hbyncVisitActivity != null) {
-                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("15 Months")) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
-
-                }
-
+            if (hbyncVisitActivity != null && eligibleHbycVisits.contains(hbyc.getVisit_day())) {
+                createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbyncVisitActivity, hbyc.getCreated_by());
             }
 
-            if (hbync15MonethVisitActivityCH != null) {
-                if (hbyc.getVisit_day().equals("3 Months")||hbyc.getVisit_day().equals("6 Months")|| hbyc.getVisit_day().equals("9 Months") || hbyc.getVisit_day().equals("15 Months")) {
-                    createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
-
-                }
-
+            if (hbync15MonethVisitActivityCH != null && eligibleHbycVisits.contains(hbyc.getVisit_day())) {
+                createIncentiveRecordforHbyncVisit(hbyc, hbyc.getBeneficiaryId(), hbync15MonethVisitActivityCH, hbyc.getCreated_by());
             }
+
+
 
 
 
@@ -810,7 +805,7 @@ public class ChildCareServiceImpl implements ChildCareService {
             }
             logger.info("getDischarged_from_sncu" + hbncVisit.getDischarged_from_sncu());
 
-            if (hbncVisit.getVisit_day().equals("42nd Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight() < 2.5) {
+            if (hbncVisit.getVisit_day().equals("42nd Day") && hbncVisit.getDischarged_from_sncu() && hbncVisit.getBaby_weight() <=2.5) {
                 IncentiveActivity babyDisChargeSNCUAActivity =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("SNCU_LBW_FOLLOWUP", GroupName.CHILD_HEALTH.getDisplayName());
 
@@ -1037,7 +1032,6 @@ public class ChildCareServiceImpl implements ChildCareService {
 
 
             if (record == null) {
-
                 record = new IncentiveActivityRecord();
                 record.setActivityId(incentiveActivity.getId());
                 record.setCreatedDate(visitDate);
