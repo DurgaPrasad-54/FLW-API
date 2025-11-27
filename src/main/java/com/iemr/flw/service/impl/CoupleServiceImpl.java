@@ -294,13 +294,19 @@ public class CoupleServiceImpl implements CoupleService {
                 if (antaraActivity4 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity4);
                 }
+
+
             } else if (ect.getAntraDose().contains("Dose-5")) {
                 IncentiveActivity antaraActivity4 =
                         incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA5", GroupName.FAMILY_PLANNING.getDisplayName());
 
                 IncentiveActivity antaraActivity4CH =
-                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA5", GroupName.ACTIVITY.getDisplayName());
+                        incentivesRepo.findIncentiveMasterByNameAndGroup("FP_ANC_MPA1", GroupName.ACTIVITY.getDisplayName());
                 if (antaraActivity4CH != null) {
+                    addIncenticeRecord(recordList, ect, userId, antaraActivity4CH);
+                }
+
+                if (antaraActivity4 != null) {
                     addIncenticeRecord(recordList, ect, userId, antaraActivity4);
                 }
             }
