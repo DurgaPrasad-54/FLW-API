@@ -562,6 +562,12 @@ public class ChildCareServiceImpl implements ChildCareService {
         return samResponseListDTO;
     }
 
+    /**
+     * Persist a list of ORS distribution records and create corresponding incentive records.
+     *
+     * @param orsDistributionDTOS list of ORS distribution DTOs; each DTO must include household id, userName, and a fields object containing `num_ors_packets`, `num_under5_children`, and `visit_date`
+     * @return a success message "Saved N ORS visit records successfully" when one or more records are saved, or `null` if no records were saved or an error occurred
+     */
     @Override
     public String saveOrsDistributionDetails(List<OrsDistributionDTO> orsDistributionDTOS) {
         try {
@@ -574,7 +580,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets().toString());
                 orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
                 orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
-                orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+                orsDistribution.setUserId(userRepo.getUserIdByName(orsDistributionDTO.getUserName()));
                 orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getFields().getVisit_date(),formatter));
                 orsDistributionList.add(orsDistribution);
 
@@ -727,6 +733,15 @@ public class ChildCareServiceImpl implements ChildCareService {
         });
 
     }
+    /**
+     * Creates incentive activity records for ORS distributions when applicable.
+     *
+     * For each ORS distribution in the list, this method creates incentive records for
+     * the CHILD_HEALTH and ACTIVITY groups if corresponding incentive activities exist
+     * and the distribution has a non-null packet count.
+     *
+     * @param orsDistributionList list of ORS distribution entities to evaluate for incentives
+     */
     private void  checkAndAddOrdDistributionIncentive(List<OrsDistribution> orsDistributionList){
         orsDistributionList.forEach(orsDistribution -> {
             IncentiveActivity orsPacketActivityAM =
@@ -734,13 +749,13 @@ public class ChildCareServiceImpl implements ChildCareService {
             IncentiveActivity orsPacketActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if(orsPacketActivityAM!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,jwtUtil.getUserNameFromStorage(),false);
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,userRepo.getUserNamedByUserId(orsDistribution.getUserId()),false);
                 }
             }
 
             if(orsPacketActivityCH!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,jwtUtil.getUserNameFromStorage(),true);
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,userRepo.getUserNamedByUserId(orsDistribution.getUserId()),true);
                 }
             }
 
