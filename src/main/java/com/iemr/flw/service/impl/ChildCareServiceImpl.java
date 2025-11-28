@@ -345,6 +345,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 vaccinationDTO.setBeneficiaryId(benId.longValue());
 
                 result.add(vaccinationDTO);
+                checkAndAddIncentives(vaccinationDetails);
             });
             return result;
         } catch (Exception e) {
