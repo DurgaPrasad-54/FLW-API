@@ -574,7 +574,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 orsDistribution.setNumOrsPackets(orsDistributionDTO.getFields().getNum_ors_packets().toString());
                 orsDistribution.setChildCount(orsDistributionDTO.getFields().getNum_under5_children().toString());
                 orsDistribution.setHouseholdId(orsDistributionDTO.getHouseHoldId());
-                orsDistribution.setUserId(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage()));
+                orsDistribution.setUserId(userRepo.getUserIdByName(orsDistributionDTO.getUserName()));
                 orsDistribution.setVisitDate(LocalDate.parse(orsDistributionDTO.getFields().getVisit_date(),formatter));
                 orsDistributionList.add(orsDistribution);
 
@@ -734,13 +734,13 @@ public class ChildCareServiceImpl implements ChildCareService {
             IncentiveActivity orsPacketActivityCH =       incentivesRepo.findIncentiveMasterByNameAndGroup("ORS_DISTRIBUTION", GroupName.ACTIVITY.getDisplayName());
             if(orsPacketActivityAM!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,jwtUtil.getUserNameFromStorage(),false);
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityAM,userRepo.getUserNamedByUserId(orsDistribution.getUserId()),false);
                 }
             }
 
             if(orsPacketActivityCH!=null){
                 if(orsDistribution.getNumOrsPackets()!=null){
-                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,jwtUtil.getUserNameFromStorage(),true);
+                    createIncentiveRecordforOrsDistribution(orsDistribution,orsDistribution.getBeneficiaryId(),orsPacketActivityCH,userRepo.getUserNamedByUserId(orsDistribution.getUserId()),true);
                 }
             }
 
