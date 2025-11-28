@@ -1,5 +1,6 @@
 package com.iemr.flw.utils;
 
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.iemr.flw.domain.iemr.M_User;
 import com.iemr.flw.repo.iemr.EmployeeMasterRepo;
 import com.iemr.flw.utils.exception.IEMRException;
@@ -92,16 +95,26 @@ public class JwtAuthenticationUtil {
 	}
 
 	private M_User getUserFromCache(String userId) {
-		String redisKey = "user_" + userId; // The Redis key format
-		M_User user = (M_User) redisTemplate.opsForValue().get(redisKey);
+		String redisKey = "user_" + userId;
+		Object cachedObj = redisTemplate.opsForValue().get(redisKey);
 
-		if (user == null) {
+		if (cachedObj == null) {
 			logger.warn("User not found in Redis. Will try to fetch from DB.");
-		} else {
-			logger.info("User fetched successfully from Redis.");
+			return null;
 		}
 
-		return user; // Returns null if not found
+		if (cachedObj instanceof M_User) {
+			logger.info("User fetched successfully from Redis.");
+			return (M_User) cachedObj;
+		} else if (cachedObj instanceof LinkedHashMap) {
+			ObjectMapper mapper = new ObjectMapper();
+			M_User user = mapper.convertValue(cachedObj, M_User.class);
+			logger.info("User converted from LinkedHashMap in Redis.");
+			return user;
+		}
+
+		logger.warn("Unexpected object type in Redis: " + cachedObj.getClass().getName());
+		return null;
 	}
 
 	private M_User fetchUserFromDB(String userId) {

@@ -33,19 +33,15 @@ public class CrashLogController {
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public String uploadCrashLog(
-            @RequestHeader(value = "Authorization") String authorization,
+            @RequestHeader(value = "JwtToken") String jwtToken, // Changed from Authorization
             @RequestParam("file") MultipartFile file,
             @RequestParam("metadata") String metadataJson) {
 
         OutputResponse response = new OutputResponse();
 
         try {
-            // Extract JWT token from Authorization header
-            // String jwtToken = authorization.replace("Bearer ", "");
-
-            // Extract userId from JWT token
-            Integer userId = 123;
-            // Integer userId = jwtUtil.extractUserId(jwtToken);
+            // No need to remove "Bearer " prefix - JwtToken header contains raw JWT
+            Integer userId = jwtUtil.extractUserId(jwtToken);
 
             // Parse metadata JSON
             CrashLogRequest request = objectMapper.readValue(metadataJson, CrashLogRequest.class);

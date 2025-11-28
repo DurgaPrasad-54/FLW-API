@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.iemr.flw.dto.crashlogs.CrashLogRequest;
 import com.iemr.flw.service.CrashLogService;
 import com.iemr.flw.utils.exception.IEMRException;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class CrashLogServiceImpl implements CrashLogService {
@@ -23,6 +24,7 @@ public class CrashLogServiceImpl implements CrashLogService {
     // @Value("${crash.logs.base.path}")
 
     private String crashLogsBasePath = "/opt/amrit/services/crashlogs";
+    // private String crashLogsBasePath;
 
     @Override
     public String saveCrashLog(CrashLogRequest request, Integer userId, MultipartFile file) throws IEMRException {
