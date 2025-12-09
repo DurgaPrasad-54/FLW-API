@@ -49,8 +49,54 @@ public class MaaMeetingController {
             dto.setAshaId(Integer.parseInt(ashaId));
             dto.setCreatedBY(createdBy);
             dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
+            if (dto != null) {
+                service.saveMeeting(dto);
 
-            service.saveMeeting(dto);
+            }
+            return ResponseEntity.ok("Saved Successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateMeeting(
+            @RequestPart("meetingDate") String meetingDate,
+            @RequestPart("place") String place,
+            @RequestPart("participants") String participants,
+            @RequestPart("ashaId") String ashaId,
+            @RequestPart("createdBy") String createdBy,
+            @RequestPart(value = "meetingImages", required = false) List<MultipartFile> meetingImages) {
+        try {
+            MaaMeetingRequestDTO dto = new MaaMeetingRequestDTO();
+            if (meetingDate != null) {
+                dto.setMeetingDate(LocalDate.parse(meetingDate));
+
+            }
+            if (place != null) {
+                dto.setPlace(place);
+
+            }
+            if (participants != null) {
+                dto.setParticipants(Integer.parseInt(participants));
+
+            }
+            if (ashaId != null) {
+                dto.setAshaId(Integer.parseInt(ashaId));
+
+            }
+            if (createdBy != null) {
+                dto.setCreatedBY(createdBy);
+
+            }
+            if (meetingImages != null) {
+                dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
+
+            }
+            if (dto != null) {
+                service.updateMeeting(dto);
+
+            }
             return ResponseEntity.ok("Saved Successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
