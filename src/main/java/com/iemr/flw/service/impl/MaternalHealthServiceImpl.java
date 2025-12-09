@@ -512,7 +512,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
                 }
             }
             if (ancFullActivityAM != null) {
-                if (ancVisit.getAncVisit() == 4) {
+                if (ancVisit.getAncVisit() == 4 || ancVisit.getAncVisit() == 2 || ancVisit.getAncVisit() == 3) {
                     recordAncRelatedIncentive(ancFullActivityAM, ancVisit);
                 }
 

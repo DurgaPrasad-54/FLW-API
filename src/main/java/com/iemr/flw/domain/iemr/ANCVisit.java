@@ -132,7 +132,7 @@ public class ANCVisit {
     private Integer terminationDoneById;
 
     @Column(name = "is_paiucd_id")
-    private Boolean isPaiucdId;
+    private Integer isPaiucdId;
 
     @Column(name = "is_paiucd")
     private String isPaiucd;
@@ -160,6 +160,12 @@ public class ANCVisit {
 
     @Column(name = "lmp_date")
     private Timestamp lmpDate;
+
+    @Column(name = "is_YesOrNo")
+    private Boolean isYesOrNo;
+
+    @Column(name = "date_of_sterilisation")
+    private Timestamp  dateSterilisation;
 
 
 

@@ -127,7 +127,17 @@ public class ScreeningMalaria {
     @Column(name = "case_status_id")
     private Integer caseStatusId;
 
+    @Column(name = "malaria_test_type")
+    private String malariaTestType;
+
+    @Column(name = "malaria_slide_test_Type")
+    private String malariaSlideTestType;
+
+    @Column(name = "visit_Id")
+    private Long visitId;
+
+    @Column(name = "visit_date")
+    private Date visitDate;
 
 
-    // Getters and Setters
 }

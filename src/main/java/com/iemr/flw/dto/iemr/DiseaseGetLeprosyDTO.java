@@ -22,136 +22,78 @@
 /*
 * AMRIT – Accessible Medical Records via Integrated Technology
 */
-package com.iemr.flw.domain.iemr;
+package com.iemr.flw.dto.iemr;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Entity
-@Table(name = "screening_leprosy", schema = "db_iemr")
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
-public class ScreeningLeprosy {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class DiseaseGetLeprosyDTO {
+
     private Long id;
-
-    @Column(name = "ben_id")
     private Long benId;
-
-    @Column(name = "house_hold_details_Id",nullable = false)
     private Long houseHoldDetailsId;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "home_visit_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date homeVisitDate;
 
-    @Column(name = "leprosy_status", length = 225)
     private String leprosyStatus;
-
-    @Column(name = "referred_to", length = 225)
     private String referredTo;
-
-    @Column(name = "other_referred_to", columnDefinition = "TEXT")
     private String otherReferredTo;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "leprosy_status_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date leprosyStatusDate;
 
-    @Column(name = "type_of_leprosy", length = 225)
     private String typeOfLeprosy;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "follow_up_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date followUpDate;
 
-    @Column(name = "remark", length = 225)
+    private String beneficiaryStatus;
     private String remark;
-
-    @Column(name = "disease_type_id")
-    private Integer diseaseTypeId;
-
-    @Column(name = "user_id")
     private Integer userId;
-
-    @Column(name = "refer_to_name")
+    private Integer diseaseTypeId;
     private String referToName;
-
-    @Column(name = "beneficiary_statusId")
     private Integer beneficiaryStatusId;
 
-    @Column(name = "beneficiary_status", length = 50)
-    private String beneficiaryStatus;
-
-    @Column(name = "date_of_death")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date dateOfDeath;
 
-    @Column(name = "place_of_death", length = 50)
     private String placeOfDeath;
-
-    @Column(name = "other_place_of_death", columnDefinition = "TEXT")
     private String otherPlaceOfDeath;
-
-    @Column(name = "reason_for_death", length = 50)
     private String reasonForDeath;
-
-    @Column(name = "other_reason_for_death", columnDefinition = "TEXT")
     private String otherReasonForDeath;
 
-    @Column(name = "leprosy_symptoms", length = 255)
     private String leprosySymptoms;
-
-    @Column(name = "leprosy_symptoms_position")
     private Integer leprosySymptomsPosition;
-
-    @Column(name = "leprosy_status_position")
     private Integer lerosyStatusPosition;
-
-    @Column(name = "current_visit_number")
     private Integer currentVisitNumber;
-
-    @Column(name = "visit_label", length = 50)
     private String visitLabel;
-
-    @Column(name = "visit_number")
     private Integer visitNumber;
-
-    @Column(name = "is_confirmed")
     private Boolean isConfirmed;
-
-    @Column(name = "leprosy_state", length = 50)
     private String leprosyState;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "treatment_start_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date treatmentStartDate;
 
-    @Column(name = "total_followup_months_required")
     private Integer totalFollowUpMonthsRequired;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "treatment_end_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Date treatmentEndDate;
 
-    @Column(name = "mdt_blister_pack_recived", length = 100)
     private String mdtBlisterPackRecived;
-
-    @Column(name = "treatment_status", length = 100)
     private String treatmentStatus;
-
-    @Column(name = "CreatedBy", length = 100)
     private String createdBy;
 
-    @Column(name = "CreatedDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Timestamp createdDate;
 
-    @Column(name = "ModifiedBy", length = 100)
     private String modifiedBy;
 
-    @Column(name = "LastModDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM d, yyyy h:mm:ss a", timezone = "Asia/Kolkata")
     private Timestamp lastModDate;
 }

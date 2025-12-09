@@ -24,8 +24,7 @@ public class NotificationService {
     final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 
-    @Value("${notificationurl}")
-    private String NOTIFICATION_URL;
+    private String NOTIFICATION_URL = "https://uatamrit.piramalswasthya.org/common-api/firebaseNotification/sendNotification";
 
     public String sendNotification(String appType, String topic, String title, String body, String redirect) {
         String authHeader = null;

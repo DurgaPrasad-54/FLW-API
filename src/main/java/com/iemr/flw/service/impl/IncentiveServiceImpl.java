@@ -9,6 +9,7 @@ import com.iemr.flw.domain.iemr.IncentiveActivityRecord;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.masterEnum.GroupName;
+import com.iemr.flw.masterEnum.StateCode;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.IncentiveActivityLangMappingRepo;
 import com.iemr.flw.repo.iemr.IncentiveRecordRepo;
@@ -51,7 +52,6 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Autowired
     private UserServiceRoleRepo userRepo;
-    private Integer  sateId =0;
 
     @Override
     public String saveIncentivesMaster(List<IncentiveActivityDTO> activityDTOS) {
@@ -81,15 +81,10 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getIncentiveMaster(IncentiveRequestDTO incentiveRequestDTO) {
-
         try {
-            logger.info("StateId:"+userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId());
-            UserServiceRoleDTO userServiceRoleDTO=   userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0);
-            if(userRepo.getUserRole(userRepo.getUserIdByName(jwtUtil.getUserNameFromStorage())).get(0).getStateId()!=null){
-                sateId = userServiceRoleDTO.getStateId();
-            }
+
             List<IncentiveActivity> incs = new ArrayList<>();
-            if(sateId==8){
+            if(incentiveRequestDTO.getState()==StateCode.CG.getStateCode()){
                 incs = incentivesRepo.findAll().stream().filter(incentiveActivity -> incentiveActivity.getGroup().equals("ACTIVITY")).collect(Collectors.toList());
 
             }else {
@@ -154,13 +149,14 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String getAllIncentivesByUserId(GetBenRequestHandler request) {
-        if(sateId!=8){
+
+        if(request.getVillageID()!= StateCode.CG.getStateCode()){
             checkMonthlyAshaIncentive(request.getAshaId());
         }
 
         List<IncentiveRecordDTO> dtos = new ArrayList<>();
-        List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId(), request.getFromDate(), request.getToDate());
-        if(sateId==8){
+        List<IncentiveActivityRecord> entities = recordRepo.findRecordsByAsha(request.getAshaId());
+        if(request.getVillageID()==StateCode.CG.getStateCode()){
             entities = entities.stream().filter(entitie-> incentivesRepo.findIncentiveMasterById(entitie.getActivityId(),true)!=null).collect(Collectors.toList());
 
         }else {
@@ -169,7 +165,7 @@ public class IncentiveServiceImpl implements IncentiveService {
         }
         entities.forEach(entry -> {
             if(entry.getName()==null){
-                if(entry.getBenId()!=0){
+                if(entry.getBenId()!=0 && entry.getBenId()>0L){
                     Long regId = beneficiaryRepo.getBenRegIdFromBenId(entry.getBenId());
                     logger.info("rmnchBeneficiaryDetailsRmnch"+regId);
                     BigInteger benDetailId = beneficiaryRepo.findByBenRegIdFromMapping(BigInteger.valueOf(regId)).getBenDetailsId();

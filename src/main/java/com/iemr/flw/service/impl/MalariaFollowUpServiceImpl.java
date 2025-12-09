@@ -36,15 +36,7 @@ public class MalariaFollowUpServiceImpl implements MalariaFollowUpService {
                return false;
            }
 
-           if ("Pf".equalsIgnoreCase(dto.getTreatmentGiven()) &&
-                   !(dto.getPfDay1() || dto.getPvDay2() || dto.getPfDay3())) {
-               return false;
-           }
 
-           if ("Pv".equalsIgnoreCase(dto.getTreatmentGiven()) &&
-                   !(dto.getPfDay1() || dto.getPvDay2() || dto.getPfDay3()|| dto.getPvDay4())) {
-               return false;
-           }
 
            MalariaFollowUp entity = new MalariaFollowUp();
            BeanUtils.copyProperties(dto, entity);

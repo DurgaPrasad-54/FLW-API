@@ -37,15 +37,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 
 @Service
 public class DiseaseControlServiceImpl implements DiseaseControlService {
 
     @Autowired
     private DiseaseMalariaRepository diseaseMalariaRepository;
+
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private DiseaseAESJERepository diseaseAESJERepository;
@@ -58,12 +63,22 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     private DiseaseLeprosyRepository diseaseLeprosyRepository;
 
     @Autowired
+    private LeprosyFollowUpRepository leprosyFollowUpRepository;
+
+    @Autowired
     private IncentiveRecordRepo recordRepo;
     @Autowired
     private UserServiceRoleRepo userRepo;
 
     @Autowired
     private IncentivesRepo incentivesRepo;
+
+    @Autowired
+    private MosquitoNetRepository mosquitoNetRepository;
+
+
+
+
 
     private final Logger logger = LoggerFactory.getLogger(CoupleController.class);
 
@@ -267,6 +282,107 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             }
         }
         return "Fail";
+    }
+
+    private LeprosyFollowUp saveLeprosyFollowUpData(LeprosyFollowUpDTO data) {
+        LeprosyFollowUp entity = new LeprosyFollowUp();
+
+        entity.setBenId(data.getBenId());
+        entity.setVisitNumber(data.getVisitNumber());
+        entity.setFollowUpDate(data.getFollowUpDate());
+        entity.setTreatmentStatus(data.getTreatmentStatus());
+        entity.setMdtBlisterPackReceived(data.getMdtBlisterPackReceived());
+        entity.setTreatmentCompleteDate(data.getTreatmentCompleteDate());
+        entity.setRemarks(data.getRemarks());
+        entity.setHomeVisitDate(data.getHomeVisitDate());
+        entity.setLeprosySymptoms(data.getLeprosySymptoms());
+        entity.setTypeOfLeprosy(data.getTypeOfLeprosy());
+        entity.setLeprosySymptomsPosition(data.getLeprosySymptomsPosition());
+        entity.setVisitLabel(data.getVisitLabel());
+        entity.setLeprosyStatus(data.getLeprosyStatus());
+        entity.setReferredTo(data.getReferredTo());
+        entity.setReferToName(data.getReferToName());
+        entity.setTreatmentEndDate(data.getTreatmentEndDate());
+        entity.setMdtBlisterPackRecived(data.getMdtBlisterPackRecived());
+        entity.setTreatmentStartDate(data.getTreatmentStartDate());
+
+        // Audit fields
+        entity.setCreatedBy(data.getCreatedBy());
+        entity.setCreatedDate(
+                data.getCreatedDate() != null ? data.getCreatedDate() : new Timestamp(System.currentTimeMillis()));
+        entity.setModifiedBy(data.getModifiedBy());
+        entity.setLastModDate(
+                data.getLastModDate() != null ? data.getLastModDate() : new Timestamp(System.currentTimeMillis()));
+
+        return entity;
+    }
+
+    private String updateLeprosyFollowUpData(LeprosyFollowUpDTO data, LeprosyFollowUp entity) {
+        entity.setVisitNumber(data.getVisitNumber());
+        entity.setFollowUpDate(data.getFollowUpDate());
+        entity.setTreatmentStatus(data.getTreatmentStatus());
+        entity.setMdtBlisterPackReceived(data.getMdtBlisterPackReceived());
+        entity.setTreatmentCompleteDate(data.getTreatmentCompleteDate());
+        entity.setRemarks(data.getRemarks());
+        entity.setHomeVisitDate(data.getHomeVisitDate());
+        entity.setLeprosySymptoms(data.getLeprosySymptoms());
+        entity.setTypeOfLeprosy(data.getTypeOfLeprosy());
+        entity.setLeprosySymptomsPosition(data.getLeprosySymptomsPosition());
+        entity.setVisitLabel(data.getVisitLabel());
+        entity.setLeprosyStatus(data.getLeprosyStatus());
+        entity.setReferredTo(data.getReferredTo());
+        entity.setReferToName(data.getReferToName());
+        entity.setTreatmentEndDate(data.getTreatmentEndDate());
+        entity.setMdtBlisterPackRecived(data.getMdtBlisterPackRecived());
+        entity.setTreatmentStartDate(data.getTreatmentStartDate());
+
+        // Update audit info
+        entity.setModifiedBy(data.getModifiedBy());
+        entity.setLastModDate(
+                data.getLastModDate() != null ? data.getLastModDate() : new Timestamp(System.currentTimeMillis()));
+
+        leprosyFollowUpRepository.save(entity);
+        return "Follow-up data updated successfully";
+    }
+
+    @Override
+    public String saveLeprosyFollowUp(LeprosyFollowUpDTO dto) {
+        if (dto == null)
+            return "Invalid data";
+            LeprosyFollowUp entity = saveLeprosyFollowUpData(dto);
+            leprosyFollowUpRepository.save(entity);
+            return "Follow-up data added successfully";
+        
+    }
+
+    @Override
+    public List<DiseaseGetLeprosyDTO> getAllLeprosyData(String createdBy) {
+        logger.info("Fetching leprosy data for createdBy: " + createdBy);
+
+        List<ScreeningLeprosy> leprosyList = diseaseLeprosyRepository.getByCreatedBy(createdBy);
+        logger.info("Found " + leprosyList.size() + " leprosy records");
+
+        List<DiseaseGetLeprosyDTO> dtos = new ArrayList<>();
+        leprosyList.forEach(leprosy -> {
+            dtos.add(modelMapper.map(leprosy, DiseaseGetLeprosyDTO.class));
+        });
+
+        return dtos;
+    }
+
+    @Override
+    public List<LeprosyGetFollowUpDTO> getAllLeprosyFollowUpData(String createdBy) {
+        logger.info("Fetching leprosy data for createdBy: " + createdBy);
+
+        List<LeprosyFollowUp> leprosyList = leprosyFollowUpRepository.getByCreatedBy(createdBy);
+        logger.info("Found " + leprosyList.size() + " leprosy records");
+
+        List<LeprosyGetFollowUpDTO> dtos = new ArrayList<>();
+        leprosyList.forEach(leprosy -> {
+            dtos.add(modelMapper.map(leprosy, LeprosyGetFollowUpDTO.class));
+        });
+
+        return dtos;
     }
 
     public Object getAllMalaria(GetDiseaseRequestHandler getDiseaseRequestHandler) {
@@ -583,6 +699,23 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         diseaseLeprosy.setRemark(diseaseControlData.getRemark());
         diseaseLeprosy.setUserId(diseaseControlData.getUserId());
 
+        diseaseLeprosy.setLeprosySymptoms(diseaseControlData.getLeprosySymptoms());
+        diseaseLeprosy.setLeprosySymptomsPosition(diseaseControlData.getLeprosySymptomsPosition());
+        diseaseLeprosy.setLerosyStatusPosition(diseaseControlData.getLerosyStatusPosition());
+        diseaseLeprosy.setCurrentVisitNumber(diseaseControlData.getCurrentVisitNumber());
+        diseaseLeprosy.setVisitLabel(diseaseControlData.getVisitLabel());
+        diseaseLeprosy.setVisitNumber(diseaseControlData.getVisitNumber());
+        diseaseLeprosy.setIsConfirmed(diseaseControlData.getIsConfirmed());
+        diseaseLeprosy.setLeprosyState(diseaseControlData.getLeprosyState());
+        diseaseLeprosy.setTreatmentStartDate(diseaseControlData.getTreatmentStartDate());
+        diseaseLeprosy.setTotalFollowUpMonthsRequired(diseaseControlData.getTotalFollowUpMonthsRequired());
+        diseaseLeprosy.setTreatmentEndDate(diseaseControlData.getTreatmentEndDate());
+        diseaseLeprosy.setMdtBlisterPackRecived(diseaseControlData.getMdtBlisterPackRecived());
+        diseaseLeprosy.setTreatmentStatus(diseaseControlData.getTreatmentStatus());
+        diseaseLeprosy.setCreatedBy(diseaseControlData.getCreatedBy());
+        diseaseLeprosy.setCreatedDate(diseaseControlData.getCreatedDate());
+        diseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
+        diseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
 
         return diseaseLeprosy;
     }
@@ -610,6 +743,23 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         existingDiseaseLeprosy.setOtherPlaceOfDeath(diseaseControlData.getOtherPlaceOfDeath());
         existingDiseaseLeprosy.setOtherReasonForDeath(diseaseControlData.getOtherReasonForDeath());
         existingDiseaseLeprosy.setRemark(diseaseControlData.getRemark());
+
+        existingDiseaseLeprosy.setLeprosySymptoms(diseaseControlData.getLeprosySymptoms());
+        existingDiseaseLeprosy.setLeprosySymptomsPosition(diseaseControlData.getLeprosySymptomsPosition());
+        existingDiseaseLeprosy.setLerosyStatusPosition(diseaseControlData.getLerosyStatusPosition());
+        existingDiseaseLeprosy.setCurrentVisitNumber(diseaseControlData.getCurrentVisitNumber());
+        existingDiseaseLeprosy.setVisitLabel(diseaseControlData.getVisitLabel());
+        existingDiseaseLeprosy.setVisitNumber(diseaseControlData.getVisitNumber());
+        existingDiseaseLeprosy.setIsConfirmed(diseaseControlData.getIsConfirmed());
+        existingDiseaseLeprosy.setLeprosyState(diseaseControlData.getLeprosyState());
+        existingDiseaseLeprosy.setTreatmentStartDate(diseaseControlData.getTreatmentStartDate());
+        existingDiseaseLeprosy.setTotalFollowUpMonthsRequired(diseaseControlData.getTotalFollowUpMonthsRequired());
+        existingDiseaseLeprosy.setTreatmentEndDate(diseaseControlData.getTreatmentEndDate());
+        existingDiseaseLeprosy.setMdtBlisterPackRecived(diseaseControlData.getMdtBlisterPackRecived());
+        existingDiseaseLeprosy.setTreatmentStatus(diseaseControlData.getTreatmentStatus());
+
+        existingDiseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
+        existingDiseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
 
         diseaseLeprosyRepository.save(existingDiseaseLeprosy);
         // Return the updated entity
@@ -704,6 +854,100 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         }
     }
 
+    @Override
+    public List<MosquitoNetDTO> saveMosquitoMobilizationNet(List<MosquitoNetDTO> mosquitoNetDTOList) {
+
+        // DTO → Entity
+        List<MosquitoNetEntity> entityList = mosquitoNetDTOList.stream().map(dto -> {
+
+            MosquitoNetEntity entity = new MosquitoNetEntity();
+
+            entity.setBeneficiaryId(dto.getBeneficiaryId());
+            entity.setHouseHoldId(dto.getHouseHoldId());
+
+            // ✅ String → LocalDate conversion
+            if (dto.getVisitDate() != null && !dto.getVisitDate().isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                entity.setVisitDate(LocalDate.parse(dto.getVisitDate(), formatter));
+            }
+
+
+            entity.setUserName(dto.getUserName());
+            entity.setUserId(userRepo.getUserIdByName(dto.getUserName()));
+
+            // ✅ Safe null handling for fields
+            if (dto.getFields() != null) {
+                entity.setIsNetDistributed(dto.getFields().getIs_net_distributed());
+            } else {
+                entity.setIsNetDistributed(null);
+            }
+
+            return entity;
+
+        }).collect(Collectors.toList());
+
+
+
+        // ✅ Save all
+        List<MosquitoNetEntity> savedEntities = mosquitoNetRepository.saveAll(entityList);
+
+
+
+        // ✅ Entity → DTO return
+        return savedEntities.stream().map(entity -> {
+
+            MosquitoNetDTO dto = new MosquitoNetDTO();
+
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setHouseHoldId(entity.getHouseHoldId());
+
+            // ✅ LocalDate → String (to avoid type mismatch)
+
+            if (entity.getVisitDate() != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                dto.setVisitDate(entity.getVisitDate().format(formatter));
+            }
+            dto.setUserName(entity.getUserName());
+
+            // ✅ Return is_net_distributed inside dto.fields (if needed)
+            if (dto.getFields() != null) {
+                dto.getFields().setIs_net_distributed(entity.getIsNetDistributed());
+            }
+
+            return dto;
+
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MosquitoNetDTO> getAllMosquitoMobilizationNet(Integer userId) {
+
+        List<MosquitoNetEntity> entityList = mosquitoNetRepository.findByUserId(userId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        return entityList.stream().map(entity -> {
+            MosquitoNetDTO dto = new MosquitoNetDTO();
+            dto.setId(entity.getId());
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setHouseHoldId(entity.getHouseHoldId());
+
+            if (entity.getVisitDate() != null) {
+                dto.setVisitDate(entity.getVisitDate().format(formatter));
+            }
+
+            dto.setUserName(entity.getUserName());
+            MosquitoNetListDTO mosquitoNetListDTO = new MosquitoNetListDTO();
+            mosquitoNetListDTO.setIs_net_distributed(entity.getIsNetDistributed());
+            mosquitoNetListDTO.setVisit_date(entity.getVisitDate().format(formatter));
+
+             dto.setFields(mosquitoNetListDTO);
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
+
 
     private void checkAndAddIncentives(ScreeningMalaria diseaseScreening) {
         IncentiveActivity diseaseScreeningActivity;
@@ -753,4 +997,5 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             }
         }
     }
+
 }
