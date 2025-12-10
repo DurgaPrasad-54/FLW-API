@@ -223,6 +223,7 @@ public class ChildCareServiceImpl implements ChildCareService {
                 // Convert all fields to Map
                 Map<String, Object> fields = new HashMap<>();
                 addIfValid(fields, "visit_day", visit.getVisit_day());
+                addIfValid(fields, "visit_date", visit.getVisit_date());
                 addIfValid(fields, "due_date", visit.getDue_date());
                 addIfValid(fields, "is_baby_alive", convert(visit.getIs_baby_alive()));
                 addIfValid(fields, "date_of_death", visit.getDate_of_death());
