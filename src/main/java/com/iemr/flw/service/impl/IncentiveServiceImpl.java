@@ -196,7 +196,7 @@ public class IncentiveServiceImpl implements IncentiveService {
 
     @Override
     public String updateIncentive(PendingActivityDTO pendingActivityDTO) {
-        Optional<IncentivePendingActivity> incentivePendingActivity = incentivePendingActivityRepository.findByUserIdAndModuleNameActivityId(pendingActivityDTO.getUserId(),pendingActivityDTO.getModuleName(),pendingActivityDTO.getId());
+        Optional<IncentivePendingActivity> incentivePendingActivity = incentivePendingActivityRepository.findByUserIdAndModuleNameAndActivityId(pendingActivityDTO.getUserId(),pendingActivityDTO.getModuleName(),pendingActivityDTO.getId());
 
         if(incentivePendingActivity.isPresent()){
             IncentivePendingActivity existingIncentivePendingActivity = incentivePendingActivity.get();
