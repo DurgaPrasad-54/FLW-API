@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class MaaMeetingRequestDTO {
+    private Long id;
     private LocalDate meetingDate;
     private String place;
     private Integer participants;
