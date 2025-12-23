@@ -327,6 +327,6 @@ public class RMNCHHouseHoldDetails {
 
 	@Expose
 	@Column(name = "isDeactivate")
-	private String isDeactivate;
+	private Boolean isDeactivate;
 
 }
