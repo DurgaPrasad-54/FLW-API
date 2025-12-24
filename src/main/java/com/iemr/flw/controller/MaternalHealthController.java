@@ -15,7 +15,6 @@ import com.iemr.flw.utils.response.OutputResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +119,55 @@ public class MaternalHealthController {
     @RequestMapping(value = { "/ancVisit/getAll" }, method = { RequestMethod.POST })
     public String getANCVisitDetails(@RequestBody GetBenRequestHandler requestDTO,
             @RequestHeader(value = "Authorization") String Authorization) {
+        OutputResponse response = new OutputResponse();
+        try {
+            if (requestDTO != null) {
+                logger.info("request object with timestamp : " + new Timestamp(System.currentTimeMillis()) + " "
+                        + requestDTO);
+                List<ANCVisitDTO> result = maternalHealthService.getANCVisits(requestDTO);
+                Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
+                String s = gson.toJson(result);
+                if (s != null)
+                    response.setResponse(s);
+                else
+                    response.setError(5000, "No record found");
+            } else
+                response.setError(5000, "Invalid/NULL request obj");
+        } catch (Exception e) {
+            logger.error("Error in Anc visit get data : " + e);
+            response.setError(5000, "Error in Anc visit get data : " + e);
+        }
+        return response.toString();
+    }
+
+    @Operation(summary = "save anc visit question")
+    @RequestMapping(value = { "/ancVisit/question/saveAll" }, method = { RequestMethod.POST })
+    public String saveANCVisitQuestion(@RequestBody List<AncCounsellingCareDTO> ancVisitQuestionsDTOS,
+                               @RequestHeader(value = "Authorization") String Authorization) {
+        OutputResponse response = new OutputResponse();
+        try {
+            if (ancVisitQuestionsDTOS.size() != 0) {
+
+                logger.info("Saving ANC visits with timestamp : " + new Timestamp(System.currentTimeMillis()));
+                String s = maternalHealthService.saveANCVisitQuestions(ancVisitQuestionsDTOS,Authorization);
+                if (s != null)
+                    response.setResponse(s);
+                else
+                    response.setError(500, "Saving anc data to db failed");
+            } else
+                response.setError(500, "Invalid/NULL request obj");
+        } catch (Exception e) {
+            logger.error("Error in save ANC visit details : ",e);
+
+            response.setError(500, "Error in save ANC visit details : " + e);
+        }
+        return response.toString();
+    }
+
+    @Operation(summary = "get anc visit questions")
+    @RequestMapping(value = { "/ancVisit/questions/getAll" }, method = { RequestMethod.POST })
+    public String getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
+                                     @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
             if (requestDTO != null) {
