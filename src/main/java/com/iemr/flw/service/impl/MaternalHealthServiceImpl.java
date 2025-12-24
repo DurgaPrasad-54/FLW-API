@@ -421,6 +421,63 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         return "ANC Counselling & Care data saved successfully";
     }
+
+    @Override
+    public List<AncCounsellingCareDTO> getANCCounselling(GetBenRequestHandler requestDTO) {
+
+        List<AncCounsellingCare> entities =
+                ancCounsellingCareRepo.findAllByUserId(requestDTO.getUserId());
+
+        List<AncCounsellingCareDTO> response = new ArrayList<>();
+
+        for (AncCounsellingCare entity : entities) {
+
+            AncCounsellingCareListDTO fields = new AncCounsellingCareListDTO();
+
+            fields.setHomeVisitDate(entity.getHomeVisitDate().toString());
+            fields.setSelectAll(booleanToYesNo(entity.getSelectAll()));
+            fields.setSwelling(booleanToYesNo(entity.getSwelling()));
+            fields.setHighBp(booleanToYesNo(entity.getHighBp()));
+            fields.setConvulsions(booleanToYesNo(entity.getConvulsions()));
+            fields.setAnemia(booleanToYesNo(entity.getAnemia()));
+            fields.setReducedFetalMovement(booleanToYesNo(entity.getReducedFetalMovement()));
+            fields.setAgeRisk(booleanToYesNo(entity.getAgeRisk()));
+            fields.setChildGap(booleanToYesNo(entity.getChildGap()));
+
+            fields.setShortHeight(booleanToYesNo(entity.getShortHeight()));
+            fields.setPrePregWeight(booleanToYesNo(entity.getPrePregWeight()));
+            fields.setBleeding(booleanToYesNo(entity.getBleeding()));
+            fields.setMiscarriageHistory(booleanToYesNo(entity.getMiscarriageHistory()));
+            fields.setFourPlusDelivery(booleanToYesNo(entity.getFourPlusDelivery()));
+            fields.setFirstDelivery(booleanToYesNo(entity.getFirstDelivery()));
+            fields.setTwinPregnancy(booleanToYesNo(entity.getTwinPregnancy()));
+            fields.setCSectionHistory(booleanToYesNo(entity.getCSectionHistory()));
+            fields.setPreExistingDisease(booleanToYesNo(entity.getPreExistingDisease()));
+            fields.setFeverMalaria(booleanToYesNo(entity.getFeverMalaria()));
+            fields.setJaundice(booleanToYesNo(entity.getJaundice()));
+            fields.setSickleCell(booleanToYesNo(entity.getSickleCell()));
+            fields.setProlongedLabor(booleanToYesNo(entity.getProlongedLabor()));
+            fields.setMalpresentation(booleanToYesNo(entity.getMalpresentation()));
+
+            AncCounsellingCareDTO dto = new AncCounsellingCareDTO();
+            dto.setFormId("anc_form_001");
+            dto.setAncVisitId(entity.getAncVisitId());
+            dto.setBeneficiaryId(entity.getBeneficiaryId());
+            dto.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
+            dto.setFields(fields);
+
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+    private String booleanToYesNo(Boolean value) {
+        return Boolean.TRUE.equals(value) ? "Yes" : "No";
+    }
+
+
+
     private Boolean yesNoToBoolean(String value) {
         return "Yes".equalsIgnoreCase(value);
     }

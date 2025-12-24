@@ -141,7 +141,7 @@ public class MaternalHealthController {
     }
 
     @Operation(summary = "save anc visit question")
-    @RequestMapping(value = { "/ancVisit/question/saveAll" }, method = { RequestMethod.POST })
+    @RequestMapping(value = { "/ancVisit/counselling/saveAll" }, method = { RequestMethod.POST })
     public String saveANCVisitQuestion(@RequestBody List<AncCounsellingCareDTO> ancVisitQuestionsDTOS,
                                @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
@@ -165,7 +165,7 @@ public class MaternalHealthController {
     }
 
     @Operation(summary = "get anc visit questions")
-    @RequestMapping(value = { "/ancVisit/questions/getAll" }, method = { RequestMethod.POST })
+    @RequestMapping(value = { "/ancVisit/counselling/getAll" }, method = { RequestMethod.POST })
     public String getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
                                      @RequestHeader(value = "Authorization") String Authorization) {
         OutputResponse response = new OutputResponse();
@@ -173,7 +173,7 @@ public class MaternalHealthController {
             if (requestDTO != null) {
                 logger.info("request object with timestamp : " + new Timestamp(System.currentTimeMillis()) + " "
                         + requestDTO);
-                List<ANCVisitDTO> result = maternalHealthService.getANCVisits(requestDTO);
+                List<AncCounsellingCareDTO> result = maternalHealthService.getANCCounselling(requestDTO);
                 Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
                 String s = gson.toJson(result);
                 if (s != null)
