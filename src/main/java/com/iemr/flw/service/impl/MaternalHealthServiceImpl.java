@@ -8,6 +8,8 @@ import com.iemr.flw.masterEnum.GroupName;
 import com.iemr.flw.repo.identity.BeneficiaryRepo;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.MaternalHealthService;
+import com.iemr.flw.utils.JwtUtil;
+import com.iemr.flw.utils.exception.IEMRException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +61,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     @Autowired
     private IncentiveRecordRepo recordRepo;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -66,6 +72,9 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
     @Autowired
     private SMSServiceImpl smsServiceImpl;
+
+    @Autowired
+    private AncCounsellingCareRepo ancCounsellingCareRepo;
 
 
     public static final List<String> PNC_PERIODS =
@@ -356,6 +365,66 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
         }
         return null;
     }
+
+    @Override
+    public String saveANCVisitQuestions(List<AncCounsellingCareDTO> dtos, String authorization) throws IEMRException {
+
+        List<AncCounsellingCare> entities = new ArrayList<>();
+
+        for (AncCounsellingCareDTO dto : dtos) {
+
+            AncCounsellingCare entity = new AncCounsellingCare();
+
+            entity.setBeneficiaryId(dto.getBeneficiaryId());
+            entity.setAncVisitId(dto.getAncVisitId());
+
+            entity.setHomeVisitDate(
+                    LocalDate.parse(dto.getVisitDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            );
+            AncCounsellingCareListDTO fields = dto.getFields();
+
+            entity.setHomeVisitDate(
+                    LocalDate.parse(fields.getHomeVisitDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            );
+
+            entity.setSelectAll(yesNoToBoolean(fields.getSelectAll()));
+
+            entity.setSwelling(yesNoToBoolean(fields.getSwelling()));
+            entity.setHighBp(yesNoToBoolean(fields.getHighBp()));
+            entity.setConvulsions(yesNoToBoolean(fields.getConvulsions()));
+            entity.setAnemia(yesNoToBoolean(fields.getAnemia()));
+            entity.setReducedFetalMovement(yesNoToBoolean(fields.getReducedFetalMovement()));
+            entity.setAgeRisk(yesNoToBoolean(fields.getAgeRisk()));
+            entity.setChildGap(yesNoToBoolean(fields.getChildGap()));
+            entity.setUserId(jwtUtil.extractUserId(authorization));
+            entity.setCreatedBy(jwtUtil.extractUsername(authorization));
+            entity.setUpdatedBy(jwtUtil.extractUsername(authorization));
+            entity.setShortHeight(yesNoToBoolean(fields.getShortHeight()));
+            entity.setPrePregWeight(yesNoToBoolean(fields.getPrePregWeight()));
+            entity.setBleeding(yesNoToBoolean(fields.getBleeding()));
+            entity.setMiscarriageHistory(yesNoToBoolean(fields.getMiscarriageHistory()));
+            entity.setFourPlusDelivery(yesNoToBoolean(fields.getFourPlusDelivery()));
+            entity.setFirstDelivery(yesNoToBoolean(fields.getFirstDelivery()));
+            entity.setTwinPregnancy(yesNoToBoolean(fields.getTwinPregnancy()));
+            entity.setCSectionHistory(yesNoToBoolean(fields.getCSectionHistory()));
+            entity.setPreExistingDisease(yesNoToBoolean(fields.getPreExistingDisease()));
+            entity.setFeverMalaria(yesNoToBoolean(fields.getFeverMalaria()));
+            entity.setJaundice(yesNoToBoolean(fields.getJaundice()));
+            entity.setSickleCell(yesNoToBoolean(fields.getSickleCell()));
+            entity.setProlongedLabor(yesNoToBoolean(fields.getProlongedLabor()));
+            entity.setMalpresentation(yesNoToBoolean(fields.getMalpresentation()));
+
+            entities.add(entity);
+        }
+
+        ancCounsellingCareRepo.saveAll(entities);
+
+        return "ANC Counselling & Care data saved successfully";
+    }
+    private Boolean yesNoToBoolean(String value) {
+        return "Yes".equalsIgnoreCase(value);
+    }
+
 
     private void checkAndAddAntaraIncentive(List<PNCVisit> recordList, PNCVisit ect) {
         Integer userId = userRepo.getUserIdByName(ect.getCreatedBy());
