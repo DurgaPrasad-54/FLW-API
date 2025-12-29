@@ -405,6 +405,13 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
                     resultMap.put("isMarried", benDetailsRMNCH_OBJ.getIsMarried());
                     resultMap.put("doYouHavechildren", benDetailsRMNCH_OBJ.getDoYouHavechildren());
                     resultMap.put("noofAlivechildren    ",benDetailsRMNCH_OBJ.getNoofAlivechildren());
+                    if(houseHoldRepo.getByHouseHoldID(benDetailsRMNCH_OBJ.getHouseoldId())!=null){
+                        resultMap.put("isDeactivate",true);
+
+                    }else {
+                        resultMap.put("isDeactivate",false);
+
+                    }
 
 
 
