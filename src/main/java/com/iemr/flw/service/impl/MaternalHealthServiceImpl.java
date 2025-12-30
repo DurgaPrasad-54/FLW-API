@@ -10,6 +10,7 @@ import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.MaternalHealthService;
 import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.exception.IEMRException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -368,39 +370,44 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     }
 
     @Override
+    @Transactional
     public String saveANCVisitQuestions(List<AncCounsellingCareDTO> dtos, String authorization) throws IEMRException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
         List<AncCounsellingCare> entities = new ArrayList<>();
 
         for (AncCounsellingCareDTO dto : dtos) {
 
-            AncCounsellingCare entity = new AncCounsellingCare();
-
-            entity.setBeneficiaryId(dto.getBeneficiaryId());
-            entity.setAncVisitId(0L);
-
-            // ✅ visitDate (DTO level)
-            if (StringUtils.hasText(dto.getVisitDate())) {
-                entity.setVisitDate(
-                        LocalDate.parse(dto.getVisitDate(), formatter)
-                );
-            } else {
+            if (!StringUtils.hasText(dto.getVisitDate())) {
                 throw new IllegalArgumentException("visitDate is mandatory");
             }
 
             AncCounsellingCareListDTO fields = dto.getFields();
             if (fields == null) {
-                throw new IllegalArgumentException("fields object is missing");
+                throw new IllegalArgumentException("fields object is mandatory");
             }
 
-            // ✅ homeVisitDate (fields level)
-            if (StringUtils.hasText(fields.getHomeVisitDate())) {
-                entity.setHomeVisitDate(
-                        LocalDate.parse(fields.getHomeVisitDate(), formatter)
-                );
+            LocalDate visitDate;
+            try {
+                visitDate = LocalDate.parse(dto.getVisitDate(), formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid visitDate format, expected dd-MM-yyyy");
             }
+
+            LocalDate homeVisitDate;
+            try {
+                homeVisitDate = StringUtils.hasText(fields.getHomeVisitDate())
+                        ? LocalDate.parse(fields.getHomeVisitDate(), formatter)
+                        : visitDate; // ✅ fallback
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid home_visit_date format, expected dd-MM-yyyy");
+            }
+
+            AncCounsellingCare entity = new AncCounsellingCare();
+            entity.setBeneficiaryId(dto.getBeneficiaryId());
+            entity.setAncVisitId(0L);
+            entity.setVisitDate(visitDate);
+            entity.setHomeVisitDate(homeVisitDate);
 
             entity.setSelectAll(yesNoToBoolean(fields.getSelectAll()));
             entity.setSwelling(yesNoToBoolean(fields.getSwelling()));
@@ -434,8 +441,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
         ancCounsellingCareRepo.saveAll(entities);
         return "ANC Counselling & Care data saved successfully";
-
     }
+
 
     @Override
     public List<AncCounsellingCareDTO> getANCCounselling(GetBenRequestHandler requestDTO) {
