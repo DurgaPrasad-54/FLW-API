@@ -143,7 +143,7 @@ public class MaternalHealthController {
     @Operation(summary = "save anc visit question")
     @RequestMapping(value = { "/ancVisit/counselling/saveAll" }, method = { RequestMethod.POST })
     public String saveANCVisitQuestion(@RequestBody List<AncCounsellingCareDTO> ancVisitQuestionsDTOS,
-                               @RequestHeader(value = "Authorization") String Authorization) {
+                               @RequestHeader(value = "JwtToken") String Authorization) {
         OutputResponse response = new OutputResponse();
         try {
             if (ancVisitQuestionsDTOS.size() != 0) {
