@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -369,6 +370,8 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     @Override
     public String saveANCVisitQuestions(List<AncCounsellingCareDTO> dtos, String authorization) throws IEMRException {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         List<AncCounsellingCare> entities = new ArrayList<>();
 
         for (AncCounsellingCareDTO dto : dtos) {
@@ -378,17 +381,28 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             entity.setBeneficiaryId(dto.getBeneficiaryId());
             entity.setAncVisitId(0L);
 
-            entity.setHomeVisitDate(
-                    LocalDate.parse(dto.getVisitDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-            );
-            AncCounsellingCareListDTO fields = dto.getFields();
+            // ✅ visitDate (DTO level)
+            if (StringUtils.hasText(dto.getVisitDate())) {
+                entity.setVisitDate(
+                        LocalDate.parse(dto.getVisitDate(), formatter)
+                );
+            } else {
+                throw new IllegalArgumentException("visitDate is mandatory");
+            }
 
-            entity.setHomeVisitDate(
-                    LocalDate.parse(fields.getHomeVisitDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-            );
+            AncCounsellingCareListDTO fields = dto.getFields();
+            if (fields == null) {
+                throw new IllegalArgumentException("fields object is missing");
+            }
+
+            // ✅ homeVisitDate (fields level)
+            if (StringUtils.hasText(fields.getHomeVisitDate())) {
+                entity.setHomeVisitDate(
+                        LocalDate.parse(fields.getHomeVisitDate(), formatter)
+                );
+            }
 
             entity.setSelectAll(yesNoToBoolean(fields.getSelectAll()));
-
             entity.setSwelling(yesNoToBoolean(fields.getSwelling()));
             entity.setHighBp(yesNoToBoolean(fields.getHighBp()));
             entity.setConvulsions(yesNoToBoolean(fields.getConvulsions()));
@@ -396,9 +410,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             entity.setReducedFetalMovement(yesNoToBoolean(fields.getReducedFetalMovement()));
             entity.setAgeRisk(yesNoToBoolean(fields.getAgeRisk()));
             entity.setChildGap(yesNoToBoolean(fields.getChildGap()));
-            entity.setUserId(jwtUtil.extractUserId(authorization));
-            entity.setCreatedBy(jwtUtil.extractUsername(authorization));
-            entity.setUpdatedBy(jwtUtil.extractUsername(authorization));
             entity.setShortHeight(yesNoToBoolean(fields.getShortHeight()));
             entity.setPrePregWeight(yesNoToBoolean(fields.getPrePregWeight()));
             entity.setBleeding(yesNoToBoolean(fields.getBleeding()));
@@ -414,12 +425,16 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             entity.setProlongedLabor(yesNoToBoolean(fields.getProlongedLabor()));
             entity.setMalpresentation(yesNoToBoolean(fields.getMalpresentation()));
 
+            entity.setUserId(jwtUtil.extractUserId(authorization));
+            entity.setCreatedBy(jwtUtil.extractUsername(authorization));
+            entity.setUpdatedBy(jwtUtil.extractUsername(authorization));
+
             entities.add(entity);
         }
 
         ancCounsellingCareRepo.saveAll(entities);
-
         return "ANC Counselling & Care data saved successfully";
+
     }
 
     @Override
