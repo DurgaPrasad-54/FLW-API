@@ -448,7 +448,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
     public List<AncCounsellingCareDTO> getANCCounselling(GetBenRequestHandler requestDTO) {
 
         List<AncCounsellingCare> entities =
-                ancCounsellingCareRepo.findAllByUserId(requestDTO.getUserId());
+                ancCounsellingCareRepo.findAllByUserId(requestDTO.getAshaId());
 
         List<AncCounsellingCareDTO> response = new ArrayList<>();
 
