@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -90,6 +92,7 @@ public class MaternalHealthController {
             response.setError(5000, "Error in pregnant woman get data : " + e);
         }
         return response.toString();
+
     }
 
     @Operation(summary = "save anc visit details")
@@ -166,27 +169,39 @@ public class MaternalHealthController {
 
     @Operation(summary = "get anc visit questions")
     @RequestMapping(value = { "/ancVisit/counselling/getAll" }, method = { RequestMethod.POST })
-    public String getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
-                                     @RequestHeader(value = "Authorization") String Authorization) {
-        OutputResponse response = new OutputResponse();
+    public ResponseEntity<StandardResponse<List<AncCounsellingCareDTO>>> getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
+                                     @RequestHeader(value = "JwtToken") String Authorization) {
+        StandardResponse<List<AncCounsellingCareDTO>> response = new StandardResponse<>();
+
         try {
             if (requestDTO != null) {
-                logger.info("request object with timestamp : " + new Timestamp(System.currentTimeMillis()) + " "
-                        + requestDTO);
+                logger.info("Request: " + requestDTO);
+
                 List<AncCounsellingCareDTO> result = maternalHealthService.getANCCounselling(requestDTO);
-                Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
-                String s = gson.toJson(result);
-                if (s != null)
-                    response.setResponse(s);
-                else
-                    response.setError(500, "No record found");
-            } else
-                response.setError(500, "Invalid/NULL request obj");
+
+                response.setStatusCode(200);
+                response.setStatus("Success");
+                response.setErrorMessage("Success");
+                response.setData(result);
+
+                return ResponseEntity.ok(response);
+
+            } else {
+                response.setStatusCode(400);
+                response.setStatus("Failed");
+                response.setErrorMessage("Invalid request object");
+                response.setData(null);
+                return ResponseEntity.badRequest().body(response);
+            }
         } catch (Exception e) {
-            logger.error("Error in Anc visit get data : " + e);
-            response.setError(500, "Error in Anc visit get data : " + e);
+            logger.error("Exception in fetching HBNC visits", e);
+
+            response.setStatusCode(500);
+            response.setStatus("Failed");
+            response.setErrorMessage("Internal Server Error: " + e.getMessage());
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return response.toString();
     }
 
     @Operation(summary = "save Delivery Outcome details")
@@ -211,6 +226,7 @@ public class MaternalHealthController {
             response.setError(5000, "Error in save delivery outcome details : " + e);
         }
         return response.toString();
+
     }
 
     @Operation(summary = "get Delivery Outcome details")
