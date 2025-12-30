@@ -376,7 +376,7 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
             AncCounsellingCare entity = new AncCounsellingCare();
 
             entity.setBeneficiaryId(dto.getBeneficiaryId());
-            entity.setAncVisitId(dto.getAncVisitId());
+            entity.setAncVisitId(0L);
 
             entity.setHomeVisitDate(
                     LocalDate.parse(dto.getVisitDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"))
@@ -461,7 +461,6 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
             AncCounsellingCareDTO dto = new AncCounsellingCareDTO();
             dto.setFormId("anc_form_001");
-            dto.setAncVisitId(entity.getAncVisitId());
             dto.setBeneficiaryId(entity.getBeneficiaryId());
             dto.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
             dto.setFields(fields);
