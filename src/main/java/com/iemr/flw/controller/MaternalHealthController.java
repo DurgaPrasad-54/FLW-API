@@ -169,15 +169,15 @@ public class MaternalHealthController {
 
     @Operation(summary = "get anc visit questions")
     @RequestMapping(value = { "/ancVisit/counselling/getAll" }, method = { RequestMethod.POST })
-    public ResponseEntity<StandardResponse<List<AncCounsellingCareDTO>>> getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
+    public ResponseEntity<StandardResponse<List<AncCounsellingCareResponseDTO>>> getANCVisitQuestion(@RequestBody GetBenRequestHandler requestDTO,
                                      @RequestHeader(value = "JwtToken") String Authorization) {
-        StandardResponse<List<AncCounsellingCareDTO>> response = new StandardResponse<>();
+        StandardResponse<List<AncCounsellingCareResponseDTO>> response = new StandardResponse<>();
 
         try {
             if (requestDTO != null) {
                 logger.info("Request: " + requestDTO);
 
-                List<AncCounsellingCareDTO> result = maternalHealthService.getANCCounselling(requestDTO);
+                List<AncCounsellingCareResponseDTO> result = maternalHealthService.getANCCounselling(requestDTO);
 
                 response.setStatusCode(200);
                 response.setStatus("Success");

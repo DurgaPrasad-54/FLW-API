@@ -28,5 +28,5 @@ public interface MaternalHealthService {
 
     String saveANCVisitQuestions(List<AncCounsellingCareDTO> ancVisitQuestionsDTOS, String authorization) throws IEMRException;
 
-    List<AncCounsellingCareDTO> getANCCounselling(GetBenRequestHandler requestDTO);
+    List<AncCounsellingCareResponseDTO> getANCCounselling(GetBenRequestHandler requestDTO);
 }
