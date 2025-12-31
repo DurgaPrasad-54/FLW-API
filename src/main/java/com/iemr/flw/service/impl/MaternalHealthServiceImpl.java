@@ -445,52 +445,61 @@ public class MaternalHealthServiceImpl implements MaternalHealthService {
 
 
     @Override
-    public List<AncCounsellingCareDTO> getANCCounselling(GetBenRequestHandler requestDTO) {
+    public List<AncCounsellingCareResponseDTO> getANCCounselling(GetBenRequestHandler requestDTO) {
 
         List<AncCounsellingCare> entities =
                 ancCounsellingCareRepo.findAllByUserId(requestDTO.getAshaId());
 
-        List<AncCounsellingCareDTO> response = new ArrayList<>();
+     List<AncCounsellingCareResponseDTO> responseDTOList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         for (AncCounsellingCare entity : entities) {
 
-            AncCounsellingCareListDTO fields = new AncCounsellingCareListDTO();
+            AncCounsellingCareResponseDTO responseDTO = new AncCounsellingCareResponseDTO();
+            responseDTO.setFormId("anc_form_001");
+            responseDTO.setBeneficiaryId(entity.getBeneficiaryId()); // Update with actual value
+            responseDTO.setVisitDate(entity.getVisitDate().format(formatter)); // Format visit.getVisitDate()
 
-            fields.setHomeVisitDate(entity.getHomeVisitDate().toString());
-            fields.setSelectAll(booleanToYesNo(entity.getSelectAll()));
-            fields.setSwelling(booleanToYesNo(entity.getSwelling()));
-            fields.setHighBp(booleanToYesNo(entity.getHighBp()));
-            fields.setConvulsions(booleanToYesNo(entity.getConvulsions()));
-            fields.setAnemia(booleanToYesNo(entity.getAnemia()));
-            fields.setReducedFetalMovement(booleanToYesNo(entity.getReducedFetalMovement()));
-            fields.setAgeRisk(booleanToYesNo(entity.getAgeRisk()));
-            fields.setChildGap(booleanToYesNo(entity.getChildGap()));
+            // 🔹 fields map
+            Map<String, Object> fields = new HashMap<>();
 
-            fields.setShortHeight(booleanToYesNo(entity.getShortHeight()));
-            fields.setPrePregWeight(booleanToYesNo(entity.getPrePregWeight()));
-            fields.setBleeding(booleanToYesNo(entity.getBleeding()));
-            fields.setMiscarriageHistory(booleanToYesNo(entity.getMiscarriageHistory()));
-            fields.setFourPlusDelivery(booleanToYesNo(entity.getFourPlusDelivery()));
-            fields.setFirstDelivery(booleanToYesNo(entity.getFirstDelivery()));
-            fields.setTwinPregnancy(booleanToYesNo(entity.getTwinPregnancy()));
-            fields.setCSectionHistory(booleanToYesNo(entity.getCSectionHistory()));
-            fields.setPreExistingDisease(booleanToYesNo(entity.getPreExistingDisease()));
-            fields.setFeverMalaria(booleanToYesNo(entity.getFeverMalaria()));
-            fields.setJaundice(booleanToYesNo(entity.getJaundice()));
-            fields.setSickleCell(booleanToYesNo(entity.getSickleCell()));
-            fields.setProlongedLabor(booleanToYesNo(entity.getProlongedLabor()));
-            fields.setMalpresentation(booleanToYesNo(entity.getMalpresentation()));
+            fields.put("home_visit_date",
+                    entity.getHomeVisitDate() != null
+                            ? entity.getHomeVisitDate().format(formatter)
+                            : null);
 
-            AncCounsellingCareDTO dto = new AncCounsellingCareDTO();
-            dto.setFormId("anc_form_001");
-            dto.setBeneficiaryId(entity.getBeneficiaryId());
-            dto.setVisitDate(entity.getVisitDate() != null ? entity.getVisitDate().toString() : null);
-            dto.setFields(fields);
+            fields.put("select_all", booleanToYesNo(entity.getSelectAll()));
+            fields.put("swelling", booleanToYesNo(entity.getSwelling()));
+            fields.put("high_bp", booleanToYesNo(entity.getHighBp()));
+            fields.put("convulsions", booleanToYesNo(entity.getConvulsions()));
+            fields.put("anemia", booleanToYesNo(entity.getAnemia()));
+            fields.put("reduced_fetal_movement", booleanToYesNo(entity.getReducedFetalMovement()));
+            fields.put("age_risk", booleanToYesNo(entity.getAgeRisk()));
+            fields.put("child_gap", booleanToYesNo(entity.getChildGap()));
+            fields.put("short_height", booleanToYesNo(entity.getShortHeight()));
+            fields.put("pre_preg_weight", booleanToYesNo(entity.getPrePregWeight()));
+            fields.put("bleeding", booleanToYesNo(entity.getBleeding()));
+            fields.put("miscarriage_history", booleanToYesNo(entity.getMiscarriageHistory()));
+            fields.put("four_plus_delivery", booleanToYesNo(entity.getFourPlusDelivery()));
+            fields.put("first_delivery", booleanToYesNo(entity.getFirstDelivery()));
+            fields.put("twin_pregnancy", booleanToYesNo(entity.getTwinPregnancy()));
+            fields.put("c_section_history", booleanToYesNo(entity.getCSectionHistory()));
+            fields.put("pre_existing_disease", booleanToYesNo(entity.getPreExistingDisease()));
+            fields.put("fever_malaria", booleanToYesNo(entity.getFeverMalaria()));
+            fields.put("jaundice", booleanToYesNo(entity.getJaundice()));
+            fields.put("sickle_cell", booleanToYesNo(entity.getSickleCell()));
+            fields.put("prolonged_labor", booleanToYesNo(entity.getProlongedLabor()));
+            fields.put("malpresentation", booleanToYesNo(entity.getMalpresentation()));
 
-            response.add(dto);
+            responseDTO.setFields(fields);
+            responseDTOList.add(responseDTO);
+
+
+
+
         }
+        return responseDTOList;
 
-        return response;
     }
 
     private String booleanToYesNo(Boolean value) {
