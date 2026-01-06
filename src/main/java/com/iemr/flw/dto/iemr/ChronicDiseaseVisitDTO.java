@@ -1,7 +1,10 @@
 package com.iemr.flw.dto.iemr;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class ChronicDiseaseVisitDTO {
@@ -26,6 +29,9 @@ public class ChronicDiseaseVisitDTO {
 
     @JsonProperty("followUpNo")
     private Integer followUpNo;
+
+    @Column(name = "followUpDate")
+    private LocalDate followUpDate;
 
     @JsonProperty("diagnosisCodes")
     private String diagnosisCodes;

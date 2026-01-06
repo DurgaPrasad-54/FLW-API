@@ -23,7 +23,7 @@ public class ChronicDiseaseVisitEntity {
     @Column(name = "form_id")
     private String formId;
 
-    @Column(name = "version")
+    @Column(name =   "version")
     private Integer version;
 
     @Column(name = "visit_no")
@@ -37,6 +37,9 @@ public class ChronicDiseaseVisitEntity {
 
     @Column(name = "treatment_start_date")
     private LocalDate treatmentStartDate;
+
+    @Column(name = "follow_up_date")
+    private LocalDate followUpDate;
 
     @Column(name = "form_data_json", columnDefinition = "JSON")
     private String formDataJson;
