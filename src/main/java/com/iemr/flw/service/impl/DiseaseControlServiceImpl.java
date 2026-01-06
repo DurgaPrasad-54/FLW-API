@@ -724,6 +724,33 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         diseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
         diseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
 
+        diseaseLeprosy.setRecurrentUlcerationId(diseaseControlData.getRecurrentUlcerationId());
+        diseaseLeprosy.setRecurrentTinglingId(diseaseControlData.getRecurrentTinglingId());
+        diseaseLeprosy.setHypopigmentedPatchId(diseaseControlData.getHypopigmentedPatchId());
+        diseaseLeprosy.setThickenedSkinId(diseaseControlData.getThickenedSkinId());
+        diseaseLeprosy.setSkinNodulesId(diseaseControlData.getSkinNodulesId());
+        diseaseLeprosy.setSkinPatchDiscolorationId(diseaseControlData.getSkinPatchDiscolorationId());
+        diseaseLeprosy.setRecurrentNumbnessId(diseaseControlData.getRecurrentNumbnessId());
+        diseaseLeprosy.setClawingFingersId(diseaseControlData.getClawingFingersId());
+        diseaseLeprosy.setTinglingNumbnessExtremitiesId(diseaseControlData.getTinglingNumbnessExtremitiesId());
+        diseaseLeprosy.setInabilityCloseEyelidId(diseaseControlData.getInabilityCloseEyelidId());
+        diseaseLeprosy.setDifficultyHoldingObjectsId(diseaseControlData.getDifficultyHoldingObjectsId());
+        diseaseLeprosy.setWeaknessFeetId(diseaseControlData.getWeaknessFeetId());
+
+        diseaseLeprosy.setRecurrentUlceration(diseaseControlData.getRecurrentUlceration());
+        diseaseLeprosy.setRecurrentTingling(diseaseControlData.getRecurrentTingling());
+        diseaseLeprosy.setHypopigmentedPatch(diseaseControlData.getHypopigmentedPatch());
+        diseaseLeprosy.setThickenedSkin(diseaseControlData.getThickenedSkin());
+        diseaseLeprosy.setSkinNodules(diseaseControlData.getSkinNodules());
+        diseaseLeprosy.setSkinPatchDiscoloration(diseaseControlData.getSkinPatchDiscoloration());
+        diseaseLeprosy.setRecurrentNumbness(diseaseControlData.getRecurrentNumbness());
+        diseaseLeprosy.setClawingFingers(diseaseControlData.getClawingFingers());
+        diseaseLeprosy.setTinglingNumbnessExtremities(diseaseControlData.getTinglingNumbnessExtremities());
+        diseaseLeprosy.setInabilityCloseEyelid(diseaseControlData.getInabilityCloseEyelid());
+        diseaseLeprosy.setDifficultyHoldingObjects(diseaseControlData.getDifficultyHoldingObjects());
+        diseaseLeprosy.setWeaknessFeet(diseaseControlData.getWeaknessFeet());
+
+
         return diseaseLeprosy;
     }
 
@@ -767,6 +794,33 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
         existingDiseaseLeprosy.setModifiedBy(diseaseControlData.getModifiedBy());
         existingDiseaseLeprosy.setLastModDate(diseaseControlData.getLastModDate());
+
+        existingDiseaseLeprosy.setRecurrentUlcerationId(diseaseControlData.getRecurrentUlcerationId());
+        existingDiseaseLeprosy.setRecurrentTinglingId(diseaseControlData.getRecurrentTinglingId());
+        existingDiseaseLeprosy.setHypopigmentedPatchId(diseaseControlData.getHypopigmentedPatchId());
+        existingDiseaseLeprosy.setThickenedSkinId(diseaseControlData.getThickenedSkinId());
+        existingDiseaseLeprosy.setSkinNodulesId(diseaseControlData.getSkinNodulesId());
+        existingDiseaseLeprosy.setSkinPatchDiscolorationId(diseaseControlData.getSkinPatchDiscolorationId());
+        existingDiseaseLeprosy.setRecurrentNumbnessId(diseaseControlData.getRecurrentNumbnessId());
+        existingDiseaseLeprosy.setClawingFingersId(diseaseControlData.getClawingFingersId());
+        existingDiseaseLeprosy.setTinglingNumbnessExtremitiesId(diseaseControlData.getTinglingNumbnessExtremitiesId());
+        existingDiseaseLeprosy.setInabilityCloseEyelidId(diseaseControlData.getInabilityCloseEyelidId());
+        existingDiseaseLeprosy.setDifficultyHoldingObjectsId(diseaseControlData.getDifficultyHoldingObjectsId());
+        existingDiseaseLeprosy.setWeaknessFeetId(diseaseControlData.getWeaknessFeetId());
+
+        existingDiseaseLeprosy.setRecurrentUlceration(diseaseControlData.getRecurrentUlceration());
+        existingDiseaseLeprosy.setRecurrentTingling(diseaseControlData.getRecurrentTingling());
+        existingDiseaseLeprosy.setHypopigmentedPatch(diseaseControlData.getHypopigmentedPatch());
+        existingDiseaseLeprosy.setThickenedSkin(diseaseControlData.getThickenedSkin());
+        existingDiseaseLeprosy.setSkinNodules(diseaseControlData.getSkinNodules());
+        existingDiseaseLeprosy.setSkinPatchDiscoloration(diseaseControlData.getSkinPatchDiscoloration());
+        existingDiseaseLeprosy.setRecurrentNumbness(diseaseControlData.getRecurrentNumbness());
+        existingDiseaseLeprosy.setClawingFingers(diseaseControlData.getClawingFingers());
+        existingDiseaseLeprosy.setTinglingNumbnessExtremities(diseaseControlData.getTinglingNumbnessExtremities());
+        existingDiseaseLeprosy.setInabilityCloseEyelid(diseaseControlData.getInabilityCloseEyelid());
+        existingDiseaseLeprosy.setDifficultyHoldingObjects(diseaseControlData.getDifficultyHoldingObjects());
+        existingDiseaseLeprosy.setWeaknessFeet(diseaseControlData.getWeaknessFeet());
+
 
         diseaseLeprosyRepository.save(existingDiseaseLeprosy);
         // Return the updated entity
