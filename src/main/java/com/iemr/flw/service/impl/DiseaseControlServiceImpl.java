@@ -31,6 +31,8 @@ import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.masterEnum.DiseaseType;
 import com.iemr.flw.repo.iemr.*;
 import com.iemr.flw.service.DiseaseControlService;
+import com.iemr.flw.utils.JwtUtil;
+import com.iemr.flw.utils.exception.IEMRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +79,11 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
     private MosquitoNetRepository mosquitoNetRepository;
 
 
+    @Autowired
+    private ChronicDiseaseVisitRepository chronicDiseaseVisitRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     private final Logger logger = LoggerFactory.getLogger(CoupleController.class);
@@ -996,6 +1002,46 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
 
             }
         }
+    }
+
+
+
+    @Override
+    public List<ChronicDiseaseVisitDTO> saveChronicDiseaseVisit(
+            List<ChronicDiseaseVisitDTO> requestList,String token) throws IEMRException {
+
+        List<ChronicDiseaseVisitDTO> responseList = new ArrayList<>();
+
+        for (ChronicDiseaseVisitDTO dto : requestList) {
+
+            ChronicDiseaseVisitEntity entity = new ChronicDiseaseVisitEntity();
+
+            entity.setBenId(dto.getBenId());
+            entity.setHhId(dto.getHhId());
+            entity.setFormId(dto.getFormId());
+            entity.setVersion(dto.getVersion());
+            entity.setVisitNo(dto.getVisitNo());
+            entity.setFollowUpNo(dto.getFollowUpNo());
+            entity.setDiagnosisCodes(dto.getDiagnosisCodes());
+            entity.setFormDataJson(dto.getFormDataJson());
+            entity.setUserID(jwtUtil.extractUserId(token));
+            entity.setCreatedBy(jwtUtil.extractUsername(token));
+
+
+            if (dto.getTreatmentStartDate() != null) {
+                entity.setTreatmentStartDate(
+                        LocalDate.parse(dto.getTreatmentStartDate())
+                );
+            }
+
+            ChronicDiseaseVisitEntity savedEntity =
+                    chronicDiseaseVisitRepository.save(entity);
+
+            dto.setId(savedEntity.getId());
+            responseList.add(dto);
+        }
+
+        return responseList;
     }
 
 }
