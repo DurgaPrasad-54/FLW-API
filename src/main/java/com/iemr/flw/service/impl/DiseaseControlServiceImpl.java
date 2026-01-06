@@ -1077,10 +1077,12 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             entity.setVersion(dto.getVersion());
             entity.setVisitNo(dto.getVisitNo());
             entity.setFollowUpNo(dto.getFollowUpNo());
+            entity.setFollowUpDate(dto.getFollowUpDate());
             entity.setDiagnosisCodes(dto.getDiagnosisCodes());
             entity.setFormDataJson(dto.getFormDataJson());
             entity.setUserID(jwtUtil.extractUserId(token));
             entity.setCreatedBy(jwtUtil.extractUsername(token));
+            entity.setUpdatedBy(jwtUtil.extractUserId(token));
 
 
             if (dto.getTreatmentStartDate() != null) {
@@ -1117,6 +1119,7 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
             dto.setVersion(entity.getVersion());
             dto.setVisitNo(entity.getVisitNo());
             dto.setFollowUpNo(entity.getFollowUpNo());
+            dto.setFollowUpDate(entity.getFollowUpDate());
             dto.setDiagnosisCodes(entity.getDiagnosisCodes());
             dto.setFormDataJson(entity.getFormDataJson());
 
