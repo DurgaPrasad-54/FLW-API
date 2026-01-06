@@ -27,6 +27,7 @@ package com.iemr.flw.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.controller.CoupleController;
 import com.iemr.flw.domain.iemr.*;
+import com.iemr.flw.dto.identity.GetBenRequestHandler;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.masterEnum.DiseaseType;
 import com.iemr.flw.repo.iemr.*;
@@ -1042,6 +1043,39 @@ public class DiseaseControlServiceImpl implements DiseaseControlService {
         }
 
         return responseList;
+    }
+
+    @Override
+    public List<ChronicDiseaseVisitDTO> getCdtfVisits(GetBenRequestHandler getBenRequestHandler) {
+
+        List<ChronicDiseaseVisitEntity> entityList = chronicDiseaseVisitRepository.findByUserID(getBenRequestHandler.getAshaId());
+
+        List<ChronicDiseaseVisitDTO> dtoList = new ArrayList<>();
+
+        for (ChronicDiseaseVisitEntity entity : entityList) {
+
+            ChronicDiseaseVisitDTO dto = new ChronicDiseaseVisitDTO();
+
+            dto.setId(entity.getId());
+            dto.setBenId(entity.getBenId());
+            dto.setHhId(entity.getHhId());
+            dto.setFormId(entity.getFormId());
+            dto.setVersion(entity.getVersion());
+            dto.setVisitNo(entity.getVisitNo());
+            dto.setFollowUpNo(entity.getFollowUpNo());
+            dto.setDiagnosisCodes(entity.getDiagnosisCodes());
+            dto.setFormDataJson(entity.getFormDataJson());
+
+            if (entity.getTreatmentStartDate() != null) {
+                dto.setTreatmentStartDate(
+                        entity.getTreatmentStartDate().toString()
+                );
+            }
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
 }

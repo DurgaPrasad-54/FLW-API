@@ -340,6 +340,33 @@ public class DiseaseControlController {
         }
     }
 
+    @RequestMapping(value = "cdtfVisit/getAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getVisitDetails(
+            @RequestBody GetBenRequestHandler getBenRequestHandler) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        try {
+            List<ChronicDiseaseVisitDTO> result =
+                    diseaseControlService.getCdtfVisits(getBenRequestHandler);
+
+            if (result != null && !result.isEmpty()) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", result);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error fetching Chronic Disease Visit :", e);
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
 
 }
