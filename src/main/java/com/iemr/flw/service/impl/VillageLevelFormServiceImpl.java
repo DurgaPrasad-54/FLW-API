@@ -132,13 +132,13 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         vhncForm.setImage2(vhncFormDTO.getImage2());
         vhncForm.setImage1(vhncFormDTO.getImage1());
         vhncForm.setPlace(vhncFormDTO.getPlace());
-        vhncForm.setVillageName(vhncForm.getVillageName());
-        vhncForm.setAnm(vhncForm.getAnm());
-        vhncForm.setAww(vhncForm.getAww());
-        vhncForm.setNoOfPragnentWoment(vhncForm.getNoOfPragnentWoment());
-        vhncForm.setNoOfLactingMother(vhncForm.getNoOfLactingMother());
-        vhncForm.setNoOfCommittee(vhncForm.getNoOfCommittee());
-        vhncForm.setFollowupPrevius(vhncForm.getFollowupPrevius());
+        vhncForm.setVillageName(vhncFormDTO.getVillageName());
+        vhncForm.setAnm(vhncFormDTO.getAnm());
+        vhncForm.setAww(vhncFormDTO.getAww());
+        vhncForm.setNoOfPragnentWoment(vhncFormDTO.getNoOfPragnentWoment());
+        vhncForm.setNoOfLactingMother(vhncFormDTO.getNoOfLactingMother());
+        vhncForm.setNoOfCommittee(vhncFormDTO.getNoOfCommittee());
+        vhncForm.setFollowupPrevius(vhncFormDTO.getFollowupPrevius());
 
         vhncForm.setNoOfBeneficiariesAttended(vhncFormDTO.getNoOfBeneficiariesAttended());
 
