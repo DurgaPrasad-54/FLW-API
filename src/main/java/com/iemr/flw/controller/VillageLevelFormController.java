@@ -42,7 +42,7 @@ public class VillageLevelFormController {
     @Autowired
     private VillageLevelFormService villageLevelFormService;
 
-    @RequestMapping(value = "vhnd/saveAll")
+    @RequestMapping(value = "vhnd/saveAll",method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> saveVhndForm(@RequestBody VhndDto dto) {
         Map<String, Object> response = new HashMap<>();
         if (!dto.getEntries().isEmpty()) {
