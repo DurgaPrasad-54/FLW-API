@@ -210,6 +210,16 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         vhndForm.setImage1(vhndFormDTO.getImage1());
         vhndForm.setPlace(vhndFormDTO.getPlace());
         vhndForm.setNoOfBeneficiariesAttended(vhndFormDTO.getNoOfBeneficiariesAttended());
+        vhndForm.setPregnantWomenAnc(vhndFormDTO.getPregnantWomenAnc());
+        vhndForm.setLactatingMothersPnc(vhndFormDTO.getLactatingMothersPnc());
+        vhndForm.setChildrenImmunization(vhndFormDTO.getChildrenImmunization());
+        vhndForm.setSelectAllEducation(vhndFormDTO.getSelectAllEducation());
+        vhndForm.setKnowledgeBalancedDiet(vhndFormDTO.getKnowledgeBalancedDiet());
+        vhndForm.setCareDuringPregnancy(vhndFormDTO.getCareDuringPregnancy());
+        vhndForm.setImportanceBreastfeeding(vhndFormDTO.getImportanceBreastfeeding());
+        vhndForm.setComplementaryFeeding(vhndFormDTO.getComplementaryFeeding());
+        vhndForm.setHygieneSanitation(vhndFormDTO.getHygieneSanitation());
+        vhndForm.setFamilyPlanningHealthcare(vhndFormDTO.getFamilyPlanningHealthcare());
         vhndForm.setFormType("VHND");
         vhndRepo.save(vhndForm);
         checkAndAddIncentives(vhndForm.getVhndDate(), vhndForm.getUserId(), "VHND_PARTICIPATION", vhndForm.getCreatedBy());
