@@ -38,7 +38,7 @@ public class MaaMeetingController {
             @RequestPart("villageName") String villageName,
             @RequestPart("noOfPragnentWoment") String noOfPragnentWomen,
             @RequestPart("noOfLactingMother") String noOfLactingMother,
-            @RequestPart("mitaninActivityCheckList") List<String> mitaninActivityCheckList,
+            @RequestPart("mitaninActivityCheckList") String  mitaninActivityCheckList,
             @RequestPart("meetingDate") String meetingDate,
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,

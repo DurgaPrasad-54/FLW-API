@@ -49,9 +49,7 @@ public class MaaMeetingService {
         meeting.setNoOfLactingMother(req.getNoOfLactingMother());
         meeting.setNoOfPragnentWomen(req.getNoOfPragnentWomen());
         meeting.setVillageName(req.getVillageName());
-        String checklistJson =
-                objectMapper.writeValueAsString(req.getMitaninActivityCheckList());
-        meeting.setMitaninActivityCheckList(checklistJson);
+        meeting.setMitaninActivityCheckList(req.getMitaninActivityCheckList());
         meeting.setCreatedBy(req.getCreatedBY());
 
         // Convert meeting images to Base64 JSON
@@ -138,17 +136,7 @@ public class MaaMeetingService {
             dto.setVillageName(meeting.getVillageName());
             dto.setNoOfLactingMother(String.valueOf(meeting.getNoOfLactingMother()));
             dto.setNoOfPragnentWomen(String.valueOf(meeting.getNoOfPragnentWomen()));
-            List<String> checklist =
-                    null;
-            try {
-                checklist = objectMapper.readValue(
-                        meeting.getMitaninActivityCheckList(),
-                        new TypeReference<List<String>>() {}
-                );
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            dto.setMitaninActivityCheckList(checklist);
+            dto.setMitaninActivityCheckList(meeting.getMitaninActivityCheckList());
             dto.setCreatedBy(meeting.getCreatedBy());
 
             try {

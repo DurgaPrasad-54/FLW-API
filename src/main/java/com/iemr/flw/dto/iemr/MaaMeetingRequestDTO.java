@@ -19,6 +19,6 @@ public class MaaMeetingRequestDTO {
     private String villageName;
     private Integer noOfPragnentWomen;
     private Integer noOfLactingMother;
-    private List<String> mitaninActivityCheckList;
+    private String  mitaninActivityCheckList;
     private String createdBY;
 }
