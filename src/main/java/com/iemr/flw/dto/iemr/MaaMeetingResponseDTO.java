@@ -39,6 +39,7 @@ public class MaaMeetingResponseDTO {
     private String noOfPragnentWomen;
     private String noOfLactingMother;
     private String mitaninActivityCheckList;
+    private String isSelectAll;
 
     @Column(name = "created_by")
     private String createdBy;

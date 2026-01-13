@@ -20,5 +20,6 @@ public class MaaMeetingRequestDTO {
     private Integer noOfPragnentWomen;
     private Integer noOfLactingMother;
     private String  mitaninActivityCheckList;
+    private String isSelectAll;
     private String createdBY;
 }

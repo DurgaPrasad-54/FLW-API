@@ -52,6 +52,9 @@ public class MaaMeeting {
     @Column(name = "mitanin_activity_checkList")
     private String mitaninActivityCheckList;
 
+    @Column(name = "is_select_all")
+    private Boolean isSelectAll;
+
     @Column(name = "created_by")
     private String createdBy;
 }
