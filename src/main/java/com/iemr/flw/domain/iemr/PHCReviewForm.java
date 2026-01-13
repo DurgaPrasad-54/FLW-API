@@ -56,4 +56,5 @@ public class PHCReviewForm {
 
     @Column(name = "form_type")
     private String formType;
+
 }

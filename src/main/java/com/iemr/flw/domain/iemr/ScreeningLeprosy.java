@@ -26,7 +26,6 @@ package com.iemr.flw.domain.iemr;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
