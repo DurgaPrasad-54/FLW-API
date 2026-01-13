@@ -38,7 +38,7 @@ public class MaaMeetingResponseDTO {
     private String villageName;
     private String noOfPragnentWomen;
     private String noOfLactingMother;
-    private List<String> mitaninActivityCheckList;
+    private String mitaninActivityCheckList;
 
     @Column(name = "created_by")
     private String createdBy;
