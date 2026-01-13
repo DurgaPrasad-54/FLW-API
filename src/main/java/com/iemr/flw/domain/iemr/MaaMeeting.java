@@ -53,7 +53,7 @@ public class MaaMeeting {
     private String mitaninActivityCheckList;
 
     @Column(name = "is_select_all")
-    private Boolean isSelectAll;
+    private String isSelectAll;
 
     @Column(name = "created_by")
     private String createdBy;

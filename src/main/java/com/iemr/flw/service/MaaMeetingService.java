@@ -50,12 +50,8 @@ public class MaaMeetingService {
         meeting.setNoOfPragnentWomen(req.getNoOfPragnentWomen());
         meeting.setVillageName(req.getVillageName());
         meeting.setMitaninActivityCheckList(req.getMitaninActivityCheckList());
-        if(Objects.equals(req.getIsSelectAll(), "Yes")){
-            meeting.setIsSelectAll(true);
-        }else {
-            meeting.setIsSelectAll(false);
+        meeting.setIsSelectAll(req.getIsSelectAll());
 
-        }
         meeting.setCreatedBy(req.getCreatedBY());
 
         // Convert meeting images to Base64 JSON
@@ -143,13 +139,7 @@ public class MaaMeetingService {
             dto.setNoOfLactingMother(String.valueOf(meeting.getNoOfLactingMother()));
             dto.setNoOfPragnentWomen(String.valueOf(meeting.getNoOfPragnentWomen()));
             dto.setMitaninActivityCheckList(meeting.getMitaninActivityCheckList());
-            if(meeting.getIsSelectAll()){
-                dto.setIsSelectAll("Yes");
-
-            }else {
-                dto.setIsSelectAll("No");
-
-            }
+            dto.setIsSelectAll(meeting.getIsSelectAll());
             dto.setCreatedBy(meeting.getCreatedBy());
 
             try {
