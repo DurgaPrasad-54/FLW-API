@@ -35,6 +35,10 @@ public class MaaMeetingController {
 
     @PostMapping(value = "/saveAll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveMeeting(
+            @RequestPart("villageName") String villageName,
+            @RequestPart("noOfPragnentWoment") String noOfPragnentWomen,
+            @RequestPart("noOfLactingMother") String noOfLactingMother,
+            @RequestPart("mitaninActivityCheckList") List<String> mitaninActivityCheckList,
             @RequestPart("meetingDate") String meetingDate,
             @RequestPart("place") String place,
             @RequestPart("participants") String participants,
@@ -48,6 +52,11 @@ public class MaaMeetingController {
             dto.setParticipants(Integer.parseInt(participants));
             dto.setAshaId(Integer.parseInt(ashaId));
             dto.setCreatedBY(createdBy);
+            dto.setVillageName(villageName);
+            dto.setNoOfLactingMother(Integer.parseInt(noOfLactingMother));
+            dto.setNoOfPragnentWomen(Integer.parseInt(noOfPragnentWomen));
+            dto.setMitaninActivityCheckList(mitaninActivityCheckList);
+
             dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
             if (dto != null) {
                 service.saveMeeting(dto);
