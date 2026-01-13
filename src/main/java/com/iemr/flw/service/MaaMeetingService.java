@@ -46,6 +46,12 @@ public class MaaMeetingService {
         meeting.setPlace(req.getPlace());
         meeting.setParticipants(req.getParticipants());
         meeting.setAshaId(req.getAshaId());
+        meeting.setNoOfLactingMother(req.getNoOfLactingMother());
+        meeting.setNoOfPragnentWomen(req.getNoOfPragnentWomen());
+        meeting.setVillageName(req.getVillageName());
+        String checklistJson =
+                objectMapper.writeValueAsString(req.getMitaninActivityCheckList());
+        meeting.setMitaninActivityCheckList(checklistJson);
         meeting.setCreatedBy(req.getCreatedBY());
 
         // Convert meeting images to Base64 JSON
@@ -102,7 +108,7 @@ public class MaaMeetingService {
         }
 
         checkAndAddIncentive(existingMeeting);
-        if(existingMeeting.getMeetingImagesJson()!=null){
+        if (existingMeeting.getMeetingImagesJson() != null) {
             checkAndUpdateIncentive(existingMeeting);
 
         }
@@ -119,8 +125,6 @@ public class MaaMeetingService {
     }
 
 
-
-
     public List<MaaMeetingResponseDTO> getAllMeetings(GetBenRequestHandler getBenRequestHandler) throws Exception {
         List<MaaMeeting> meetings = repository.findByAshaId(getBenRequestHandler.getAshaId());
 
@@ -131,13 +135,28 @@ public class MaaMeetingService {
             dto.setPlace(meeting.getPlace());
             dto.setParticipants(meeting.getParticipants());
             dto.setAshaId(meeting.getAshaId());
+            dto.setVillageName(meeting.getVillageName());
+            dto.setNoOfLactingMother(String.valueOf(meeting.getNoOfLactingMother()));
+            dto.setNoOfPragnentWomen(String.valueOf(meeting.getNoOfPragnentWomen()));
+            List<String> checklist =
+                    null;
+            try {
+                checklist = objectMapper.readValue(
+                        meeting.getMitaninActivityCheckList(),
+                        new TypeReference<List<String>>() {}
+                );
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            dto.setMitaninActivityCheckList(checklist);
             dto.setCreatedBy(meeting.getCreatedBy());
 
             try {
                 if (meeting.getMeetingImagesJson() != null) {
                     List<String> base64Images = objectMapper.readValue(
                             meeting.getMeetingImagesJson(),
-                            new TypeReference<List<String>>() {}
+                            new TypeReference<List<String>>() {
+                            }
                     );
 
                     dto.setMeetingImages(base64Images);
@@ -151,45 +170,48 @@ public class MaaMeetingService {
             return dto;
         }).collect(Collectors.toList());
     }
-    private void  updatePendingActivity(Integer userId,Long recordId,Long activityId,String moduleName){
+
+    private void updatePendingActivity(Integer userId, Long recordId, Long activityId, String moduleName) {
         IncentivePendingActivity incentivePendingActivity = new IncentivePendingActivity();
         incentivePendingActivity.setActivityId(activityId);
         incentivePendingActivity.setRecordId(recordId);
         incentivePendingActivity.setUserId(userId);
         incentivePendingActivity.setModuleName(moduleName);
-        if(incentivePendingActivity!=null){
+        if (incentivePendingActivity != null) {
             incentivePendingActivityRepository.save(incentivePendingActivity);
         }
 
     }
+
     private void checkAndUpdateIncentive(MaaMeeting meeting) {
         IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.CHILD_HEALTH.getDisplayName());
         IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.ACTIVITY.getDisplayName());
-        if(incentiveActivityAM!=null){
-            updateIncentive(incentiveActivityAM,meeting);
+        if (incentiveActivityAM != null) {
+            updateIncentive(incentiveActivityAM, meeting);
         }
-        if(incentiveActivityCH!=null){
-            updateIncentive(incentiveActivityCH,meeting);
+        if (incentiveActivityCH != null) {
+            updateIncentive(incentiveActivityCH, meeting);
 
         }
 
     }
+
     private void checkAndAddIncentive(MaaMeeting meeting) {
         IncentiveActivity incentiveActivityAM = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.CHILD_HEALTH.getDisplayName());
         IncentiveActivity incentiveActivityCH = incentivesRepo.findIncentiveMasterByNameAndGroup("MAA_QUARTERLY_MEETING", GroupName.ACTIVITY.getDisplayName());
-       if(incentiveActivityAM!=null){
-           addIncentive(incentiveActivityAM,meeting);
-       }
-       if(incentiveActivityCH!=null){
-           addIncentive(incentiveActivityCH,meeting);
+        if (incentiveActivityAM != null) {
+            addIncentive(incentiveActivityAM, meeting);
+        }
+        if (incentiveActivityCH != null) {
+            addIncentive(incentiveActivityCH, meeting);
 
-       }
+        }
 
     }
 
-    private void  addIncentive(IncentiveActivity incentiveActivity,MaaMeeting meeting){
+    private void addIncentive(IncentiveActivity incentiveActivity, MaaMeeting meeting) {
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L,meeting.getAshaId());
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L, meeting.getAshaId());
 
         if (record == null) {
             record = new IncentiveActivityRecord();
@@ -202,11 +224,11 @@ public class MaaMeetingService {
             record.setUpdatedBy(meeting.getCreatedBy());
             record.setBenId(0L);
             record.setAshaId(meeting.getAshaId());
-            if(meeting.getMeetingImagesJson()!=null){
+            if (meeting.getMeetingImagesJson() != null) {
                 record.setIsEligible(true);
-            }else {
+            } else {
                 record.setIsEligible(false);
-                updatePendingActivity(meeting.getAshaId(),meeting.getId(),record.getId(),"MAA_MEETING");
+                updatePendingActivity(meeting.getAshaId(), meeting.getId(), record.getId(), "MAA_MEETING");
 
             }
             record.setAmount(Long.valueOf(incentiveActivity.getRate()));
@@ -215,11 +237,11 @@ public class MaaMeetingService {
 
     }
 
-    private void  updateIncentive(IncentiveActivity incentiveActivity,MaaMeeting meeting){
+    private void updateIncentive(IncentiveActivity incentiveActivity, MaaMeeting meeting) {
         IncentiveActivityRecord record = recordRepo
-                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L,meeting.getAshaId());
+                .findRecordByActivityIdCreatedDateBenId(incentiveActivity.getId(), Timestamp.valueOf(meeting.getMeetingDate().atStartOfDay()), 0L, meeting.getAshaId());
 
-        if (record!= null) {
+        if (record != null) {
             record = new IncentiveActivityRecord();
             record.setIsEligible(true);
             recordRepo.save(record);
