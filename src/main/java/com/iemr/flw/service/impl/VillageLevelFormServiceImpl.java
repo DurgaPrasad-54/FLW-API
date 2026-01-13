@@ -157,6 +157,10 @@ public class VillageLevelFormServiceImpl implements VillageLevelFormService {
         phcReviewForm.setPlace(dto.getPlace());
         phcReviewForm.setNoOfBeneficiariesAttended(dto.getNoOfBeneficiariesAttended());
         phcReviewForm.setImage1(dto.getImage1());
+        phcReviewForm.setVillageName(dto.getVillageName());
+        phcReviewForm.setMitaninActivityCheckList(dto.getMitaninActivityCheckList());
+        phcReviewForm.setPlaceId(dto.getPlaceId());
+        phcReviewForm.setMitaninHistory(dto.getMitaninHistory());
         phcReviewForm.setImage2(dto.getImage2());
         phcReviewForm.setFormType("PHC");
         phcReviewFormRepo.save(phcReviewForm);
