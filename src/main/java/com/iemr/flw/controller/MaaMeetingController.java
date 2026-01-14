@@ -38,7 +38,6 @@ public class MaaMeetingController {
             @RequestPart("villageName") String villageName,
             @RequestPart("noOfPragnentWoment") String noOfPragnentWomen,
             @RequestPart("noOfLactingMother") String noOfLactingMother,
-            @RequestPart("isSelectAll") String isSelectAll,
             @RequestPart("mitaninActivityCheckList") String  mitaninActivityCheckList,
             @RequestPart("meetingDate") String meetingDate,
             @RequestPart("place") String place,
@@ -54,7 +53,6 @@ public class MaaMeetingController {
             dto.setAshaId(Integer.parseInt(ashaId));
             dto.setCreatedBY(createdBy);
             dto.setVillageName(villageName);
-            dto.setIsSelectAll(isSelectAll);
             dto.setNoOfLactingMother(Integer.parseInt(noOfLactingMother));
             dto.setNoOfPragnentWomen(Integer.parseInt(noOfPragnentWomen));
             dto.setMitaninActivityCheckList(mitaninActivityCheckList);

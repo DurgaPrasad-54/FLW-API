@@ -50,7 +50,6 @@ public class MaaMeetingService {
         meeting.setNoOfPragnentWomen(req.getNoOfPragnentWomen());
         meeting.setVillageName(req.getVillageName());
         meeting.setMitaninActivityCheckList(req.getMitaninActivityCheckList());
-        meeting.setIsSelectAll(req.getIsSelectAll());
 
         meeting.setCreatedBy(req.getCreatedBY());
 
@@ -139,7 +138,6 @@ public class MaaMeetingService {
             dto.setNoOfLactingMother(String.valueOf(meeting.getNoOfLactingMother()));
             dto.setNoOfPragnentWomen(String.valueOf(meeting.getNoOfPragnentWomen()));
             dto.setMitaninActivityCheckList(meeting.getMitaninActivityCheckList());
-            dto.setIsSelectAll(meeting.getIsSelectAll());
             dto.setCreatedBy(meeting.getCreatedBy());
 
             try {
