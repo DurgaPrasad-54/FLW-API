@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class CampaignServiceImpl implements CampaignService {
     private JwtUtil jwtUtil;
 
     @Override
+    @Transactional
     public Object saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException {
         if (orsCampaignDTO == null || orsCampaignDTO.isEmpty()) {
             return null;
@@ -67,6 +69,7 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
+    @Transactional
     public List<OrsCampaignDTO> getOrsCampaign(String token) throws IEMRException {
         Integer userId = jwtUtil.extractUserId(token);
         List<OrsCampaignDTO> orsCampaignDTOSResponse = new ArrayList<>();
