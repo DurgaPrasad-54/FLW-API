@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,9 +29,9 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     @Transactional
-    public Object saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException {
+    public List<CampaignOrs> saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException {
         if (orsCampaignDTO == null || orsCampaignDTO.isEmpty()) {
-            return null;
+            return Collections.emptyList(); //
         }
 
         List<CampaignOrs> campaignOrsRequest = new ArrayList<>();
@@ -39,10 +40,10 @@ public class CampaignServiceImpl implements CampaignService {
 
         for (OrsCampaignDTO campaignDTO : orsCampaignDTO) {
             if (campaignDTO.getFields() == null) {
-                continue; // or throw exception based on your requirements
+                continue;
             }
 
-            CampaignOrs campaignOrsEntity = new CampaignOrs(); // Create new entity for each DTO
+            CampaignOrs campaignOrsEntity = new CampaignOrs();
             campaignOrsEntity.setUserId(userId);
             campaignOrsEntity.setCreatedBy(userName);
             campaignOrsEntity.setUpdatedBy(userName);
@@ -52,7 +53,6 @@ public class CampaignServiceImpl implements CampaignService {
                         Integer.parseInt(campaignDTO.getFields().getNumberOfFamilies())
                 );
             } catch (NumberFormatException e) {
-                // Handle invalid number format - log or throw exception
                 throw new IEMRException("Invalid number format for families");
             }
 
@@ -61,11 +61,11 @@ public class CampaignServiceImpl implements CampaignService {
         }
 
         if (!campaignOrsRequest.isEmpty()) {
-            orsCampaignRepo.saveAll(campaignOrsRequest);
-            return campaignOrsRequest;
+            List<CampaignOrs> savedCampaigns = orsCampaignRepo.saveAll(campaignOrsRequest);
+            return savedCampaigns;
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
