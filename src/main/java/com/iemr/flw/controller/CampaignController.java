@@ -1,6 +1,7 @@
 package com.iemr.flw.controller;
 
 import com.iemr.flw.dto.iemr.OrsCampaignDTO;
+import com.iemr.flw.dto.iemr.PolioCampaignDTO;
 import com.iemr.flw.service.CampaignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class CampaignController {
             }
 
         } catch (Exception e) {
-            logger.error("Error save ors distribution :", e);
+            logger.error("Error save ors distribution :", e.getMessage());
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -69,7 +70,63 @@ public class CampaignController {
             }
 
         } catch (Exception e) {
-            logger.error("Error save ors distribution :", e);
+            logger.error("Error save ors distribution :", e.getMessage());
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @RequestMapping(value = "polio/campaign/saveAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> savePolioCampaign(@RequestBody List<PolioCampaignDTO> polioCampaignDTOS, @RequestHeader(value = "jwtToken") String token) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        try {
+            Object result  = campaignService.savePolioCampaign(polioCampaignDTOS,token);
+
+
+            if (result != null) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", result);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error save polio:", e.getMessage());
+            response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @RequestMapping(value = "polio/campaign/getAll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getAllPolioCampaign(@RequestHeader(value = "jwtToken") String token) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        try {
+            List<PolioCampaignDTO> result  = campaignService.getPolioCampaign(token);
+
+
+            if (result != null) {
+                response.put("statusCode", HttpStatus.OK.value());
+                response.put("data", result);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("statusCode", HttpStatus.NOT_FOUND.value());
+                response.put("message", "No records found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("Error save ors distribution :", e.getMessage());
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("errorMessage", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
