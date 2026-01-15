@@ -69,7 +69,6 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    @Transactional
     public List<OrsCampaignDTO> getOrsCampaign(String token) throws IEMRException {
         Integer userId = jwtUtil.extractUserId(token);
         List<OrsCampaignDTO> orsCampaignDTOSResponse = new ArrayList<>();
