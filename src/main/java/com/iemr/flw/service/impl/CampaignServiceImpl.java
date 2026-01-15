@@ -2,6 +2,7 @@ package com.iemr.flw.service.impl;
 
 import com.iemr.flw.domain.iemr.CampaignOrs;
 import com.iemr.flw.dto.iemr.OrsCampaignDTO;
+import com.iemr.flw.dto.iemr.OrsCampaignListDTO;
 import com.iemr.flw.repo.iemr.OrsCampaignRepo;
 import com.iemr.flw.service.CampaignService;
 import com.iemr.flw.utils.JwtUtil;
@@ -85,8 +86,12 @@ public class CampaignServiceImpl implements CampaignService {
     }
     private OrsCampaignDTO convertToDTO(CampaignOrs campaign) {
         OrsCampaignDTO dto = new OrsCampaignDTO();
-        // Set DTO fields from entity
-        // dto.setXxx(campaign.getXxx());
+        OrsCampaignListDTO orsCampaignListDTO = new OrsCampaignListDTO();
+        orsCampaignListDTO.setCampaign_photos(campaign.getCampaignPhotos());
+        orsCampaignListDTO.setEnd_date(campaign.getEndDate());
+        orsCampaignListDTO.setStart_date(campaign.getStartDate());
+        orsCampaignListDTO.setNumber_of_families(String.valueOf(campaign.getNumberOfFamilies()));
+        dto.setFields(orsCampaignListDTO);
         return dto;
     }
 }
