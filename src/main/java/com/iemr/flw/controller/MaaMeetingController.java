@@ -35,35 +35,56 @@ public class MaaMeetingController {
 
     @PostMapping(value = "/saveAll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveMeeting(
-            @RequestPart("villageName") String villageName,
-            @RequestPart("noOfPragnentWoment") String noOfPragnentWomen,
-            @RequestPart("noOfLactingMother") String noOfLactingMother,
-            @RequestPart("mitaninActivityCheckList") String  mitaninActivityCheckList,
-            @RequestPart("meetingDate") String meetingDate,
-            @RequestPart("place") String place,
-            @RequestPart("participants") String participants,
-            @RequestPart("ashaId") String ashaId,
-            @RequestPart("createdBy") String createdBy,
-            @RequestPart(value = "meetingImages", required = false) List<MultipartFile> meetingImages) {
+
+            @RequestPart(value = "villageName", required = false) String villageName,
+            @RequestPart(value = "noOfPragnentWoment", required = false) String noOfPragnentWomen,
+            @RequestPart(value = "noOfLactingMother", required = false) String noOfLactingMother,
+            @RequestPart(value = "mitaninActivityCheckList", required = false) String mitaninActivityCheckList,
+            @RequestPart(value = "meetingDate") String meetingDate,
+            @RequestPart(value = "place", required = false) String place,
+            @RequestPart(value = "participants") String participants,
+            @RequestPart(value = "ashaId", required = false) String ashaId,
+            @RequestPart(value = "createdBy", required = false) String createdBy,
+            @RequestPart(value = "meetingImages", required = false) List<MultipartFile> meetingImages
+    ) {
         try {
             MaaMeetingRequestDTO dto = new MaaMeetingRequestDTO();
-            dto.setMeetingDate(LocalDate.parse(meetingDate));
-            dto.setPlace(place);
-            dto.setParticipants(Integer.parseInt(participants));
-            dto.setAshaId(Integer.parseInt(ashaId));
-            dto.setCreatedBY(createdBy);
-            dto.setVillageName(villageName);
-            dto.setNoOfLactingMother(Integer.parseInt(noOfLactingMother));
-            dto.setNoOfPragnentWomen(Integer.parseInt(noOfPragnentWomen));
-            dto.setMitaninActivityCheckList(mitaninActivityCheckList);
 
-            dto.setMeetingImages(meetingImages != null ? meetingImages.toArray(new MultipartFile[0]) : null);
-            if (dto != null) {
-                service.saveMeeting(dto);
-
+            if (meetingDate != null && !meetingDate.isEmpty()) {
+                dto.setMeetingDate(LocalDate.parse(meetingDate));
             }
+
+            dto.setPlace(place);
+            dto.setVillageName(villageName);
+            dto.setMitaninActivityCheckList(mitaninActivityCheckList);
+            dto.setCreatedBY(createdBy);
+
+            if (participants != null && !participants.isEmpty()) {
+                dto.setParticipants(Integer.parseInt(participants));
+            }
+
+            if (ashaId != null && !ashaId.isEmpty()) {
+                dto.setAshaId(Integer.parseInt(ashaId));
+            }
+
+            if (noOfLactingMother != null && !noOfLactingMother.isEmpty()) {
+                dto.setNoOfLactingMother(Integer.parseInt(noOfLactingMother));
+            }
+
+            if (noOfPragnentWomen != null && !noOfPragnentWomen.isEmpty()) {
+                dto.setNoOfPragnentWomen(Integer.parseInt(noOfPragnentWomen));
+            }
+
+            if (meetingImages != null && !meetingImages.isEmpty()) {
+                dto.setMeetingImages(meetingImages.toArray(new MultipartFile[0]));
+            }
+
+            service.saveMeeting(dto);
+
             return ResponseEntity.ok("Saved Successfully");
+
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
