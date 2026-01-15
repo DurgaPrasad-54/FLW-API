@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/Campaign")
+@RequestMapping(value = "/campaign")
 public class CampaignController {
     private final Logger logger = LoggerFactory.getLogger(CampaignController.class);
 
