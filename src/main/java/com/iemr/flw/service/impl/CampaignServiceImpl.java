@@ -47,14 +47,14 @@ public class CampaignServiceImpl implements CampaignService {
 
             try {
                 campaignOrsEntity.setNumberOfFamilies(
-                        Integer.parseInt(campaignDTO.getFields().getNumber_of_families())
+                        Integer.parseInt(campaignDTO.getFields().getNumberOfFamilies())
                 );
             } catch (NumberFormatException e) {
                 // Handle invalid number format - log or throw exception
                 throw new IEMRException("Invalid number format for families");
             }
 
-            campaignOrsEntity.setCampaignPhotos(campaignDTO.getFields().getCampaign_photos());
+            campaignOrsEntity.setCampaignPhotos(campaignDTO.getFields().getCampaignPhotos());
             campaignOrsRequest.add(campaignOrsEntity);
         }
 
@@ -87,10 +87,10 @@ public class CampaignServiceImpl implements CampaignService {
     private OrsCampaignDTO convertToDTO(CampaignOrs campaign) {
         OrsCampaignDTO dto = new OrsCampaignDTO();
         OrsCampaignListDTO orsCampaignListDTO = new OrsCampaignListDTO();
-        orsCampaignListDTO.setCampaign_photos(campaign.getCampaignPhotos());
-        orsCampaignListDTO.setEnd_date(campaign.getEndDate());
-        orsCampaignListDTO.setStart_date(campaign.getStartDate());
-        orsCampaignListDTO.setNumber_of_families(String.valueOf(campaign.getNumberOfFamilies()));
+        orsCampaignListDTO.setCampaignPhotos(campaign.getCampaignPhotos());
+        orsCampaignListDTO.setEndDate(campaign.getEndDate());
+        orsCampaignListDTO.setStartDate(campaign.getStartDate());
+        orsCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
         dto.setFields(orsCampaignListDTO);
         return dto;
     }
