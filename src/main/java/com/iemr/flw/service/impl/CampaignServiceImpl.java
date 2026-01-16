@@ -59,12 +59,17 @@ public class CampaignServiceImpl implements CampaignService {
             campaignOrsEntity.setUpdatedBy(userName);
 
             try {
-                campaignOrsEntity.setNumberOfFamilies(
-                        Integer.parseInt(campaignDTO.getFields().getNumberOfFamilies())
-                );
+                String familiesStr = campaignDTO.getFields().getNumberOfFamilies();
+                if (familiesStr != null && !familiesStr.trim().isEmpty()) {
+                    double familiesDouble = Double.parseDouble(familiesStr);
+                    campaignOrsEntity.setNumberOfFamilies((int) familiesDouble);
+                } else {
+                    campaignOrsEntity.setNumberOfFamilies(0); // default 0
+                }
             } catch (NumberFormatException e) {
-                throw new IEMRException("Invalid number format for families");
+                throw new IEMRException("Invalid number format for families: " + campaignDTO.getFields().getNumberOfFamilies());
             }
+
 
             ObjectMapper mapper = new ObjectMapper();
             String photosStr = campaignDTO.getFields().getCampaignPhotos();
@@ -140,7 +145,13 @@ public class CampaignServiceImpl implements CampaignService {
             try {
                 String childrenStr = campaignDTO.getFields().getNumberOfChildren();
                 if (childrenStr != null && !childrenStr.trim().isEmpty()) {
-                    campaignPolioEntity.setNumberOfChildren(Integer.parseInt(childrenStr));
+                    try {
+                        // parse as double first, then cast to int
+                        double childrenDouble = Double.parseDouble(childrenStr);
+                        campaignPolioEntity.setNumberOfChildren((int) childrenDouble);
+                    } catch (NumberFormatException e) {
+                        campaignPolioEntity.setNumberOfChildren(0); // default 0 if invalid
+                    }
                 } else {
                     campaignPolioEntity.setNumberOfChildren(0);
                 }

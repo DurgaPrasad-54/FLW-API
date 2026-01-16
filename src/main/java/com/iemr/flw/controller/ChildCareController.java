@@ -40,7 +40,7 @@ public class ChildCareController {
     @Operation(summary = "save HBYC details")
     @RequestMapping(value = {"/hbycVisit/saveAll"}, method = {RequestMethod.POST})
     public String saveHbycRecords(@RequestBody List<HbycRequestDTO> hbycDTOs,
-                                  @RequestHeader(value = "Authorization") String Authorization) {
+                                  @RequestHeader(value = "JwtToken") String token) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty print
 
@@ -52,7 +52,7 @@ public class ChildCareController {
 
             logger.info("Saving All HBYC Details");
             if (hbycDTOs != null) {
-                String s = childCareService.registerHBYC(hbycDTOs);
+                String s = childCareService.registerHBYC(hbycDTOs,token);
                 if (s != null)
                     response.setResponse(s);
                 else
