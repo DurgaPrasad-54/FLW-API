@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iemr.flw.domain.iemr.CampaignOrs;
+import com.iemr.flw.domain.iemr.FilariasisCampaign;
 import com.iemr.flw.domain.iemr.PulsePolioCampaign;
 import com.iemr.flw.dto.iemr.*;
+import com.iemr.flw.repo.iemr.FilariasisCampaignRepo;
 import com.iemr.flw.repo.iemr.OrsCampaignRepo;
 import com.iemr.flw.repo.iemr.PulsePolioCampaignRepo;
 import com.iemr.flw.service.CampaignService;
@@ -33,6 +35,9 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Autowired
     private PulsePolioCampaignRepo pulsePolioCampaignRepo;
+
+    @Autowired
+    private FilariasisCampaignRepo filariasisCampaignRepo;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -179,6 +184,85 @@ public class CampaignServiceImpl implements CampaignService {
 
 
     @Override
+    @Transactional
+    public List<FilariasisCampaign> saveFilariasisCampaign(List<FilariasisCampaignDTO> filariasisCampaignDTOS, String token) throws IEMRException {
+
+        if (filariasisCampaignDTOS == null || filariasisCampaignDTOS.isEmpty()) {
+            throw new IEMRException("Campaign data is required");
+        }
+
+        List<FilariasisCampaign> campaignPolioRequest = new ArrayList<>();
+        Integer userId = jwtUtil.extractUserId(token);
+        String userName = jwtUtil.extractUsername(token);
+
+        for (FilariasisCampaignDTO campaignDTO : filariasisCampaignDTOS) {
+            if (campaignDTO.getFields() == null) {
+                continue;
+            }
+
+            FilariasisCampaign filariasisCampaign = new FilariasisCampaign();
+            filariasisCampaign.setUserId(userId);
+            filariasisCampaign.setCreatedBy(userName);
+            filariasisCampaign.setUpdatedBy(userName);
+
+            // Set start and end dates
+            filariasisCampaign.setStartDate(campaignDTO.getFields().getStartDate());
+            filariasisCampaign.setEndDate(campaignDTO.getFields().getEndDate());
+
+            // Parse number of children
+            try {
+                String numberOfFamilies = campaignDTO.getFields().getNumberOfFamilies();
+                String numberOfIndividuals = campaignDTO.getFields().getNumberOfIndividuals();
+                if (numberOfFamilies != null && !numberOfFamilies.trim().isEmpty()) {
+                    try {
+                        // parse as double first, then cast to int
+                        double noDouble = Double.parseDouble(numberOfFamilies);
+                        filariasisCampaign.setNumberOfFamilies((int) noDouble);
+                    } catch (NumberFormatException e) {
+                        filariasisCampaign.setNumberOfFamilies(0); // default 0 if invalid
+                    }
+                } else {
+                    filariasisCampaign.setNumberOfFamilies(0);
+                }
+
+                if (numberOfIndividuals != null && !numberOfIndividuals.trim().isEmpty()) {
+                    try {
+                        // parse as double first, then cast to int
+                        double noDouble = Double.parseDouble(numberOfIndividuals);
+                        filariasisCampaign.setNumberOfFamilies((int) noDouble);
+                    } catch (NumberFormatException e) {
+                        filariasisCampaign.setNumberOfIndividuals(0); // default 0 if invalid
+                    }
+                } else {
+                    filariasisCampaign.setNumberOfIndividuals(0);
+                }
+            } catch (NumberFormatException e) {
+                throw new IEMRException("Invalid number format for children: " + e.getMessage());
+            }
+
+            // Convert photos to base64 JSON array
+
+            List<String> photosList = campaignDTO.getFields().getMdaPhotos();
+            String photosStr = (photosList != null && !photosList.isEmpty())
+                    ? String.join(",", photosList)
+                    : null;
+
+            filariasisCampaign.setCampaignPhotos(photosStr);
+
+
+            campaignPolioRequest.add(filariasisCampaign);
+        }
+
+        if (!campaignPolioRequest.isEmpty()) {
+            List<FilariasisCampaign> savedCampaigns = filariasisCampaignRepo.saveAll(campaignPolioRequest);
+            return savedCampaigns;
+        }
+
+        throw new IEMRException("No valid campaign data to save");
+    }
+
+
+    @Override
     public List<PolioCampaignResponseDTO> getPolioCampaign(String token) throws IEMRException {
         Integer userId = jwtUtil.extractUserId(token);
         List<PolioCampaignResponseDTO> polioCampaignDTOSResponse = new ArrayList<>();
@@ -195,6 +279,25 @@ public class CampaignServiceImpl implements CampaignService {
             page++;
         } while (campaignPolioPage.hasNext());
         return polioCampaignDTOSResponse;
+    }
+
+    @Override
+    public List<FilariasisResponseDTO> getAllFilariasisCampaign(String token) throws IEMRException {
+        Integer userId = jwtUtil.extractUserId(token);
+        List<FilariasisResponseDTO> filariasisResponseDTOS = new ArrayList<>();
+        int page = 0;
+        int pageSize = 10;
+        Page<FilariasisCampaign> campaignPolioPage;
+        do {
+            Pageable pageable = PageRequest.of(page, pageSize);
+            campaignPolioPage = filariasisCampaignRepo.findByUserId(userId, pageable);
+            for (FilariasisCampaign campaignOrs : campaignPolioPage.getContent()) {
+                FilariasisResponseDTO dto = convertFilariasisDTO(campaignOrs);
+                filariasisResponseDTOS.add(dto);
+            }
+            page++;
+        } while (campaignPolioPage.hasNext());
+        return filariasisResponseDTOS;
     }
 
 
@@ -223,6 +326,21 @@ public class CampaignServiceImpl implements CampaignService {
         polioCampaignListDTO.setStartDate(campaign.getStartDate());
         polioCampaignListDTO.setNumberOfChildren(String.valueOf(campaign.getNumberOfChildren()));
         dto.setFields(polioCampaignListDTO);
+        return dto;
+    }
+
+    private FilariasisResponseDTO convertFilariasisDTO(FilariasisCampaign campaign) {
+        FilariasisResponseDTO dto = new FilariasisResponseDTO();
+        FilariasisCampaignListResponseDTO filariasisCampaignListDTO = new FilariasisCampaignListResponseDTO();
+        if (campaign.getCampaignPhotos() != null) {
+            List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
+            filariasisCampaignListDTO.setMdaPhotos(photosList); // ✅ Now List<String> matches
+        }
+        filariasisCampaignListDTO.setEndDate(campaign.getEndDate());
+        filariasisCampaignListDTO.setStartDate(campaign.getStartDate());
+        filariasisCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
+        filariasisCampaignListDTO.setNumberOfIndividuals(String.valueOf(campaign.getNumberOfIndividuals()));
+        dto.setFields(filariasisCampaignListDTO);
         return dto;
     }
     private List<String> parseBase64Json(String jsonString) {

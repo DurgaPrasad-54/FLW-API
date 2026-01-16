@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iemr.flw.domain.iemr.CampaignOrs;
+import com.iemr.flw.domain.iemr.FilariasisCampaign;
 import com.iemr.flw.domain.iemr.PulsePolioCampaign;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.CampaignService;
@@ -249,12 +250,13 @@ public class CampaignController {
     @PostMapping("/filariasis/campaign/saveAll")
     public ResponseEntity<Map<String, Object>> saveFilariasisCampaign(
             @RequestPart("formDataJson") String fields,
-            @RequestPart(value = "campaignPhotos", required = false) List<MultipartFile> campaignPhotos,
             @RequestHeader("jwtToken") String token) {
 
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
+            logger.info("Received polio campaign data");
+
             // Validate input
             if (fields == null || fields.trim().isEmpty()) {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
@@ -265,30 +267,44 @@ public class CampaignController {
             // Parse JSON to DTO
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
-            PolioCampaignListDTO polioCampaignFields = objectMapper.readValue(fields, PolioCampaignListDTO.class);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-            // Set campaign photos if present
-            if (campaignPhotos != null && !campaignPhotos.isEmpty()) {
-              //  polioCampaignFields.setCampaignPhotos(campaignPhotos.toArray(new MultipartFile[0]));
+            FilariasisCampaignDTO requestDTO = objectMapper.readValue(fields, FilariasisCampaignDTO.class);
+
+            // Validate fields
+            if (requestDTO.getFields() == null) {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Campaign fields are required");
+                return ResponseEntity.badRequest().body(response);
             }
 
-            // Create DTO
-            PolioCampaignDTO campaignDTO = new PolioCampaignDTO();
-            campaignDTO.setFields(polioCampaignFields);
+            logger.info("Parsed DTO - Start Date: {}, End Date: {}, Families: {}, Individuals: {}, Photos: {}",
+                    requestDTO.getFields().getStartDate(),
+                    requestDTO.getFields().getEndDate(),
+                    requestDTO.getFields().getNumberOfIndividuals(),
+                    requestDTO.getFields().getNumberOfIndividuals(),
 
-            List<PolioCampaignDTO> polioCampaignDTOList = Collections.singletonList(campaignDTO);
+                    requestDTO.getFields().getMdaPhotos()
+            );
+
+            // Create DTO
+            FilariasisCampaignDTO campaignDTO = new FilariasisCampaignDTO();
+            campaignDTO.setFields(requestDTO.getFields());
+
+            List<FilariasisCampaignDTO> filariasisCampaignDTOS = Collections.singletonList(campaignDTO);
+
 
             // Save to database
-            List<PulsePolioCampaign> result = campaignService.savePolioCampaign(polioCampaignDTOList, token);
+            List<FilariasisCampaign> result = campaignService.saveFilariasisCampaign(filariasisCampaignDTOS, token);
 
             if (result != null && !result.isEmpty()) {
                 response.put("statusCode", HttpStatus.OK.value());
-                response.put("message", "Polio campaign saved successfully");
+                response.put("message", "filariasis campaign saved successfully");
                 response.put("data", result);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", "Failed to save polio campaign");
+                response.put("message", "Failed to save filariasis campaign");
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -306,7 +322,7 @@ public class CampaignController {
             return ResponseEntity.badRequest().body(response);
 
         } catch (Exception e) {
-            logger.error("Error saving polio campaign: {}", e.getMessage(), e);
+            logger.error("Error saving filariasis campaign: {}", e.getMessage(), e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("message", "Internal server error occurred");
             response.put("errorMessage", e.getMessage());
@@ -321,7 +337,7 @@ public class CampaignController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<PolioCampaignResponseDTO> result  = campaignService.getPolioCampaign(token);
+            List<FilariasisResponseDTO> result  = campaignService.getAllFilariasisCampaign(token);
 
 
             if (result != null) {
