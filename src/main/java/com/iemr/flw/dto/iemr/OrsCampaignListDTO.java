@@ -24,7 +24,7 @@ public class OrsCampaignListDTO {
     private String NumberOfFamilies;
 
     @JsonProperty("campaign_photos")
-    private List<String> campaignPhotos;
+    private String campaignPhotos;
 
 
 }
