@@ -40,4 +40,47 @@ public class TBSuspected {
 
     @Column(name = "followups")
     private String followUps;
+
+    @Column(name = "visit_code", nullable = false)
+    private Long visitCode;
+
+    // Visit Information
+    @Column(name = "visit_label", length = 100, nullable = false)
+    private String visitLabel;
+
+    @Column(name = "type_of_tb_case", length = 50, nullable = false)
+    private String typeOfTBCase;
+
+    @Column(name = "reason_for_suspicion", length = 500)
+    private String reasonForSuspicion;
+
+    // Symptoms
+    @Column(name = "has_symptoms", nullable = false)
+    private Boolean hasSymptoms = false;
+
+    // Chest X-Ray
+    @Column(name = "is_chest_xray_done")
+    private Boolean isChestXRayDone;
+
+    @Column(name = "chest_xray_result", length = 100)
+    private String chestXRayResult;
+
+    // Referral & Confirmation
+    @Column(name = "referral_facility", length = 200)
+    private String referralFacility;
+
+    @Column(name = "is_tb_confirmed")
+    private Boolean isTBConfirmed;
+
+    @Column(name = "is_drtb_confirmed")
+    private Boolean isDRTBConfirmed;
+
+    @Column(name = "is_confirmed", nullable = false)
+    private Boolean isConfirmed = false;
+
+    @Column(name = "provider_service_map_id")
+    private Integer providerServiceMapId;
+
+
+
 }
