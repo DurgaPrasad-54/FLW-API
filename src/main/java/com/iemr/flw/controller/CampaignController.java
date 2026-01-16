@@ -63,7 +63,7 @@ public class CampaignController {
                     requestDTO.getFields().getStartDate(),
                     requestDTO.getFields().getEndDate(),
                     requestDTO.getFields().getNumberOfFamilies(),
-                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().size() : 0
+                    requestDTO.getFields().getCampaignPhotos()
             );
 
             // Create DTO
@@ -145,7 +145,7 @@ public class CampaignController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            logger.info("Received filariasis campaign data");
+            logger.info("Received polio campaign data");
 
             // Validate input
             if (fields == null || fields.trim().isEmpty()) {
@@ -173,26 +173,26 @@ public class CampaignController {
                     requestDTO.getFields().getEndDate(),
                     requestDTO.getFields().getNumberOfChildren(),
 
-                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().size() : 0
+                    requestDTO.getFields().getCampaignPhotos()
             );
 
             // Create DTO
             PolioCampaignDTO campaignDTO = new PolioCampaignDTO();
             campaignDTO.setFields(requestDTO.getFields());
 
-            List<PolioCampaignDTO> filariasisCampaignDTOList = Collections.singletonList(campaignDTO);
+            List<PolioCampaignDTO> polioCampaignDTOList = Collections.singletonList(campaignDTO);
 
             // Save to database
-            List<PulsePolioCampaign> result = campaignService.savePolioCampaign(filariasisCampaignDTOList, token);
+            List<PulsePolioCampaign> result = campaignService.savePolioCampaign(polioCampaignDTOList, token);
 
             if (result != null && !result.isEmpty()) {
                 response.put("statusCode", HttpStatus.CREATED.value());
-                response.put("message", "Filariasis (MDA) campaign saved successfully");
+                response.put("message", "polio  campaign saved successfully");
                 response.put("data", result);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             } else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                response.put("message", "Failed to save filariasis campaign");
+                response.put("message", "Failed to save Polio campaign");
                 return ResponseEntity.badRequest().body(response);
             }
 

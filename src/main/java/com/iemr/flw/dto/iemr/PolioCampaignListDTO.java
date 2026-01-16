@@ -22,7 +22,7 @@ public class PolioCampaignListDTO {
     private String numberOfChildren;
 
     @JsonProperty("campaign_photos")
-    private List<String> campaignPhotos; // base64 strings
+    private String campaignPhotos; // base64 strings
 
 
 }
