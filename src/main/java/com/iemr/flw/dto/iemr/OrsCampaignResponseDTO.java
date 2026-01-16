@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class OrsCampaignResponseDTO {
     private Long id;
-    private String visitDate;
     private OrsCampaignListResponseDTO fields;
 }
