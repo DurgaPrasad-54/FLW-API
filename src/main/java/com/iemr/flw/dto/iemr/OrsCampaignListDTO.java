@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class OrsCampaignListDTO {
@@ -23,7 +24,7 @@ public class OrsCampaignListDTO {
     private String NumberOfFamilies;
 
     @JsonProperty("campaign_photos")
-    private MultipartFile[] CampaignPhotos;
+    private List<String> campaignPhotos;
 
 
 }

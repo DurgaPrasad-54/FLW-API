@@ -63,7 +63,7 @@ public class CampaignController {
                     requestDTO.getFields().getStartDate(),
                     requestDTO.getFields().getEndDate(),
                     requestDTO.getFields().getNumberOfFamilies(),
-                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().length : 0
+                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().size() : 0
             );
 
             // Create DTO
@@ -172,7 +172,8 @@ public class CampaignController {
                     requestDTO.getFields().getStartDate(),
                     requestDTO.getFields().getEndDate(),
                     requestDTO.getFields().getNumberOfChildren(),
-                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().length : 0
+
+                    requestDTO.getFields().getCampaignPhotos() != null ? requestDTO.getFields().getCampaignPhotos().size() : 0
             );
 
             // Create DTO
@@ -269,7 +270,7 @@ public class CampaignController {
 
             // Set campaign photos if present
             if (campaignPhotos != null && !campaignPhotos.isEmpty()) {
-                polioCampaignFields.setCampaignPhotos(campaignPhotos.toArray(new MultipartFile[0]));
+              //  polioCampaignFields.setCampaignPhotos(campaignPhotos.toArray(new MultipartFile[0]));
             }
 
             // Create DTO
