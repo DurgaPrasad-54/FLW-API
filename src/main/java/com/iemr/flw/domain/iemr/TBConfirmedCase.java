@@ -1,4 +1,4 @@
-package com.iemr.flw.dto.iemr;
+package com.iemr.flw.domain.iemr;
 
 import jakarta.persistence.*;
 import lombok.Data;
