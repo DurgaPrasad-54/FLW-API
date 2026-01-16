@@ -1,18 +1,22 @@
 package com.iemr.flw.controller;
 
-import com.iemr.flw.dto.iemr.OrsCampaignDTO;
-import com.iemr.flw.dto.iemr.PolioCampaignDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.iemr.flw.domain.iemr.CampaignOrs;
+import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.CampaignService;
+import com.iemr.flw.utils.exception.IEMRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/campaign")
@@ -22,28 +26,69 @@ public class CampaignController {
     @Autowired
     private CampaignService campaignService;
 
-    @RequestMapping(value = "ors/distribution/saveAll", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> saveOrsDistribution(@RequestBody List<OrsCampaignDTO> orsCampaignDTO, @RequestHeader(value = "jwtToken") String token) {
+    @PostMapping("/ors/distribution/saveAll")
+    public ResponseEntity<Map<String, Object>> saveOrsDistribution(
+            @RequestPart("formDataJson") String fields,
+            @RequestPart(value = "campaignPhotos", required = false) List<MultipartFile> campaignPhotos,
+            @RequestHeader("jwtToken") String token) {
 
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-          Object result  = campaignService.saveOrsCampaign(orsCampaignDTO,token);
-
-
-            if (result != null) {
-                response.put("statusCode", HttpStatus.OK.value());
-                response.put("data", result);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("statusCode", HttpStatus.NOT_FOUND.value());
-                response.put("message", "No records found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            // Validate input
+            if (fields == null || fields.trim().isEmpty()) {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Form data is required");
+                return ResponseEntity.badRequest().body(response);
             }
 
+            // Parse JSON to DTO
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            OrsCampaignListDTO orsCampaignFields = objectMapper.readValue(fields, OrsCampaignListDTO.class);
+
+            // Set campaign photos if present
+            if (campaignPhotos != null && !campaignPhotos.isEmpty()) {
+                orsCampaignFields.setCampaignPhotos(campaignPhotos.toArray(new MultipartFile[0]));
+            }
+
+            // Create DTO
+            OrsCampaignDTO campaignDTO = new OrsCampaignDTO();
+            campaignDTO.setFields(orsCampaignFields);
+
+            List<OrsCampaignDTO> orsCampaignDTOList = Collections.singletonList(campaignDTO);
+
+            // Save to database
+            Object result = campaignService.saveOrsCampaign(orsCampaignDTOList, token);
+
+            if (result != null) {
+                response.put("statusCode", HttpStatus.CREATED.value());
+                response.put("message", "Campaign saved successfully");
+                response.put("data", result);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save campaign");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        } catch (JsonProcessingException e) {
+            logger.error("JSON parsing error: {}", e.getMessage(), e);
+            response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            response.put("message", "Invalid JSON format");
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        } catch (IEMRException e) {
+            logger.error("Business logic error: {}", e.getMessage(), e);
+            response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
         } catch (Exception e) {
-            logger.error("Error save ors distribution :", e.getMessage());
+            logger.error("Error saving ORS distribution: {}", e.getMessage(), e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("message", "Internal server error occurred");
             response.put("errorMessage", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
@@ -56,7 +101,7 @@ public class CampaignController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<OrsCampaignDTO> result  = campaignService.getOrsCampaign(token);
+            List<OrsCampaignResponseDTO> result  = campaignService.getOrsCampaign(token);
 
 
             if (result != null) {

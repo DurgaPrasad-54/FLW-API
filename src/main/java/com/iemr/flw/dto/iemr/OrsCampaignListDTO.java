@@ -3,6 +3,7 @@ package com.iemr.flw.dto.iemr;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -19,7 +20,7 @@ public class OrsCampaignListDTO {
     private String NumberOfFamilies;
 
     @JsonProperty("campaign_photos")
-    private String CampaignPhotos;
+    private MultipartFile[] CampaignPhotos;
 
 
 }
