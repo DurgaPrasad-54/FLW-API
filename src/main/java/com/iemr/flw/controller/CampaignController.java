@@ -36,7 +36,6 @@ public class CampaignController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            logger.info("Received formDataJson: {}", fields.substring(0, Math.min(100, fields.length()))); // Log first 100 chars
 
             // Validate input
             if (fields == null || fields.trim().isEmpty()) {
