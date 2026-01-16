@@ -39,7 +39,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     @Transactional
-    public List<CampaignOrs> saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException {
+    public List<CampaignOrs> saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException, JsonProcessingException {
         if (orsCampaignDTO == null || orsCampaignDTO.isEmpty()) {
             return Collections.emptyList(); //
         }
@@ -66,20 +66,9 @@ public class CampaignServiceImpl implements CampaignService {
                 throw new IEMRException("Invalid number format for families");
             }
 
-            List<String> photos = campaignDTO.getFields().getCampaignPhotos();
-
-            if (photos != null && !photos.isEmpty()) {
-
-                // remove null / empty / invalid entries
-                List<String> validPhotos = photos.stream()
-                        .filter(p -> p != null && !p.trim().isEmpty())
-                        .toList();
-
-                if (!validPhotos.isEmpty()) {
-                    String base64Json = convertPhotosToBase64Json(validPhotos);
-                    campaignOrsEntity.setCampaignPhotos(base64Json);
-                }
-            }
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonPhotos = mapper.writeValueAsString(campaignDTO.getFields().getCampaignPhotos());
+            campaignOrsEntity.setCampaignPhotos(jsonPhotos);
 
             campaignOrsRequest.add(campaignOrsEntity);
         }
@@ -115,7 +104,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public List<PulsePolioCampaign> savePolioCampaign(List<PolioCampaignDTO> polioCampaignDTOs, String token)
-            throws IEMRException {
+            throws IEMRException, JsonProcessingException {
 
         if (polioCampaignDTOs == null || polioCampaignDTOs.isEmpty()) {
             throw new IEMRException("Campaign data is required");
@@ -154,10 +143,9 @@ public class CampaignServiceImpl implements CampaignService {
             // Convert photos to base64 JSON array
             List<String> photos = campaignDTO.getFields().getCampaignPhotos();
 
-            if (photos != null && !photos.isEmpty()) {
-                String base64Json = convertPhotosToBase64Json(photos);
-                campaignPolioEntity.setCampaignPhotos(base64Json);
-            }
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonPhotos = mapper.writeValueAsString(campaignDTO.getFields().getCampaignPhotos());
+            campaignPolioEntity.setCampaignPhotos(jsonPhotos);
 
 
             campaignPolioRequest.add(campaignPolioEntity);
