@@ -1,5 +1,6 @@
 package com.iemr.flw.dto.iemr;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -10,9 +11,11 @@ import java.time.LocalDate;
 
 @Data
 public class OrsCampaignListDTO {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("start_date")
     private LocalDate StartDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("end_date")
     private LocalDate EndDate;
 
