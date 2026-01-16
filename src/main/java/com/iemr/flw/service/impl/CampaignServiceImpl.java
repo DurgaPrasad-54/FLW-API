@@ -104,16 +104,18 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     @Transactional
-    public List<PulsePolioCampaign> savePolioCampaign(List<PolioCampaignDTO> orsCampaignDTO, String token) throws IEMRException {
-        if (orsCampaignDTO == null || orsCampaignDTO.isEmpty()) {
-            return Collections.emptyList(); //
+    public List<PulsePolioCampaign> savePolioCampaign(List<PolioCampaignDTO> polioCampaignDTOs, String token)
+            throws IEMRException {
+
+        if (polioCampaignDTOs == null || polioCampaignDTOs.isEmpty()) {
+            throw new IEMRException("Campaign data is required");
         }
 
         List<PulsePolioCampaign> campaignPolioRequest = new ArrayList<>();
         Integer userId = jwtUtil.extractUserId(token);
         String userName = jwtUtil.extractUsername(token);
 
-        for (PolioCampaignDTO campaignDTO : orsCampaignDTO) {
+        for (PolioCampaignDTO campaignDTO : polioCampaignDTOs) {
             if (campaignDTO.getFields() == null) {
                 continue;
             }
@@ -123,15 +125,29 @@ public class CampaignServiceImpl implements CampaignService {
             campaignPolioEntity.setCreatedBy(userName);
             campaignPolioEntity.setUpdatedBy(userName);
 
+            // Set start and end dates
+            campaignPolioEntity.setStartDate(campaignDTO.getFields().getStartDate());
+            campaignPolioEntity.setEndDate(campaignDTO.getFields().getEndDate());
+
+            // Parse number of children
             try {
-                campaignPolioEntity.setNumberOfChildren(
-                        Integer.parseInt(campaignDTO.getFields().getNumberOfChildren())
-                );
+                String childrenStr = campaignDTO.getFields().getNumberOfChildren();
+                if (childrenStr != null && !childrenStr.trim().isEmpty()) {
+                    campaignPolioEntity.setNumberOfChildren(Integer.parseInt(childrenStr));
+                } else {
+                    campaignPolioEntity.setNumberOfChildren(0);
+                }
             } catch (NumberFormatException e) {
-                throw new IEMRException("Invalid number format for families");
+                throw new IEMRException("Invalid number format for children: " + e.getMessage());
             }
 
-            campaignPolioEntity.setCampaignPhotos(campaignDTO.getFields().getCampaignPhotos());
+            // Convert photos to base64 JSON array
+            MultipartFile[] photos = campaignDTO.getFields().getCampaignPhotos();
+            if (photos != null && photos.length > 0) {
+                String base64Json = convertPhotosToBase64Json(photos);
+                campaignPolioEntity.setCampaignPhotos(base64Json);
+            }
+
             campaignPolioRequest.add(campaignPolioEntity);
         }
 
@@ -140,13 +156,14 @@ public class CampaignServiceImpl implements CampaignService {
             return savedCampaigns;
         }
 
-        return Collections.emptyList();
+        throw new IEMRException("No valid campaign data to save");
     }
 
+
     @Override
-    public List<PolioCampaignDTO> getPolioCampaign(String token) throws IEMRException {
+    public List<PolioCampaignResponseDTO> getPolioCampaign(String token) throws IEMRException {
         Integer userId = jwtUtil.extractUserId(token);
-        List<PolioCampaignDTO> polioCampaignDTOSResponse = new ArrayList<>();
+        List<PolioCampaignResponseDTO> polioCampaignDTOSResponse = new ArrayList<>();
         int page = 0;
         int pageSize = 10;
         Page<PulsePolioCampaign> campaignPolioPage;
@@ -154,7 +171,7 @@ public class CampaignServiceImpl implements CampaignService {
             Pageable pageable = PageRequest.of(page, pageSize);
             campaignPolioPage = pulsePolioCampaignRepo.findByUserId(userId, pageable);
             for (PulsePolioCampaign campaignOrs : campaignPolioPage.getContent()) {
-                PolioCampaignDTO dto = convertPolioToDTO(campaignOrs);
+                PolioCampaignResponseDTO dto = convertPolioToDTO(campaignOrs);
                 polioCampaignDTOSResponse.add(dto);
             }
             page++;
@@ -170,16 +187,20 @@ public class CampaignServiceImpl implements CampaignService {
             List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
             orsCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
         }        orsCampaignListDTO.setEndDate(campaign.getEndDate());
+
         orsCampaignListDTO.setStartDate(campaign.getStartDate());
         orsCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
         dto.setFields(orsCampaignListDTO);
         return dto;
     }
 
-    private PolioCampaignDTO convertPolioToDTO(PulsePolioCampaign campaign) {
-        PolioCampaignDTO dto = new PolioCampaignDTO();
-        PolioCampaignListDTO polioCampaignListDTO = new PolioCampaignListDTO();
-        polioCampaignListDTO.setCampaignPhotos(campaign.getCampaignPhotos());
+    private PolioCampaignResponseDTO convertPolioToDTO(PulsePolioCampaign campaign) {
+        PolioCampaignResponseDTO dto = new PolioCampaignResponseDTO();
+        PolioCampaignListResponseDTO polioCampaignListDTO = new PolioCampaignListResponseDTO();
+        if (campaign.getCampaignPhotos() != null) {
+            List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
+            polioCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
+        }
         polioCampaignListDTO.setEndDate(campaign.getEndDate());
         polioCampaignListDTO.setStartDate(campaign.getStartDate());
         polioCampaignListDTO.setNumberOfChildren(String.valueOf(campaign.getNumberOfChildren()));

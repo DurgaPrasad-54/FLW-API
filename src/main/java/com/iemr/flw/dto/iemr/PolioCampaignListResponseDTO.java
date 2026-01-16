@@ -5,9 +5,10 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
-public class PolioCampaignListDTO {
+public class PolioCampaignListResponseDTO {
     @JsonProperty("start_date")
     private LocalDate startDate;
 
@@ -18,7 +19,7 @@ public class PolioCampaignListDTO {
     private String numberOfChildren;
 
     @JsonProperty("campaign_photos")
-    private MultipartFile[] campaignPhotos;
+    private List<String> campaignPhotos;
 
 
 }

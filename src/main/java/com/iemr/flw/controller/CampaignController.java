@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iemr.flw.domain.iemr.CampaignOrs;
+import com.iemr.flw.domain.iemr.PulsePolioCampaign;
 import com.iemr.flw.dto.iemr.*;
 import com.iemr.flw.service.CampaignService;
 import com.iemr.flw.utils.exception.IEMRException;
@@ -59,9 +60,9 @@ public class CampaignController {
             List<OrsCampaignDTO> orsCampaignDTOList = Collections.singletonList(campaignDTO);
 
             // Save to database
-            Object result = campaignService.saveOrsCampaign(orsCampaignDTOList, token);
+            List<CampaignOrs> result = campaignService.saveOrsCampaign(orsCampaignDTOList, token);
 
-            if (result != null) {
+            if (result != null && !result.isEmpty()) {
                 response.put("statusCode", HttpStatus.CREATED.value());
                 response.put("message", "Campaign saved successfully");
                 response.put("data", result);
@@ -123,28 +124,69 @@ public class CampaignController {
     }
 
 
-    @RequestMapping(value = "polio/campaign/saveAll", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> savePolioCampaign(@RequestBody List<PolioCampaignDTO> polioCampaignDTOS, @RequestHeader(value = "jwtToken") String token) {
+    @PostMapping("/polio/campaign/saveAll")
+    public ResponseEntity<Map<String, Object>> savePolioCampaign(
+            @RequestPart("formDataJson") String fields,
+            @RequestPart(value = "campaignPhotos", required = false) List<MultipartFile> campaignPhotos,
+            @RequestHeader("jwtToken") String token) {
 
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            Object result  = campaignService.savePolioCampaign(polioCampaignDTOS,token);
-
-
-            if (result != null) {
-                response.put("statusCode", HttpStatus.OK.value());
-                response.put("data", result);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("statusCode", HttpStatus.NOT_FOUND.value());
-                response.put("message", "No records found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            // Validate input
+            if (fields == null || fields.trim().isEmpty()) {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Form data is required");
+                return ResponseEntity.badRequest().body(response);
             }
 
+            // Parse JSON to DTO
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            PolioCampaignListDTO polioCampaignFields = objectMapper.readValue(fields, PolioCampaignListDTO.class);
+
+            // Set campaign photos if present
+            if (campaignPhotos != null && !campaignPhotos.isEmpty()) {
+                polioCampaignFields.setCampaignPhotos(campaignPhotos.toArray(new MultipartFile[0]));
+            }
+
+            // Create DTO
+            PolioCampaignDTO campaignDTO = new PolioCampaignDTO();
+            campaignDTO.setFields(polioCampaignFields);
+
+            List<PolioCampaignDTO> polioCampaignDTOList = Collections.singletonList(campaignDTO);
+
+            // Save to database
+            List<PulsePolioCampaign> result = campaignService.savePolioCampaign(polioCampaignDTOList, token);
+
+            if (result != null && !result.isEmpty()) {
+                response.put("statusCode", HttpStatus.CREATED.value());
+                response.put("message", "Polio campaign saved successfully");
+                response.put("data", result);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                response.put("message", "Failed to save polio campaign");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        } catch (JsonProcessingException e) {
+            logger.error("JSON parsing error: {}", e.getMessage(), e);
+            response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            response.put("message", "Invalid JSON format");
+            response.put("errorMessage", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        } catch (IEMRException e) {
+            logger.error("Business logic error: {}", e.getMessage(), e);
+            response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
         } catch (Exception e) {
-            logger.error("Error save polio:", e.getMessage());
+            logger.error("Error saving polio campaign: {}", e.getMessage(), e);
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("message", "Internal server error occurred");
             response.put("errorMessage", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
@@ -157,7 +199,7 @@ public class CampaignController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         try {
-            List<PolioCampaignDTO> result  = campaignService.getPolioCampaign(token);
+            List<PolioCampaignResponseDTO> result  = campaignService.getPolioCampaign(token);
 
 
             if (result != null) {
