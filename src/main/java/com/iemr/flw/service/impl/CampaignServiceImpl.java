@@ -66,11 +66,21 @@ public class CampaignServiceImpl implements CampaignService {
                 throw new IEMRException("Invalid number format for families");
             }
 
-            MultipartFile[] photos = campaignDTO.getFields().getCampaignPhotos();
-            if (photos != null && photos.length > 0) {
-                String base64Json = convertPhotosToBase64Json(photos);
-                campaignOrsEntity.setCampaignPhotos(base64Json);
+            List<String> photos = campaignDTO.getFields().getCampaignPhotos();
+
+            if (photos != null && !photos.isEmpty()) {
+
+                // remove null / empty / invalid entries
+                List<String> validPhotos = photos.stream()
+                        .filter(p -> p != null && !p.trim().isEmpty())
+                        .toList();
+
+                if (!validPhotos.isEmpty()) {
+                    String base64Json = convertPhotosToBase64Json(validPhotos);
+                    campaignOrsEntity.setCampaignPhotos(base64Json);
+                }
             }
+
             campaignOrsRequest.add(campaignOrsEntity);
         }
 
@@ -142,11 +152,13 @@ public class CampaignServiceImpl implements CampaignService {
             }
 
             // Convert photos to base64 JSON array
-            MultipartFile[] photos = campaignDTO.getFields().getCampaignPhotos();
-            if (photos != null && photos.length > 0) {
+            List<String> photos = campaignDTO.getFields().getCampaignPhotos();
+
+            if (photos != null && !photos.isEmpty()) {
                 String base64Json = convertPhotosToBase64Json(photos);
                 campaignPolioEntity.setCampaignPhotos(base64Json);
             }
+
 
             campaignPolioRequest.add(campaignPolioEntity);
         }
@@ -217,37 +229,29 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
 
-    private String convertPhotosToBase64Json(MultipartFile[] photos) throws IEMRException {
+    private String convertPhotosToBase64Json(List<String> photos) throws IEMRException {
         try {
-            List<String> base64Images = new ArrayList<>();
+            List<String> cleanedBase64Images = new ArrayList<>();
 
-            for (MultipartFile photo : photos) {
-                if (photo != null && !photo.isEmpty()) {
-                    // Get file bytes
-                    byte[] bytes = photo.getBytes();
+            for (String photo : photos) {
+                if (photo != null && !photo.trim().isEmpty()) {
 
-                    // Convert to Base64
-                    String base64 = Base64.getEncoder().encodeToString(bytes);
+                    // remove data:image/...;base64, if present
+                    String cleanBase64 = photo.contains(",")
+                            ? photo.substring(photo.indexOf(",") + 1)
+                            : photo;
 
-                    // Get content type (image/jpeg, image/png, etc.)
-                    String contentType = photo.getContentType();
-                    if (contentType == null) {
-                        contentType = "image/jpeg"; // default
-                    }
-
-                    // Create data URL format: data:image/jpeg;base64,xxxxx
-                    String base64Image = "data:" + contentType + ";base64," + base64;
-                    base64Images.add(base64Image);
+                    cleanedBase64Images.add(cleanBase64);
                 }
             }
 
-            // Convert list to JSON array string
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(base64Images);
+            return objectMapper.writeValueAsString(cleanedBase64Images);
 
-        } catch (IOException e) {
-            throw new IEMRException("Error converting photos to base64: " + e.getMessage());
+        } catch (Exception e) {
+            throw new IEMRException("Error processing base64 photos: " + e.getMessage());
         }
     }
+
 }
 
