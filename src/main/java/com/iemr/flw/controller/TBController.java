@@ -165,7 +165,7 @@ public class TBController {
     }
 
     @Operation(summary = "get tb confirmed case by beneficiary id")
-    @RequestMapping(value = { "/confirmed/getAll}" }, method = { RequestMethod.GET })
+    @RequestMapping(value = { "/confirmed/getAll" }, method = { RequestMethod.GET })
     public String getConfirmedByBenId(
             @PathVariable Long benId,
             @RequestHeader(value = "jwtToken") String token) {
