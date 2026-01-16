@@ -57,6 +57,8 @@ public class CampaignServiceImpl implements CampaignService {
             campaignOrsEntity.setUserId(userId);
             campaignOrsEntity.setCreatedBy(userName);
             campaignOrsEntity.setUpdatedBy(userName);
+            campaignOrsEntity.setStartDate(campaignDTO.getFields().getStartDate());
+            campaignOrsEntity.setStartDate(campaignDTO.getFields().getEndDate());
 
             try {
                 String familiesStr = campaignDTO.getFields().getNumberOfFamilies();
