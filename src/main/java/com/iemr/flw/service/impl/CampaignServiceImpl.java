@@ -77,6 +77,7 @@ public class CampaignServiceImpl implements CampaignService {
             String jsonPhotos = mapper.writeValueAsString(photosList);
             campaignOrsEntity.setCampaignPhotos(jsonPhotos);
 
+
             campaignOrsRequest.add(campaignOrsEntity);
         }
 
