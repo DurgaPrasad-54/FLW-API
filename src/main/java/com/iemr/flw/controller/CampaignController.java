@@ -75,10 +75,10 @@ public class CampaignController {
             List<CampaignOrs> result = campaignService.saveOrsCampaign(orsCampaignDTOList, token);
 
             if (result != null && !result.isEmpty()) {
-                response.put("statusCode", HttpStatus.CREATED.value());
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", "Campaign saved successfully");
                 response.put("data", result);
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 response.put("message", "Failed to save campaign");
@@ -185,10 +185,10 @@ public class CampaignController {
             List<PulsePolioCampaign> result = campaignService.savePolioCampaign(polioCampaignDTOList, token);
 
             if (result != null && !result.isEmpty()) {
-                response.put("statusCode", HttpStatus.CREATED.value());
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", "polio  campaign saved successfully");
                 response.put("data", result);
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 response.put("message", "Failed to save Polio campaign");
@@ -282,10 +282,10 @@ public class CampaignController {
             List<PulsePolioCampaign> result = campaignService.savePolioCampaign(polioCampaignDTOList, token);
 
             if (result != null && !result.isEmpty()) {
-                response.put("statusCode", HttpStatus.CREATED.value());
+                response.put("statusCode", HttpStatus.OK.value());
                 response.put("message", "Polio campaign saved successfully");
                 response.put("data", result);
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 response.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 response.put("message", "Failed to save polio campaign");
