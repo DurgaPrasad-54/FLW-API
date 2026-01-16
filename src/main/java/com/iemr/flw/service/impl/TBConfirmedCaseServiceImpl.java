@@ -1,7 +1,7 @@
 package com.iemr.flw.service.impl;
 
 import com.iemr.flw.domain.iemr.TBConfirmedCaseDTO;
-import com.iemr.flw.dto.iemr.TBConfirmedCase;
+import com.iemr.flw.domain.iemr.TBConfirmedCase;
 import com.iemr.flw.repo.iemr.TBConfirmedTreatmentRepository;
 import com.iemr.flw.service.TBConfirmedCaseService;
 
