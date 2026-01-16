@@ -27,11 +27,8 @@ public class PulsePolioCampaign {
     @Column(name = "number_of_children", nullable = false)
     private Integer numberOfChildren = 0;
 
-    /**
-     * Store JSON array like ["img1.jpg","img2.jpg"]
-     * MySQL JSON column
-     */
-    @Column(name = "campaign_photos", columnDefinition = "json")
+
+    @Column(name = "campaign_photos")
     private String campaignPhotos;
 
     @Column(name = "created_by", length = 200)

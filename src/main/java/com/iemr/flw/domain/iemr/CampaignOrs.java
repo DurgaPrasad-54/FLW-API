@@ -27,11 +27,7 @@ public class CampaignOrs {
     @Column(name = "number_of_families", nullable = false)
     private Integer numberOfFamilies = 0;
 
-    /**
-     * Store JSON array like ["img1.jpg","img2.jpg"]
-     * MySQL JSON column
-     */
-    @Column(name = "campaign_photos", columnDefinition = "json")
+    @Column(name = "campaign_photos")
     private String campaignPhotos;
 
     @Column(name = "created_by", length = 200)

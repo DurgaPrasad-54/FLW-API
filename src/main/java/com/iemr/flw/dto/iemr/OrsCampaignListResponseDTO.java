@@ -1,5 +1,7 @@
 package com.iemr.flw.dto.iemr;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -7,9 +9,17 @@ import java.util.List;
 
 @Data
 public class OrsCampaignListResponseDTO {
-    private Long id;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String numberOfFamilies;
-    private List<String> campaignPhotos; // Base64 or URLs
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("start_date")
+    private LocalDate StartDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("end_date")
+    private LocalDate EndDate;
+
+    @JsonProperty("number_of_families")
+    private String NumberOfFamilies;
+
+    @JsonProperty("campaign_photos")
+    private List<String> campaignPhotos;
 }

@@ -307,10 +307,11 @@ public class CampaignServiceImpl implements CampaignService {
         if (campaign.getCampaignPhotos() != null) {
             List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
             orsCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
-        }        orsCampaignListDTO.setEndDate(campaign.getEndDate());
-
+        }
+        orsCampaignListDTO.setEndDate(campaign.getEndDate());
         orsCampaignListDTO.setStartDate(campaign.getStartDate());
         orsCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
+        dto.setId(campaign.getId());
         dto.setFields(orsCampaignListDTO);
         return dto;
     }
@@ -325,6 +326,7 @@ public class CampaignServiceImpl implements CampaignService {
         polioCampaignListDTO.setEndDate(campaign.getEndDate());
         polioCampaignListDTO.setStartDate(campaign.getStartDate());
         polioCampaignListDTO.setNumberOfChildren(String.valueOf(campaign.getNumberOfChildren()));
+        dto.setId(campaign.getId());
         dto.setFields(polioCampaignListDTO);
         return dto;
     }
