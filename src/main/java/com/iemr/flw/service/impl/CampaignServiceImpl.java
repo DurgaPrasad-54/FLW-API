@@ -71,16 +71,11 @@ public class CampaignServiceImpl implements CampaignService {
             }
 
 
-            ObjectMapper mapper = new ObjectMapper();
-            String photosStr = campaignDTO.getFields().getCampaignPhotos();
-
-            List<String> photosList = Collections.emptyList();
-            if (photosStr != null && !photosStr.isEmpty()) {
-                photosList = mapper.readValue(photosStr, new TypeReference<List<String>>() {});
-            }
-
-            String jsonPhotos = mapper.writeValueAsString(photosList);
-            campaignOrsEntity.setCampaignPhotos(jsonPhotos);
+            List<String> photos = campaignDTO.getFields().getCampaignPhotos();
+            String photosStr = (photos != null && !photos.isEmpty())
+                    ? String.join(",", photos)
+                    : null;
+            campaignOrsEntity.setCampaignPhotos(photosStr);
 
 
             campaignOrsRequest.add(campaignOrsEntity);
@@ -161,16 +156,12 @@ public class CampaignServiceImpl implements CampaignService {
 
             // Convert photos to base64 JSON array
 
-            ObjectMapper mapper = new ObjectMapper();
-            String photosStr = campaignDTO.getFields().getCampaignPhotos();
+            List<String> photosList = campaignDTO.getFields().getCampaignPhotos();
+            String photosStr = (photosList != null && !photosList.isEmpty())
+                    ? String.join(",", photosList)
+                    : null;
 
-            List<String> photosList = Collections.emptyList();
-            if (photosStr != null && !photosStr.isEmpty()) {
-                photosList = mapper.readValue(photosStr, new TypeReference<List<String>>() {});
-            }
-
-            String jsonPhotos = mapper.writeValueAsString(photosList);
-            campaignPolioEntity.setCampaignPhotos(jsonPhotos);
+            campaignPolioEntity.setCampaignPhotos(photosStr);
 
 
             campaignPolioRequest.add(campaignPolioEntity);
