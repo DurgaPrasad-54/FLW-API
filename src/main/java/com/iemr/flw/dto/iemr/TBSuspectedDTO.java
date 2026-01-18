@@ -23,7 +23,6 @@ public class TBSuspectedDTO {
     private String referralFacility;
     private Boolean isTBConfirmed;
     private Boolean isDRTBConfirmed;
-    private Boolean isConfirmed;
     private Boolean referred;
     private String followUps;
 }
