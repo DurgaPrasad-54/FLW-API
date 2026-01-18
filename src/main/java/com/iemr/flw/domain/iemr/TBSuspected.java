@@ -54,9 +54,6 @@ public class TBSuspected {
     @Column(name = "reason_for_suspicion", length = 500)
     private String reasonForSuspicion;
 
-    // Symptoms
-    @Column(name = "has_symptoms", nullable = false)
-    private Boolean hasSymptoms = false;
 
     // Chest X-Ray
     @Column(name = "is_chest_xray_done")
