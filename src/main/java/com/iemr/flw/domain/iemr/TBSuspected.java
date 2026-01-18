@@ -41,9 +41,6 @@ public class TBSuspected {
     @Column(name = "followups")
     private String followUps;
 
-    @Column(name = "visit_code", nullable = false)
-    private Long visitCode;
-
     // Visit Information
     @Column(name = "visit_label", length = 100, nullable = false)
     private String visitLabel;

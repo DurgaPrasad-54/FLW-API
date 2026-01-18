@@ -10,7 +10,6 @@ public class TBSuspectedDTO {
     private Long id;
 
     private Long benId;
-    private Long visitCode;
     private String visitLabel;
     private String typeOfTBCase;
     private String reasonForSuspicion;
