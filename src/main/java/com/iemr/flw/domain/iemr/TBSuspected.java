@@ -72,9 +72,6 @@ public class TBSuspected {
     @Column(name = "is_drtb_confirmed")
     private Boolean isDRTBConfirmed;
 
-    @Column(name = "is_confirmed", nullable = false)
-    private Boolean isConfirmed = false;
-
     @Column(name = "provider_service_map_id")
     private Integer providerServiceMapId;
 
