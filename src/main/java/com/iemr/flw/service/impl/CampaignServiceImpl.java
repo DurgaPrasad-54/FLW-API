@@ -305,8 +305,26 @@ public class CampaignServiceImpl implements CampaignService {
         OrsCampaignResponseDTO dto = new OrsCampaignResponseDTO();
         OrsCampaignListResponseDTO orsCampaignListDTO = new OrsCampaignListResponseDTO();
         if (campaign.getCampaignPhotos() != null) {
-            List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
-            orsCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<String> photosList = new ArrayList<>();
+
+            String photoStr = campaign.getCampaignPhotos();
+
+            if (photoStr != null && !photoStr.trim().isEmpty()) {
+                try {
+                    // try JSON list
+                    photosList = objectMapper.readValue(
+                            photoStr,
+                            new TypeReference<List<String>>() {}
+                    );
+                } catch (Exception e) {
+                    // fallback: single image
+                    photosList.add(photoStr.trim());
+                }
+            }
+
+            orsCampaignListDTO.setCampaignPhotos(photosList);
+            // ✅ Now List<String> matches
         }
         orsCampaignListDTO.setEndDate(campaign.getEndDate());
         orsCampaignListDTO.setStartDate(campaign.getStartDate());
@@ -320,7 +338,26 @@ public class CampaignServiceImpl implements CampaignService {
         PolioCampaignResponseDTO dto = new PolioCampaignResponseDTO();
         PolioCampaignListResponseDTO polioCampaignListDTO = new PolioCampaignListResponseDTO();
         if (campaign.getCampaignPhotos() != null) {
-            List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<String> photosList = new ArrayList<>();
+
+            String photoStr = campaign.getCampaignPhotos();
+
+            if (photoStr != null && !photoStr.trim().isEmpty()) {
+                try {
+                    // try JSON list
+                    photosList = objectMapper.readValue(
+                            photoStr,
+                            new TypeReference<List<String>>() {}
+                    );
+                } catch (Exception e) {
+                    // fallback: single image
+                    photosList.add(photoStr.trim());
+                }
+            }
+
+            polioCampaignListDTO.setCampaignPhotos(photosList);
+
             polioCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
         }
         polioCampaignListDTO.setEndDate(campaign.getEndDate());
