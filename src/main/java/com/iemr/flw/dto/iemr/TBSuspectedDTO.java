@@ -14,7 +14,6 @@ public class TBSuspectedDTO {
     private String visitLabel;
     private String typeOfTBCase;
     private String reasonForSuspicion;
-    private Boolean hasSymptoms;
     private Boolean isSputumCollected;
     private String sputumSubmittedAt;
     private String nikshayId;
