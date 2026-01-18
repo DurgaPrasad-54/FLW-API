@@ -42,10 +42,10 @@ public class TBSuspected {
     private String followUps;
 
     // Visit Information
-    @Column(name = "visit_label", length = 100, nullable = false)
+    @Column(name = "visit_label")
     private String visitLabel;
 
-    @Column(name = "type_of_tb_case", length = 50, nullable = false)
+    @Column(name = "type_of_tb_case")
     private String typeOfTBCase;
 
     @Column(name = "reason_for_suspicion", length = 500)
