@@ -14,5 +14,4 @@ public interface TBConfirmedTreatmentRepository
     List<TBConfirmedCase> findByBenId(Long benId);
     List<TBConfirmedCase> findByUserId(Integer benId);
 
-    Optional<TBConfirmedCase> findByBenIdAndSuspectedTbId(Long benId, Integer suspectedTbId);
 }
