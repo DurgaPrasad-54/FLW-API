@@ -12,6 +12,7 @@ public class TBSuspectedDTO {
     private Long benId;
     private String visitLabel;
     private String typeOfTBCase;
+    private Timestamp visitDate;
     private String reasonForSuspicion;
     private Boolean isSputumCollected;
     private String sputumSubmittedAt;
