@@ -4,7 +4,8 @@ import com.iemr.flw.domain.iemr.TBConfirmedCaseDTO;
 import com.iemr.flw.domain.iemr.TBConfirmedCase;
 import com.iemr.flw.repo.iemr.TBConfirmedTreatmentRepository;
 import com.iemr.flw.service.TBConfirmedCaseService;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.iemr.flw.utils.JwtUtil;
 import com.iemr.flw.utils.response.OutputResponse;
 import org.slf4j.Logger;
@@ -103,33 +104,12 @@ public class TBConfirmedCaseServiceImpl implements TBConfirmedCaseService {
 
     @Override
     public String getByUserId(String authorisation) throws Exception {
-        OutputResponse response = new OutputResponse();
+        Integer userId = jwtUtil.extractUserId(authorisation);
 
-
-        try {
-            Integer userId = jwtUtil.extractUserId(authorisation);
-
-            List<TBConfirmedCase> list = repository.findByUserId(userId)
-                    .stream()
-                    .filter(x -> x.getUserId() != null && x.getUserId().equals(userId))
-                    .collect(Collectors.toList());
-
-            if (!list.isEmpty()) {
-                List<TBConfirmedCaseDTO> dtoList = list.stream()
-                        .map(this::toDTO)
-                        .collect(Collectors.toList());
-
-                response.setResponse(dtoList.toString());
-            } else {
-                response.setError(404, "No record found for userId: " + userId);
-            }
-
-        } catch (Exception e) {
-            logger.error("Error getting TB confirmed case by userId", e);
-            response.setError(5000, "Error getting TB confirmed case: " + e.getMessage());
-        }
-
-        return response.toString();
+        List<TBConfirmedCase> list = repository.findByUserId(userId);
+        
+        Gson gson = new GsonBuilder().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
+        return gson.toJson(list);
     }
 
     // Utility: convert entity -> DTO
