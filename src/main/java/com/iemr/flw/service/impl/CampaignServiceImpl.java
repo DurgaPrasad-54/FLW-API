@@ -42,6 +42,9 @@ public class CampaignServiceImpl implements CampaignService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     @Transactional
     public List<CampaignOrs> saveOrsCampaign(List<OrsCampaignDTO> orsCampaignDTO, String token) throws IEMRException, JsonProcessingException {
@@ -77,13 +80,11 @@ public class CampaignServiceImpl implements CampaignService {
                 throw new IEMRException("Invalid number format for families: " + campaignDTO.getFields().getNumberOfFamilies());
             }
 
-
-            List<String> photos = campaignDTO.getFields().getCampaignPhotos();
-            String photosStr = (photos != null && !photos.isEmpty())
-                    ? String.join(",", photos)
-                    : null;
-            campaignOrsEntity.setCampaignPhotos(photosStr);
-
+            OrsCampaignListDTO campaignListDTO = new OrsCampaignListDTO();
+            if(campaignListDTO!=null){
+                String photosJson = objectMapper.writeValueAsString(campaignListDTO.getCampaignPhotos());
+                campaignOrsEntity.setCampaignPhotos(photosJson);
+            }
 
             campaignOrsRequest.add(campaignOrsEntity);
         }
@@ -163,13 +164,13 @@ public class CampaignServiceImpl implements CampaignService {
 
             // Convert photos to base64 JSON array
 
-            List<String> photosList = campaignDTO.getFields().getCampaignPhotos();
-            String photosStr = (photosList != null && !photosList.isEmpty())
-                    ? String.join(",", photosList)
-                    : null;
+            PolioCampaignListDTO polioCampaignListDTO = campaignDTO.getFields();
+            if(polioCampaignListDTO!=null){
+                String photosJson = objectMapper.writeValueAsString(polioCampaignListDTO.getCampaignPhotos());
+                campaignPolioEntity.setCampaignPhotos(photosJson);
 
-            campaignPolioEntity.setCampaignPhotos(photosStr);
 
+            }
 
             campaignPolioRequest.add(campaignPolioEntity);
         }
@@ -185,7 +186,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     @Transactional
-    public List<FilariasisCampaign> saveFilariasisCampaign(List<FilariasisCampaignDTO> filariasisCampaignDTOS, String token) throws IEMRException {
+    public List<FilariasisCampaign> saveFilariasisCampaign(List<FilariasisCampaignDTO> filariasisCampaignDTOS, String token) throws IEMRException, JsonProcessingException {
 
         if (filariasisCampaignDTOS == null || filariasisCampaignDTOS.isEmpty()) {
             throw new IEMRException("Campaign data is required");
@@ -241,14 +242,13 @@ public class CampaignServiceImpl implements CampaignService {
             }
 
             // Convert photos to base64 JSON array
+            FilariasisCampaignListDTO filariasisCampaignListDTO = campaignDTO.getFields();
+            if(filariasisCampaignListDTO!=null){
+                String photosJson = objectMapper.writeValueAsString(filariasisCampaignListDTO.getMdaPhotos());
+                filariasisCampaign.setCampaignPhotos(photosJson);
 
-            List<String> photosList = campaignDTO.getFields().getMdaPhotos();
-            String photosStr = (photosList != null && !photosList.isEmpty())
-                    ? String.join(",", photosList)
-                    : null;
 
-            filariasisCampaign.setCampaignPhotos(photosStr);
-
+            }
 
             campaignPolioRequest.add(filariasisCampaign);
         }
@@ -322,13 +322,11 @@ public class CampaignServiceImpl implements CampaignService {
                     photosList.add(photoStr.trim());
                 }
             }
-
             orsCampaignListDTO.setCampaignPhotos(photosList);
-            // ✅ Now List<String> matches
         }
         orsCampaignListDTO.setEndDate(campaign.getEndDate());
         orsCampaignListDTO.setStartDate(campaign.getStartDate());
-        orsCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
+        orsCampaignListDTO.setNumberOfFamilies(Double.valueOf(campaign.getNumberOfFamilies()));
         dto.setId(campaign.getId());
         dto.setFields(orsCampaignListDTO);
         return dto;
@@ -338,7 +336,6 @@ public class CampaignServiceImpl implements CampaignService {
         PolioCampaignResponseDTO dto = new PolioCampaignResponseDTO();
         PolioCampaignListResponseDTO polioCampaignListDTO = new PolioCampaignListResponseDTO();
         if (campaign.getCampaignPhotos() != null) {
-            ObjectMapper objectMapper = new ObjectMapper();
             List<String> photosList = new ArrayList<>();
 
             String photoStr = campaign.getCampaignPhotos();
@@ -357,12 +354,10 @@ public class CampaignServiceImpl implements CampaignService {
             }
 
             polioCampaignListDTO.setCampaignPhotos(photosList);
-
-            polioCampaignListDTO.setCampaignPhotos(photosList); // ✅ Now List<String> matches
         }
         polioCampaignListDTO.setEndDate(campaign.getEndDate());
         polioCampaignListDTO.setStartDate(campaign.getStartDate());
-        polioCampaignListDTO.setNumberOfChildren(String.valueOf(campaign.getNumberOfChildren()));
+        polioCampaignListDTO.setNumberOfChildren(Double.valueOf(campaign.getNumberOfChildren()));
         dto.setId(campaign.getId());
         dto.setFields(polioCampaignListDTO);
         return dto;
@@ -372,13 +367,27 @@ public class CampaignServiceImpl implements CampaignService {
         FilariasisResponseDTO dto = new FilariasisResponseDTO();
         FilariasisCampaignListResponseDTO filariasisCampaignListDTO = new FilariasisCampaignListResponseDTO();
         if (campaign.getCampaignPhotos() != null) {
-            List<String> photosList = parseBase64Json(campaign.getCampaignPhotos());
-            filariasisCampaignListDTO.setMdaPhotos(photosList); // ✅ Now List<String> matches
+            List<String> photosList = new ArrayList<>();
+            String photoStr = campaign.getCampaignPhotos();
+
+            if (photoStr != null && !photoStr.trim().isEmpty()) {
+                try {
+                    // try JSON list
+                    photosList = objectMapper.readValue(
+                            photoStr,
+                            new TypeReference<List<String>>() {}
+                    );
+                } catch (Exception e) {
+                    // fallback: single image
+                    photosList.add(photoStr.trim());
+                }
+            }
+
+            filariasisCampaignListDTO.setMdaPhotos(photosList);
         }
         filariasisCampaignListDTO.setEndDate(campaign.getEndDate());
         filariasisCampaignListDTO.setStartDate(campaign.getStartDate());
-        filariasisCampaignListDTO.setNumberOfFamilies(String.valueOf(campaign.getNumberOfFamilies()));
-        filariasisCampaignListDTO.setNumberOfIndividuals(String.valueOf(campaign.getNumberOfIndividuals()));
+        filariasisCampaignListDTO.setNumberOfIndividuals(Double.valueOf(campaign.getNumberOfIndividuals()));
         dto.setFields(filariasisCampaignListDTO);
         return dto;
     }
@@ -392,29 +401,6 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
 
-    private String convertPhotosToBase64Json(List<String> photos) throws IEMRException {
-        try {
-            List<String> cleanedBase64Images = new ArrayList<>();
-
-            for (String photo : photos) {
-                if (photo != null && !photo.trim().isEmpty()) {
-
-                    // remove data:image/...;base64, if present
-                    String cleanBase64 = photo.contains(",")
-                            ? photo.substring(photo.indexOf(",") + 1)
-                            : photo;
-
-                    cleanedBase64Images.add(cleanBase64);
-                }
-            }
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(cleanedBase64Images);
-
-        } catch (Exception e) {
-            throw new IEMRException("Error processing base64 photos: " + e.getMessage());
-        }
-    }
 
 }
 

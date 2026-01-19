@@ -15,8 +15,8 @@ public class PolioCampaignListResponseDTO {
     @JsonProperty("end_date")
     private LocalDate endDate;
 
-    @JsonProperty("number_of_children")
-    private String numberOfChildren;
+    @JsonProperty("children_vaccinated")
+    private Double numberOfChildren;
 
     @JsonProperty("campaign_photos")
     private List<String> campaignPhotos;

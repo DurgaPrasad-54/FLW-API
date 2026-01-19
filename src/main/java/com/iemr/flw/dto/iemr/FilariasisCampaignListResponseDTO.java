@@ -21,7 +21,7 @@ public class FilariasisCampaignListResponseDTO {
     private String numberOfFamilies;
 
     @JsonProperty("no_of_individuals")
-    private String numberOfIndividuals;
+    private Double numberOfIndividuals;
 
     @JsonProperty("mda_photos")
     private List<String> mdaPhotos;
