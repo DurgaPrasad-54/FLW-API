@@ -79,7 +79,8 @@ public class CampaignServiceImpl implements CampaignService {
                 throw new IEMRException("Invalid number format for families: " + campaignDTO.getFields().getNumberOfFamilies());
             }
 
-            OrsCampaignListDTO campaignListDTO = new OrsCampaignListDTO();
+            OrsCampaignListDTO campaignListDTO = campaignDTO.getFields();
+
             if(campaignListDTO!=null){
                 String photosJson = objectMapper.writeValueAsString(campaignListDTO.getCampaignPhotos());
                 campaignOrsEntity.setCampaignPhotos(photosJson);
