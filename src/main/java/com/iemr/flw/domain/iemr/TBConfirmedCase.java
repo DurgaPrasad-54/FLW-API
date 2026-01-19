@@ -21,8 +21,6 @@ public class TBConfirmedCase {
     @Column(name = "user_id",nullable = false)
     private Integer userId;
 
-    @Column(name = "suspected_tb_id", nullable = false)
-    private Integer suspectedTbId;
 
     @Column(name = "regimen_type")
     private String regimenType;
