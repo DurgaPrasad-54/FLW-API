@@ -42,8 +42,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     @Transactional

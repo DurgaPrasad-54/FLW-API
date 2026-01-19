@@ -28,7 +28,7 @@ public class PulsePolioCampaign {
     private Integer numberOfChildren = 0;
 
 
-    @Column(name = "campaign_photos")
+    @Column(name = "campaign_photos",columnDefinition = "LONGTEXT")
     private String campaignPhotos;
 
     @Column(name = "created_by", length = 200)
