@@ -18,7 +18,7 @@ public interface CampaignService {
 
     List<PolioCampaignResponseDTO> getPolioCampaign(String token) throws IEMRException;
 
-    List<FilariasisCampaign> saveFilariasisCampaign(List<FilariasisCampaignDTO> filariasisCampaignDTOS, String token) throws IEMRException;
+    List<FilariasisCampaign> saveFilariasisCampaign(List<FilariasisCampaignDTO> filariasisCampaignDTOS, String token) throws IEMRException, JsonProcessingException;
 
     List<FilariasisResponseDTO> getAllFilariasisCampaign(String token) throws IEMRException;
 }

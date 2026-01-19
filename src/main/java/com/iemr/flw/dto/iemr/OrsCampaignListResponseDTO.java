@@ -18,7 +18,7 @@ public class OrsCampaignListResponseDTO {
     private LocalDate EndDate;
 
     @JsonProperty("number_of_families")
-    private String NumberOfFamilies;
+    private Double NumberOfFamilies;
 
     @JsonProperty("campaign_photos")
     private List<String> campaignPhotos;
