@@ -18,13 +18,14 @@ public class FilariasisCampaignListResponseDTO {
     private LocalDate endDate;
 
     @JsonProperty("no_of_families")
-    private String numberOfFamilies;
+    private Double numberOfFamilies;
 
     @JsonProperty("no_of_individuals")
     private Double numberOfIndividuals;
 
     @JsonProperty("mda_photos")
     private List<String> mdaPhotos;
+
 
 
 }

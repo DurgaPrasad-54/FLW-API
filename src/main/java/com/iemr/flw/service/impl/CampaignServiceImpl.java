@@ -388,6 +388,8 @@ public class CampaignServiceImpl implements CampaignService {
         filariasisCampaignListDTO.setEndDate(campaign.getEndDate());
         filariasisCampaignListDTO.setStartDate(campaign.getStartDate());
         filariasisCampaignListDTO.setNumberOfIndividuals(Double.valueOf(campaign.getNumberOfIndividuals()));
+        filariasisCampaignListDTO.setNumberOfFamilies(Double.valueOf(campaign.getNumberOfFamilies()));
+
         dto.setFields(filariasisCampaignListDTO);
         return dto;
     }
