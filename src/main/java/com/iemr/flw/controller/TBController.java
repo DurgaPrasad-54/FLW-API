@@ -2,6 +2,7 @@ package com.iemr.flw.controller;
 
 import com.iemr.flw.domain.iemr.TBConfirmedCaseDTO;
 import com.iemr.flw.dto.identity.GetBenRequestHandler;
+import com.iemr.flw.dto.iemr.TBConfirmedRequestDTO;
 import com.iemr.flw.dto.iemr.TBScreeningRequestDTO;
 import com.iemr.flw.dto.iemr.TBSuspectedRequestDTO;
 import com.iemr.flw.service.TBConfirmedCaseService;
@@ -134,7 +135,7 @@ public class TBController {
     @Operation(summary = "save tb confirmed case data of beneficiary")
     @RequestMapping(value = { "/confirmed/save" }, method = { RequestMethod.POST })
     public String saveConfirmedCase(
-            @RequestBody TBConfirmedCaseDTO requestDTO,
+            @RequestBody TBConfirmedRequestDTO requestDTO,
             @RequestHeader(value = "jwtToken") String token) {
 
         OutputResponse response = new OutputResponse();
@@ -146,7 +147,7 @@ public class TBController {
                         + new Timestamp(System.currentTimeMillis()) + " "
                         + requestDTO);
 
-                String result = tbConfirmedCaseService.save(requestDTO, token);
+                String result = tbConfirmedCaseService.save(requestDTO.getTbConfirmedList(), token);
 
                 if (result != null)
                     response.setResponse(result);

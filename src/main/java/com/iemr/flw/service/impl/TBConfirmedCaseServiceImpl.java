@@ -29,34 +29,40 @@ public class TBConfirmedCaseServiceImpl implements TBConfirmedCaseService {
     }
 
     @Override
-    public String save(TBConfirmedCaseDTO dto, String authorisation) throws Exception {
+    public String save(List<TBConfirmedCaseDTO> request, String authorisation) throws Exception {
         OutputResponse response = new OutputResponse();
 
         try {
-            if (dto != null) {
-                logger.info("Saving TB confirmed case: " + dto);
+            if (request != null) {
+                logger.info("Saving TB confirmed case: " + request);
 
                 TBConfirmedCase entity = new TBConfirmedCase();
+                for(TBConfirmedCaseDTO dto:request){
+                    entity.setBenId(dto.getBenId());
+                    entity.setUserId(dto.getUserId());
+                    entity.setSuspectedTbId(dto.getSuspectedTbId());
+                    entity.setRegimenType(dto.getRegimenType());
+                    entity.setTreatmentStartDate(dto.getTreatmentStartDate());
+                    entity.setExpectedTreatmentCompletionDate(dto.getExpectedTreatmentCompletionDate());
+                    entity.setFollowUpDate(dto.getFollowUpDate());
+                    entity.setMonthlyFollowUpDone(dto.getMonthlyFollowUpDone());
+                    entity.setAdherenceToMedicines(dto.getAdherenceToMedicines());
+                    entity.setAnyDiscomfort(dto.getAnyDiscomfort());
+                    entity.setTreatmentCompleted(dto.getTreatmentCompleted());
+                    entity.setActualTreatmentCompletionDate(dto.getActualTreatmentCompletionDate());
+                    entity.setTreatmentOutcome(dto.getTreatmentOutcome());
+                    entity.setDateOfDeath(dto.getDateOfDeath());
+                    entity.setPlaceOfDeath(dto.getPlaceOfDeath());
+                    entity.setReasonForDeath(dto.getReasonForDeath());
+                    entity.setReasonForNotCompleting(dto.getReasonForNotCompleting());
+                    if(entity!=null){
+                        repository.save(entity);
 
-                entity.setBenId(dto.getBenId());
-                entity.setUserId(dto.getUserId());
-                entity.setSuspectedTbId(dto.getSuspectedTbId());
-                entity.setRegimenType(dto.getRegimenType());
-                entity.setTreatmentStartDate(dto.getTreatmentStartDate());
-                entity.setExpectedTreatmentCompletionDate(dto.getExpectedTreatmentCompletionDate());
-                entity.setFollowUpDate(dto.getFollowUpDate());
-                entity.setMonthlyFollowUpDone(dto.getMonthlyFollowUpDone());
-                entity.setAdherenceToMedicines(dto.getAdherenceToMedicines());
-                entity.setAnyDiscomfort(dto.getAnyDiscomfort());
-                entity.setTreatmentCompleted(dto.getTreatmentCompleted());
-                entity.setActualTreatmentCompletionDate(dto.getActualTreatmentCompletionDate());
-                entity.setTreatmentOutcome(dto.getTreatmentOutcome());
-                entity.setDateOfDeath(dto.getDateOfDeath());
-                entity.setPlaceOfDeath(dto.getPlaceOfDeath());
-                entity.setReasonForDeath(dto.getReasonForDeath());
-                entity.setReasonForNotCompleting(dto.getReasonForNotCompleting());
+                    }
+                }
 
-                repository.save(entity);
+
+
 
                 response.setResponse("TB Confirmed case saved successfully");
 
