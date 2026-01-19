@@ -230,7 +230,7 @@ public class CampaignServiceImpl implements CampaignService {
                     try {
                         // parse as double first, then cast to int
                         double noDouble = Double.parseDouble(numberOfIndividuals);
-                        filariasisCampaign.setNumberOfFamilies((int) noDouble);
+                        filariasisCampaign.setNumberOfIndividuals((int) noDouble);
                     } catch (NumberFormatException e) {
                         filariasisCampaign.setNumberOfIndividuals(0); // default 0 if invalid
                     }
