@@ -27,7 +27,7 @@ public class CampaignOrs {
     @Column(name = "number_of_families", nullable = false)
     private Integer numberOfFamilies = 0;
 
-    @Column(name = "campaign_photos")
+    @Column(name = "campaign_photos",columnDefinition = "LONGTEXT")
     private String campaignPhotos;
 
     @Column(name = "created_by", length = 200)
