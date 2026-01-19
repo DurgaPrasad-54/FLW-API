@@ -39,7 +39,7 @@ public class TBConfirmedCaseServiceImpl implements TBConfirmedCaseService {
                 TBConfirmedCase entity = new TBConfirmedCase();
                 for(TBConfirmedCaseDTO dto:request){
                     entity.setBenId(dto.getBenId());
-                    entity.setUserId(dto.getUserId());
+                    entity.setUserId(jwtUtil.extractUserId(authorisation));
                     entity.setRegimenType(dto.getRegimenType());
                     entity.setTreatmentStartDate(dto.getTreatmentStartDate());
                     entity.setExpectedTreatmentCompletionDate(dto.getExpectedTreatmentCompletionDate());
