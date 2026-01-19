@@ -17,8 +17,8 @@ public class TBConfirmedCase {
 
     @Column(name = "ben_id", nullable = false)
     private Long benId;
-    @Column(name = "user_id",nullable = false)
 
+    @Column(name = "user_id",nullable = false)
     private Integer userId;
 
     @Column(name = "suspected_tb_id", nullable = false)
