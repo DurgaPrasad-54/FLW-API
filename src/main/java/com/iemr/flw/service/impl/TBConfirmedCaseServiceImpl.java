@@ -40,7 +40,6 @@ public class TBConfirmedCaseServiceImpl implements TBConfirmedCaseService {
                 for(TBConfirmedCaseDTO dto:request){
                     entity.setBenId(dto.getBenId());
                     entity.setUserId(dto.getUserId());
-                    entity.setSuspectedTbId(dto.getSuspectedTbId());
                     entity.setRegimenType(dto.getRegimenType());
                     entity.setTreatmentStartDate(dto.getTreatmentStartDate());
                     entity.setExpectedTreatmentCompletionDate(dto.getExpectedTreatmentCompletionDate());
@@ -139,7 +138,6 @@ public class TBConfirmedCaseServiceImpl implements TBConfirmedCaseService {
 
         dto.setBenId(entity.getBenId());
         dto.setUserId(entity.getUserId());
-        dto.setSuspectedTbId(entity.getSuspectedTbId());
         dto.setRegimenType(entity.getRegimenType());
         dto.setTreatmentStartDate(entity.getTreatmentStartDate());
         dto.setExpectedTreatmentCompletionDate(entity.getExpectedTreatmentCompletionDate());
