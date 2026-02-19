@@ -22,7 +22,7 @@ jobs:
           cache: maven
 
       - name: Build API (skip tests)
-        run: mvn -B clean package -DskipTests -DENV_VAR=local
+        run: mvn -B clean package -DskipTests -DENV_VAR=local -Pswagger
         
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -67,14 +67,13 @@ jobs:
       - name: Stop API
         if: always()
         run: |
-          # Graceful shutdown of the process group
+          # Kill the process directly by PID (process-group kill is unreliable in CI)
           sleep 5
-          # Force kill the process group if still running
           if [ -f api_pid.txt ]; then
               PID=$(cat api_pid.txt)
-              kill -TERM -- -"$PID" 2>/dev/null || true
+              kill -TERM "$PID" 2>/dev/null || true
               sleep 2
-              kill -9 -- -"$PID" 2>/dev/null || true
+              kill -9 "$PID" 2>/dev/null || true
             fi
             # Fallback: kill any remaining java process on port 9090
             fuser -k 9090/tcp 2>/dev/null || true

@@ -247,15 +247,20 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- H2 Database for Swagger Profile -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 	</dependencies>
 
     <profiles>
+        <profile>
+            <id>swagger</id>
+            <dependencies>
+                <!-- H2 Database for Swagger Profile (CI only) -->
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>1097_flw</id>
             <properties>

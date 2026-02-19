@@ -44,7 +44,7 @@ public class SwaggerConfig {
 		String uatUrl = env.getProperty("api.uat.url", DEFAULT_SERVER_URL);
 		String demoUrl = env.getProperty("api.demo.url", DEFAULT_SERVER_URL);
 		return new OpenAPI()
-			.info(new Info().title("FLW API").version("version").description("A microservice for the creation and management of Field Level Workers (FLW) in the AMRIT ecosystem."))
+			.info(new Info().title("FLW API").version("3.1.0").description("A microservice for the creation and management of Field Level Workers (FLW) in the AMRIT ecosystem."))
 			.addSecurityItem(new SecurityRequirement().addList(BEARER_AUTH_SCHEME))
 			.components(new Components().addSecuritySchemes(BEARER_AUTH_SCHEME,
 				new SecurityScheme().name(BEARER_AUTH_SCHEME).type(SecurityScheme.Type.HTTP).scheme("bearer")))
